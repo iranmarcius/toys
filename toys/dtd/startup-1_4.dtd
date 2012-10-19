@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ENTITY % Boolean "(false|true)">
+<!ELEMENT class-name (#PCDATA)>
+
+<!ELEMENT param EMPTY>
+<!ATTLIST param
+	name CDATA #REQUIRED
+	value CDATA #REQUIRED
+>
+
+<!ELEMENT system-properties (param+)>
+
+<!ELEMENT locale (#PCDATA)>
+<!ATTLIST locale
+	language CDATA #REQUIRED
+	country CDATA #IMPLIED
+>
+
+<!ELEMENT global-config (locale?, system-properties?)>
+
+<!-- Tags para configuração do quartz -->
+<!ELEMENT trigger EMPTY>
+<!ATTLIST trigger
+	name CDATA #REQUIRED
+	group CDATA #IMPLIED
+	jobName CDATA #IMPLIED
+	jobGroup CDATA #IMPLIED
+	start CDATA #IMPLIED
+	end CDATA #IMPLIED
+	repeatCount CDATA #IMPLIED
+	repeatInterval CDATA #IMPLIED
+	expression CDATA #IMPLIED
+>
+<!ELEMENT data-map (param+)>
+<!ELEMENT job-detail (class-name, data-map?)>
+<!ATTLIST job-detail
+	name CDATA #REQUIRED
+	group CDATA #IMPLIED
+	volatility %Boolean; #IMPLIED
+	durability %Boolean; #IMPLIED
+	recover %Boolean; #IMPLIED
+>
+<!ELEMENT schedule (job-detail, trigger+)>
+<!ELEMENT quartz (schedule+)>
+
+<!-- Elementos para a configuração de threads -->
+<!ELEMENT interval (#PCDATA)>
+<!ELEMENT thread (class-name, interval)>
+<!ATTLIST thread
+	name CDATA #REQUIRED
+>
+<!ELEMENT threads (thread+)>
+
+
+<!-- Definição do documento -->
+<!ELEMENT startup (global-config?, quartz?, threads?)>

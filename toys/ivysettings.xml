@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ivysettings>
+	<settings defaultResolver="unitoledo"/>
+	<include url="${ivy.default.settings.dir}/ivysettings-public.xml"/>
+	<include url="${ivy.default.settings.dir}/ivysettings-shared.xml"/>
+	<include url="${ivy.default.settings.dir}/ivysettings-local.xml"/>
+	<include url="${ivy.default.settings.dir}/ivysettings-main-chain.xml"/>
+	<include url="${ivy.default.settings.dir}/ivysettings-default-chain.xml"/>
+	<resolvers>
+		<filesystem name="unitoledo.shared" checkmodified="true">
+			<artifact pattern="//rubi/htdocs/default/ivy/public/[organisation]/[module]/[artifact]-[revision]-[type].[ext]"/>
+			<ivy pattern="//rubi/htdocs/default/ivy/public/[organisation]/[module]/ivy-[revision].xml"/>
+		</filesystem>
+		<url name="unitoledo.public" checkmodified="true">
+			<artifact pattern="http://rubi.toledo.br/ivy/public/[organisation]/[module]/[artifact]-[revision]-[type].[ext]"/>
+			<ivy pattern="http://rubi.toledo.br/ivy/public/[organisation]/[module]/ivy-[revision].xml"/>
+		</url >
+		<url name="sonatype-jboss" m2compatible="true">
+			<artifact pattern="https://repository.jboss.org/nexus/content/repositories/releases/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]"/>
+		</url>
+		<url name="sonatype-java.net-m2" m2compatible="true">
+			<artifact pattern="https://repository.jboss.org/nexus/content/repositories/java.net-m2/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]"/>
+		</url>
+		<chain name="unitoledo">
+			<resolver ref="unitoledo.public"/>
+			<resolver ref="default"/>
+			<resolver ref="sonatype-jboss"/>
+			<resulver ref="sonatype-java.net-m2"/>
+		</chain>
+	</resolvers>
+</ivysettings>
