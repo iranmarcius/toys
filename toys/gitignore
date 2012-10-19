@@ -1,2 +1,4 @@
 *.jpage
-*.class
+bin/
+WebContent/WEB-INF/classes/
+
