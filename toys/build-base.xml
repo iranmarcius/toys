@@ -40,7 +40,7 @@
 	</target>
 
 	<target name="resolve">
-		<ivy:settings file="../toys/ivysettings.xml"/>
+		<ivy:settings file="${ivy.settings.file}"/>
 		<ivy:resolve/>
 	</target>
 </project>
