@@ -1,3 +1,4 @@
 *.jpage
+*.log
 bin/
 dist/
