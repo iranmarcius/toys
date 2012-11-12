@@ -13,14 +13,12 @@ import javax.servlet.ServletContext;
 
 import org.apache.struts2.ServletActionContext;
 
-import com.opensymphony.xwork2.Preparable;
-
 /**
  * Ação com a implementação básica para criação de relatórios utilizando o JasperReports.
  * A configuração desta ação deverá incluir obrigatoriamente o interceptor <code>Preparable</code>.
  * @author Iran
  */
-public abstract class JasperReportsAction extends StreamAction implements Preparable {
+public abstract class JasperReportsAction extends StreamAction {
 	private static final long serialVersionUID = 8142952417314317307L;
 
 	protected Map<String, Object> params;
