@@ -29,10 +29,12 @@ public abstract class JasperReportsAction extends StreamAction implements Prepar
 	/**
 	 * Inicializa a lista de parâmetros e a referência para o contexto da servlet.
 	 */
-	public void prepare() {
+	@Override
+	public String execute() {
 		sc = ServletActionContext.getServletContext();
 		params = new HashMap<String, Object>();
 		params.put("appRoot", sc.getRealPath("/"));
+		return super.execute();
 	}
 
 }
