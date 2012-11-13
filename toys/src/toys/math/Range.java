@@ -8,30 +8,25 @@ package toys.math;
  * Bean para armazenamento de faixas de valores numéricos.
  * @author Iran Marcius
  */
-public class Range {
-	private Object lo;
-	private Object hi;
-	
-	public Range(long lo, long hi) {
-		this.lo = Long.valueOf(lo);
-		this.hi = Long.valueOf(hi);
+public class Range<T extends Number> {
+	private T min;
+	private T max;
+
+	public Range(T lo, T hi) {
+		this.min = lo;
+		this.max = hi;
 	}
-	
-	public boolean contains(long value) {
-		if ((lo instanceof Long) && (hi instanceof Long)) {
-			return (value >= ((Long)lo).longValue())
-				&& (value <= ((Long)hi).longValue());
-		} else {
-			return false;
-		}
+
+	public boolean contains(T value) {
+		return value.longValue() >= min.longValue() && value.longValue() <= max.longValue();
 	}
-	
-	public long getLongLo() {
-		return ((Long)lo).longValue();
+
+	public T getMin() {
+		return min;
 	}
-	
-	public long getLongHi() {
-		return ((Long)hi).longValue();
+
+	public T getMax() {
+		return max;
 	}
-	
+
 }
