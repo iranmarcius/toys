@@ -38,7 +38,14 @@ public abstract class StreamAction extends StandardAction {
 	protected int contentLength;
 
 	/**
-	 * Nome do arquivo para download.
+	 * Forma como o conteúdo será entregue ao navegador.
+	 */
+	protected String contentDisposition;
+
+	/**
+	 * Nome do arquivo para download. Caso a propriedade {@link #filename} a propriedade {@link #contentDisposition}
+	 * será automativamente setada para <code><b>attachment; filename=&lt;nome do arquivo&gt;</b></code> caso
+	 * esteja vazia.
 	 */
 	protected String filename;
 
@@ -61,9 +68,10 @@ public abstract class StreamAction extends StandardAction {
 	protected String cacheFilename;
 
 	/**
-	 * Esta flag indica se deve ser retornado o resultado INPUT quando ocorrer algum erro na ação.
+	 * Esta propriedade indica qual resultado deve ser retornado quando ocorrer um erro.
+	 * O resultado padrão é <code>error</code>.
 	 */
-	protected boolean onErrorReturnINPUT;
+	protected String resultOnError = ERROR;
 
 	/**
 	 * Execução da ação.
@@ -74,10 +82,12 @@ public abstract class StreamAction extends StandardAction {
 			buildStream();
 			if (inputStream != null)
 				contentLength = inputStream.available();
+			if (StringUtils.isNotBlank(filename) && StringUtils.isBlank(contentDisposition))
+				contentDisposition = "attachment; filename=${filename}";
 		} catch (Exception e) {
 			logger.error("Erro obtendo o stream de dados", e);
 		}
-		return !hasErrors() ? SUCCESS : (onErrorReturnINPUT ? INPUT : ERROR);
+		return !hasErrors() ? SUCCESS : resultOnError;
 	}
 
 	/**
@@ -198,8 +208,16 @@ public abstract class StreamAction extends StandardAction {
 		this.cacheFilename = cacheFilename;
 	}
 
-	public void setOnErrorReturnINPUT(boolean onErrorReturnINPUT) {
-		this.onErrorReturnINPUT = onErrorReturnINPUT;
+	public String getContentDisposition() {
+		return contentDisposition;
+	}
+
+	public void setContentDisposition(String contentDisposition) {
+		this.contentDisposition = contentDisposition;
+	}
+
+	public void setResultOnError(String resultOnError) {
+		this.resultOnError = resultOnError;
 	}
 
 }
