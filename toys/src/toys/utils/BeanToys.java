@@ -198,6 +198,7 @@ public final class BeanToys {
 	 * @param obj Objeto que será utilizado para criação da string
 	 * @param propriedades Nomes dos campos que serão utilizados na criação da string.
 	 * @return <code>String</code>
+	 * @deprecated Métodos toString deverão ser gerados utilizando-se a funcionalidade disponibilizada pelo Eclipse.
 	 */
 	public static String toString(Object obj, String... propriedades) {
 		StringBuffer sb = new StringBuffer("{");
