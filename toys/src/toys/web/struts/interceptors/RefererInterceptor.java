@@ -18,14 +18,12 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  * <p>Verifica se o referer da requisição está na lista de referers permitidos não
  * permitindo a execução da ação caso não esteja. Caso o referer não seja permitido,
  * o interceptor irá adicionar um erro e retornar o resultado <code>Action.ERROR</code>.</p>
- * <p>Devem ser passados os seguintes parâmetros para este interceptor:
+ * <p>Os seguintes parâmtros são permitidos:</p>
  * <ul>
- * 	<li><b>allowedReferers:</b> uma lista de regular expressions, separadas por quebra de
- * 		linha, com os referers que serão permitidos</li>
- * 	<li><b>message:</b> mensagem que será adicionada à lista de erros no caso do referer
- * 		não ser permitido</li>
+ * 	<li><b>allowedReferers (obrigatório):</b> uma lista de regular expressions, separadas por vírgula,
+ * 	com os referers que serão permitidos</li>
+ * 	<li><b>message:</b> mensagem que será adicionada à lista de erros no caso do referer não ser permitido</li>
  * 	</ul>
- * </p>
  * @author Iran
  * @author Ednei Parmigiani Júnior
  */
@@ -62,11 +60,8 @@ public class RefererInterceptor extends AbstractInterceptor {
 	 */
 	public void setAllowedReferers(String allowedReferers) {
 		log.debug("Setando referers permitidos");
-		this.allowedReferers = allowedReferers.split("(\n)|(\n\r)");
-		for (int i = 0; i < this.allowedReferers.length; i++) {
-			this.allowedReferers[i] = this.allowedReferers[i].trim();
-			log.debug(this.allowedReferers[i]);
-		}
+		this.allowedReferers = allowedReferers.split(" *, *");
+		log.debug(this.allowedReferers);
 	}
 
 	public void setMessage(String message) {
