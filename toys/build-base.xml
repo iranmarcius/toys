@@ -5,7 +5,7 @@
 	<property name="dist.dir" value="dist"/>
 	<property name="dist.jar" value="${dist.dir}/jars"/>
 	<property name="dist.sources" value="${dist.dir}/sources"/>
-	<property name="repo.dir.shared" value="//rubi/htdocs/default/ivy/public"/>
+	<property name="repo.dir.shared" value="//sparring/ivyrepo/shared"/>
 	<property name="repo.dir.local" value="${env.USERPROFILE}/.ivy2/cache"/>
 	<property name="ivy.settings.file" value="${env.ECLIPSE_GIT}/ivysettings.xml"/>
 
