@@ -30,13 +30,13 @@
     	<dependency org="javax.mail" name="mail" rev="1.4.5" conf="compile->default"/>
     	<dependency org="javax.activation" name="activation" rev="1.1" conf="compile->default"/>
     	<dependency org="javax.servlet" name="servlet-api" rev="2.5" conf="web,compile->default"/>
-		<dependency org="org.hibernate" name="hibernate-core" rev="4.1.9.Final" conf="hibernate->default"/>
-		<dependency org="org.hibernate" name="hibernate-c3p0" rev="4.1.9.Final" conf="hibernate->default"/>
-		<dependency org="org.hibernate" name="hibernate-validator" rev="4.3.0.Final" conf="hibernate->default"/>
+		<dependency org="org.hibernate" name="hibernate-core" rev="4.2.1.Final" conf="hibernate->default"/>
+		<dependency org="org.hibernate" name="hibernate-c3p0" rev="4.2.1.Final" conf="hibernate->default"/>
+		<dependency org="org.hibernate" name="hibernate-validator" rev="5.0.1.Final" conf="hibernate->default"/>
 		<dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.6" conf="hibernate->default"/>
-    	<dependency org="org.apache.struts" name="struts2-core" rev="2.3.8" conf="struts->default"/>
-    	<dependency org="org.apache.struts" name="struts2-convention-plugin" rev="2.3.8" conf="struts->default"/>
-    	<dependency org="org.apache.struts" name="struts2-sitemesh-plugin" rev="2.3.8" conf="struts->default"/>
+    	<dependency org="org.apache.struts" name="struts2-core" rev="2.3.14" conf="struts->default"/>
+    	<dependency org="org.apache.struts" name="struts2-convention-plugin" rev="2.3.14" conf="struts->default"/>
+    	<dependency org="org.apache.struts" name="struts2-sitemesh-plugin" rev="2.3.14" conf="struts->default"/>
     	<dependency org="jfree" name="jfreechart" rev="1.0.13" conf="optional->default"/>
 		<dependency org="dom4j" name="dom4j" rev="1.6.1" conf="xml->default"/>
     	<dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.2" conf="optional,xml->default"/>
