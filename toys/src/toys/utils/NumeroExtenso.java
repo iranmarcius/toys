@@ -12,7 +12,7 @@ import java.util.List;
 public class NumeroExtenso {
 	private List<Integer> nro;
 	private BigInteger num;
-	
+
 	private String qualificadores[][] = {
 			{"centavo", "centavos"},
 			{"", ""},
@@ -138,7 +138,7 @@ public class NumeroExtenso {
 		}
 		System.out.println(toString());
 	}
-	
+
 	public String toString(BigDecimal n) {
 		setNumber(n);
 		return toString();
@@ -152,9 +152,8 @@ public class NumeroExtenso {
 		StringBuffer buf = new StringBuffer();
 		for (int ct = nro.size() - 1; ct > 0; ct--) {
 			// Se ja existe texto e o atual não é zero
-			if (buf.length() > 0 && !ehGrupoZero(ct)) {
-				buf.append(" e ");
-			}
+			if (buf.length() > 0 && !ehGrupoZero(ct))
+				buf.append(", ");
 			buf.append(numToString(nro.get(ct).intValue(), ct));
 		}
 		if (buf.length() > 0) {
