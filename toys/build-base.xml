@@ -1,46 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<project name="BuildBase" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="BuildBase" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<property environment="env"/>
-	<property name="dist.dir" value="dist"/>
-	<property name="dist.jar" value="${dist.dir}/jars"/>
-	<property name="dist.sources" value="${dist.dir}/sources"/>
-	<property name="repo.dir.shared" value="//sparring/ivyrepo/shared"/>
-	<property name="repo.dir.local" value="${env.USERPROFILE}/.ivy2/cache"/>
-	<property name="ivy.settings.file" value="${env.ECLIPSE_GIT}/ivysettings.xml"/>
-
-	<target name="jarname">
-		<ivy:settings file="${ivy.settings.file}"/>
-		<ivy:resolve/>
-		<property name="jar.name" value="${ivy.module}-${ivy.revision}-jar.jar"/>
-		<property name="jar.source" value="${ivy.module}-${ivy.revision}-source.jar"/>
+	
+	<target name="pomRef">
+		<artifact:pom id="pom" file="pom.xml"/>
+	</target>
+	
+	<target name="jar" depends="pomRef">
+		<delete file="target/${pom.artifactId}-${pom.version}.jar"/>
+		<artifact:mvn>
+			<arg value="jar:jar"/>
+		</artifact:mvn>
 	</target>
 
-	<target name="jarpath">
-		<ivy:settings file="${ivy.settings.file}"/>
-		<ivy:resolve/>
-		<property name="jar.path" value="${repo.dir.shared}/${ivy.organisation}/${ivy.module}"/>
+	<target name="install" depends="jar">
+		<artifact:install file="target/${pom.artifactId}-${pom.version}.jar">
+			<pom refid="pom"/>
+		</artifact:install>
 	</target>
 
-	<target name="jar" depends="jarpath, jarname">
-		<mkdir dir="${jar.path}"/>
-		<delete file="${jar.path}/${jar.name}" failonerror="false"/>
-		<jar destfile="${jar.path}/${jar.name}" basedir="bin" includes="**/*.class **/*.properties **/*.xml" excludes="**/test*/**"/>
-	</target>
-
-	<target name="publish" depends="jar">
-		<copy file="ivy.xml" tofile="${jar.path}/ivy-${ivy.revision}.xml" overwrite="true"/>
-		<delete file="${jar.path}/${jar.source}" failonerror="false"/>
-		<jar destfile="${jar.path}/${jar.source}" basedir="src" includes="**/*.java **/*.properties **/*.xml"/>
-
-		<!-- Limpa o repositório local para que a nova versão publicada seja recuperada -->
-		<delete failonerror="false" verbose="true">
-			<fileset dir="${repo.dir.local}/${ivy.organisation}/${ivy.module}" includes="**/*"/>
-		</delete>
-	</target>
-
-	<target name="resolve">
-		<ivy:settings file="${ivy.settings.file}"/>
-		<ivy:resolve/>
-	</target>
 </project>
