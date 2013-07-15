@@ -10,6 +10,7 @@
 	<artifactId>toys</artifactId>
 	<version>1.1</version>
 	<name>Toys</name>
+	<description>API com classes e métodos utilitários genéricos.</description>
 	
 	<parent>
 		<groupId>config</groupId>
@@ -17,8 +18,6 @@
 		<version>noversion</version>
 		<relativePath>../../../pom.xml</relativePath>
 	</parent>
-	
-	<description>API com classes e métodos utilitários genéricos.</description>
 	
 	<dependencies>
 		<dependency>
