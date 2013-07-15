@@ -3,11 +3,12 @@
 <project name="BuildBase" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<property environment="env"/>
 	
-	<target name="pomRef">
+	<target name="init">
 		<artifact:pom id="pom" file="pom.xml"/>
+		<property name="artifact.path" value="${env.HOMEDRIVE}\\${env.HOMEPATH}\\.m2\\repository"/>
 	</target>
 	
-	<target name="jar" depends="pomRef">
+	<target name="jar" depends="init">
 		<delete file="target/${pom.artifactId}-${pom.version}.jar"/>
 		<artifact:mvn>
 			<arg value="jar:jar"/>
@@ -15,6 +16,7 @@
 	</target>
 
 	<target name="install" depends="jar">
+		<delete dir="${artifact.path}" includes="**/${pom.artifactId}/${pom.version}/**/*"/>
 		<artifact:install file="target/${pom.artifactId}-${pom.version}.jar">
 			<pom refid="pom"/>
 		</artifact:install>
