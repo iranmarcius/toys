@@ -30,4 +30,21 @@
 		</artifact:install>
 	</target>
 
+	<target name="buildcp">
+		<delete dir="target/dependency"/>
+		<artifact:mvn><arg value="dependency:copy-dependencies"/></artifact:mvn>
+		<pathconvert property="cp" pathsep=" ">
+			<mapper>
+				<chainedmapper>
+					<flattenmapper/>
+					<globmapper from="*" to="lib/*"/>
+				</chainedmapper>
+			</mapper>
+
+			<path>
+				<fileset dir="target/dependency/" includes="*"/>
+			</path>
+		</pathconvert>
+	</target>
+
 </project>
