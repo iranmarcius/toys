@@ -1,21 +1,15 @@
 package toys.fs;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Métodos utilitários para operações envolvendo o sistema de arquivos.
@@ -144,56 +138,6 @@ public class FileToys {
 	 */
 	public static String readText(String filename) throws IOException {
 		return new String(readBytes(filename));
-	}
-
-	/**
-	 * Retorna todas as linhas de um arquivo na forma de uma lista de strings.
-	 * @param filename Nome do arquivo
-	 * @param charset charset do arquivo que será lido. Caso seja informado um valor nulo será
-	 * utilizado o charset padrão.
-	 * @return <code>List&lt;String&gt;</code>
-	 * @throws IOException
-	 * @deprecated Será removido em favor do <b>commons-io</b>.
-	 */
-	@SuppressWarnings("resource")
-	public static List<String> readLines(String filename, String charset) throws IOException {
-		FileInputStream fis = new FileInputStream(filename);
-		InputStreamReader isr = charset != null ? new InputStreamReader(fis, charset) : new InputStreamReader(fis);
-		BufferedReader reader = new BufferedReader(isr);
-		List<String> l = new ArrayList<String>();
-		try {
-			String s = null;
-			while ((s = reader.readLine()) != null)
-				l.add(s);
-		} finally {
-			reader.close();
-		}
-		return l;
-	}
-
-	/**
-	 * Grava no arquivo especificado as linhas informadas na lista de strings.
-	 * @param filename Nome do arquivo que será criado ou atualizado.
-	 * @param linhas Lista de strings.
-	 * @param append Flag indicando se as linhas devem ser acrescentadas a um arquivo existente ou se
-	 * um novo arquivo deve ser criado.
-	 * @param charset Charset do arquivo. Caso seja informado um valor nulo será utilizado o charset padrão.
-	 * @throws IOException
-	 * @deprecated Será removido em favor do <b>commons-io</b>.
-	 */
-	@SuppressWarnings("resource")
-	public static void writeLines(String filename, List<String> linhas, boolean append, String charset) throws IOException {
-		FileOutputStream fos = new FileOutputStream(filename, append);
-		OutputStreamWriter osw = charset == null ? new OutputStreamWriter(fos) : new OutputStreamWriter(fos, charset);
-		BufferedWriter writer = new BufferedWriter(osw);
-		try {
-			for (String s: linhas) {
-				writer.write(s);
-				writer.newLine();
-			}
-		} finally {
-			writer.close();
-		}
 	}
 
 	/**
