@@ -16,37 +16,17 @@ import java.util.Random;
 public class Crypt {
 
 	/**
-	 * Retorna um array de bytes com a representação de uma string criptografada
-	 * com o algorítmo especificado.
-	 * @param s String a ser criptografada
-	 * @param algorithm Algorítmo
-	 * @return <code>byte[]</code>
-	 */
-	public static byte[] encrypt(String s, String algorithm) throws NoSuchAlgorithmException {
-		MessageDigest md = MessageDigest.getInstance(algorithm);
-		return md.digest(s.getBytes());
-	}
-
-	/**
-	 * Retorna um valor criptografado com seus bytes convertidos em hexa.
-	 * @param b Array de bytes
-	 * @see StringToys#str2hex(byte[])
-	 */
-	public static String encode(byte[] b) {
-		return StringToys.str2hex(b);
-	}
-
-	/**
 	 * Método utilitário para retornar uma string criptografada com seus bytes
 	 * convertidos para na representação hexadecimal.
 	 * @param s String a ser criptografada
 	 * @param algorithm Algorítmo
 	 * @return <code>String</code>
 	 * @see #encrypt(String, String)
-	 * @see #encode(byte[])
 	 */
 	public static String digest(String s, String algorithm) throws NoSuchAlgorithmException {
-		return encode(encrypt(s, algorithm));
+		MessageDigest md = MessageDigest.getInstance(algorithm);
+		byte[] b = md.digest(s.getBytes());
+		return StringToys.str2hex(b);
 	}
 
 	/**
