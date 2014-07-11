@@ -67,20 +67,31 @@ public abstract class BaseLoginModule implements LoginModule {
 			return false;
 		}
 
-		NameCallback nc = new NameCallback("username");
-		PasswordCallback pc = new PasswordCallback("password", false);
+		Callback[] callbacks = getCallbacks();
+		NameCallback nc = (NameCallback)callbacks[0];
+		PasswordCallback pc = (PasswordCallback)callbacks[1];
 		try {
-			callbackHandler.handle(new Callback[] {nc, pc});
+			callbackHandler.handle(callbacks);
 		} catch (Exception e) {
 			log.error("Erro executando callbacks para obtencao de usuario e senha.", e);
 			return false;
 		}
-
+		
 		username = nc.getName();
 		password = new String(pc.getPassword());
 		pc.clearPassword();
 
 		return true;
+	}
+	
+	/**
+	 * Retorna os callbacks que serão utilizados no módulo sendo que o primeiro e o segundo devem
+	 * ser respectivamente {@link NameCallback} e {@link PasswordCallback}. É altamente recomendável
+	 * que, caso este método seja sobrecarregado, seja invocado pela implementação derivada. 
+	 * @return {@link Callback}[]
+	 */
+	protected Callback[] getCallbacks() {
+		return new Callback[] {new NameCallback("username"), new PasswordCallback("password", false)};
 	}
 
 	/**
