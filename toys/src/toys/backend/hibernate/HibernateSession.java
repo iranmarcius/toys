@@ -12,8 +12,8 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistryBuilder;
 
 import toys.fs.FileToys;
 
@@ -65,11 +65,11 @@ public class HibernateSession {
 				configuration.configure();
 			}
 
-			ServiceRegistryBuilder srb = new ServiceRegistryBuilder();
+			StandardServiceRegistryBuilder srb = new StandardServiceRegistryBuilder();
 			if (props != null)
 				srb.applySettings(props);
 
-			sf = configuration.buildSessionFactory(srb.buildServiceRegistry());
+			sf = configuration.buildSessionFactory(srb.build());
 			sfm.put(params, sf);
 		}
 		return sf;
