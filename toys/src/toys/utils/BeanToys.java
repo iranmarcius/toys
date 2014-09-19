@@ -5,8 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import ognl.OgnlException;
-
 /**
  * Implementa métodos utilitários para operações com objetos.
  * @author Iran Marcius
@@ -183,7 +181,6 @@ public final class BeanToys {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
-	 * @throws OgnlException
 	 */
 	public static void populate(Object bean, String[] properties, Object[] values, int startIndex)
 		throws IllegalArgumentException, IllegalAccessException, InvocationTargetException,
@@ -225,7 +222,6 @@ public final class BeanToys {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
-	 * @throws OgnlException
 	 */
 	public static String format(Object obj, String formato, String... props) throws IllegalArgumentException,
 		IllegalAccessException, InvocationTargetException {
