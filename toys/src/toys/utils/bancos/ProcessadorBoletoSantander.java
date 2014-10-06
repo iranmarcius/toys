@@ -14,19 +14,17 @@ import toys.utils.DateToys;
 /**
  * Gera códigos específicos utilizados pelo Banco Santander.
  */
-public class ProcessadorBancoSantander extends ProcessadorBancoImpl {
+public class ProcessadorBoletoSantander extends ProcessadorBoleto {
 	public static final String BANCO = "033";
 	private String convenio;
 
 	/**
 	 * Construtor.
-	 * @param convenio Código do convênio.
-	 * @param nossoNumero Nosso número para ser utilizado como semente.
-	 * @param vencimento Vencimento do boleto.
-	 * @param valor Valor do boleto.
+	 * @param convenio Número do convênio. Necessário para a geração dos valores.
+	 * @see ProcessadorBoleto#ProcessadorBancoImpl(String, Date, Double, boolean)
 	 */
-	public ProcessadorBancoSantander(String convenio, String nossoNumero, Date vencimento, Double valor) {
-		super(nossoNumero, vencimento, valor);
+	public ProcessadorBoletoSantander(String convenio, String nossoNumero, Date vencimento, Double valor, boolean gerarDV) {
+		super(nossoNumero, vencimento, valor, gerarDV);
 		this.convenio = convenio;
 		gerarCodigoBarras();
 		gerarLinhaDigitavel();

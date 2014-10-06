@@ -12,14 +12,20 @@ import toys.utils.NumberToys;
  * Gera códigos específicos utilizados pelo Banco Sudameris.
  * @author Iran
  */
-public class ProcessadorBancoSudameris extends ProcessadorBancoImpl {
+public class ProcessadorBoletoSudameris extends ProcessadorBoleto {
 	public static final String BANCO = "215";
 	
 	private String agencia;
 	private String conta;
 
-	public ProcessadorBancoSudameris(String agencia, String conta, String nossoNumero, Date vencimento, Double valor) {
-		super(nossoNumero, vencimento, valor);
+	/**
+	 * Construtor padrão.
+	 * @param agencia Número da agência para ser utilizado na geração dos valores.
+	 * @param conta Número da conta para ser utilizador na geração dos valores.
+	 * @see ProcessadorBoleto#ProcessadorBancoImpl(String, Date, Double, boolean)
+	 */
+	public ProcessadorBoletoSudameris(String agencia, String conta, String nossoNumero, Date vencimento, Double valor, boolean gerarDV) {
+		super(nossoNumero, vencimento, valor, gerarDV);
 		this.agencia = agencia;
 		this.conta = conta;
 		gerarCodigoBarras();
