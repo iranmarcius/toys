@@ -48,10 +48,9 @@ import org.apache.commons.logging.LogFactory;
  * </ul>
  * </p>
  * @author Iran Marcius
- * @author Ednei Parmigiani Júnior
  */
 public class RefererFilter implements Filter {
-	private static Log log = LogFactory.getLog(RefererFilter.class);
+	private static final Log log = LogFactory.getLog(RefererFilter.class);
 
 	private String[] allowedReferers;
 	private String[] ignoredURLs;
