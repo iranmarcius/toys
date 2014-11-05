@@ -24,6 +24,8 @@ import javax.persistence.Entity;
 import org.hibernate.JDBCException;
 import org.hibernate.proxy.HibernateProxy;
 
+import toys.collections.ArrayToys;
+
 /**
  * Esta classe possui métodos utilitários para trabalhar com o Hibernate.
  * @author Iran Marcius
@@ -150,6 +152,18 @@ public class HibernateUtils {
 		}
 
 		return o;
+	}
+	
+	/**
+	 * Retorna um objeto do array de tuplas a partir do índice do seu alias no array de aliases.
+	 * @param alias Alias do objeto.
+	 * @param aliases Array com todos os aliases.
+	 * @param tuples Array com todas as tuplas.
+	 * @return Object
+	 */
+	public static Object getTupleByAlias(String alias, String[] aliases, Object[] tuples) {
+		int i = ArrayToys.indexOf(alias, aliases);
+		return i >= 0 ? tuples[i] : null;
 	}
 
 }
