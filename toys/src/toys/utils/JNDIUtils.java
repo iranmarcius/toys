@@ -65,7 +65,7 @@ public class JNDIUtils {
 	 * @throws NamingException
 	 */
 	public static boolean isDebugging() throws NamingException {
-		Object o = getInitialContext().lookup("java:comp/env/debugging");
+		Object o = getInitialContext().lookup("java:comp/env/debug");
 		if ((o != null) && (o instanceof Boolean))
 			return ((Boolean)o).booleanValue();
 		else
