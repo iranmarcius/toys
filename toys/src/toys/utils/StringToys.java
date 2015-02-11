@@ -506,6 +506,19 @@ public class StringToys {
 	}
 
 	/**
+	 * Retorna a primeira palavra antes do primeiro espaço em uma string.
+	 * Caso não haja espaços retorna a string original.
+	 * @param s String
+	 * @return String
+	 */
+	public static String firstWord(String s) {
+		if (s == null)
+			return null;
+		int i = s.indexOf(" ");
+		return i > -1 ? s.substring(0, i) : s;
+	}
+
+	/**
 	 * Retorna o valor de um atributo de uma string cujo conteúdo esteja no formado XML.
 	 * @param tag Tag XML.
 	 * @param attr Nome do atributo.
