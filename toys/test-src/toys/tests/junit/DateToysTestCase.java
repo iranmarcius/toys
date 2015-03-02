@@ -44,18 +44,9 @@ public class DateToysTestCase extends TestCase {
 		assertNull(DateToys.createTime("sdjkfhasjkdfhjk"));
 	}
 
-	public final void testCreateDate() {
-		assertEquals("1972-07-07", DateToys.createDate("7/7/1972").toString());
-		assertNull(DateToys.createDate("klasjdfhjk"));
-	}
-
 	public final void testTime2Ms() {
 		assertEquals(36000000l, DateToys.time2ms("10:00:00"));
 		assertEquals(36000000l, DateToys.time2ms("10:00"));
-	}
-
-	public final void testDateTime2ms() {
-		assertEquals(DateToys.dateTime2ms("7/7/1972", "16:30:01"), 79385401000l);
 	}
 
 	public final void testSetTimeFields() {

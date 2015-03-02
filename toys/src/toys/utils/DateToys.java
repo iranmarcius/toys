@@ -7,7 +7,6 @@ package toys.utils;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,8 +14,6 @@ import java.util.Locale;
 import java.util.Vector;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import toys.application.LocaleUtils;
 
@@ -25,19 +22,6 @@ import toys.application.LocaleUtils;
  * @author Iran Marcius
  */
 public final class DateToys {
-    private static Log log = LogFactory.getLog(DateToys.class);
-
-    @Deprecated
-    public static final long MILLIS_PER_SECOND = 1000;
-    @Deprecated
-    public static final long MILLIS_PER_MINUTE = MILLIS_PER_SECOND * 60;
-    @Deprecated
-    public static final long MILLIS_PER_HOUR = MILLIS_PER_MINUTE * 60;
-    @Deprecated
-    public static final long MILLIS_PER_DAY = MILLIS_PER_HOUR * 24;
-    @Deprecated
-    public static final long MILLIS_PER_WEEK = MILLIS_PER_DAY * 7;
-
     public static final byte SUNDAY 	= 0x01;
     public static final byte MONDAY 	= 0x02;
     public static final byte TUESDAY 	= 0x04;
@@ -55,114 +39,6 @@ public final class DateToys {
      * Quantidade de minutos numa semana.
      */
     public static final int MINUTES_PER_WEEK = 10080;
-
-    /**
-     * Cria uma data à partir da string informada. Para que o método funcione
-     * corretamente, a data deverá estar no formato específico da localidade
-     * informada.
-     * @param s String a ser convertida em data
-     * @param locale Localidade. Caso este valor seja nulo, será utilizada a
-     * localidade atual de acordo com o a configuração do sistema.
-     * @return Caso a string informada seja uma data válida para a localidade,
-     * retorna um objeto <code>java.util.Date</code>, caso contrário, retorna
-     * <b>null</b>.
-     * @deprecated Será removido em favor do commons-lang. 
-     */
-    public static Date formatDate(String s, Locale locale) {
-        Date d = null;
-        try {
-            if (locale == null) locale = Locale.getDefault();
-            DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT, locale);
-            formatter.setLenient(false);
-            d = formatter.parse(s);
-        } catch (Exception e) {
-            log.warn(String.format("Erro na conversao para data (%1$s, %2$s)", s, locale));
-            return null;
-        }
-        return d;
-    }
-
-    /**
-     * Cria uma data a partir da string informada. Para que o método funcione
-     * corretamente, a data deverá estar informada no formato específico da
-     * localidade padrão.
-     * @param s String a ser convertida em data
-     * @return Caso a string informada seja uma data válida para a localidade,
-     * retorna um objeto <code>java.util.Date</code>, caso contrário, retorna
-     * <b>null</b>.
-     * @deprecated Será removido em favor do <b>commons-lang3</b>.
-     */
-    public static Date formatDate(String s) {
-        return formatDate(s, Locale.getDefault());
-    }
-
-    /**
-     * Retorna se a string informada representa uma data válida de acordo com a
-     * localidade informada.
-     * @param s String com a data
-     * @param locale Localidade. Caso este valor seja nulo, utiliza a localidade
-     * default.
-     * @return boolean
-     * @deprecated Será removido em favor do <b>commons-lang3</b>.
-     */
-    public static boolean isDate(String s, Locale locale) {
-        return formatDate(s, locale) != null;
-    }
-
-    /**
-     * Retorna se os dias de duas datas são iguais.
-     * @param d1 Data 1
-     * @param d2 Data 2
-     * @return <code>boolean</code>
-     * @deprecated Será removido em favor do <b>commons-lang3</b>.
-     */
-    public static boolean isDayEquals(Date d1, Date d2) {
-    	return getTimeField(d1, Calendar.DAY_OF_MONTH) == getTimeField(d2, Calendar.DAY_OF_MONTH);
-    }
-
-    /**
-     * Retorna se os meses de duas datas são iguais.
-     * @param d1 Data 1
-     * @param d2 Data 2
-     * @return <code>boolean</code>
-     * @deprecated Será removido em favor do <b>commons-lang3</b>.
-     */
-    public static boolean isMonthEquals(Date d1, Date d2) {
-        return getTimeField(d1, Calendar.MONTH) == getTimeField(d2, Calendar.MONTH);
-    }
-
-    /**
-     * Retorna se os anos de duas datas são iguais.
-     * @param d1 Data 1
-     * @param d2 Data 2
-     * @return <code>boolean</code>
-     * @deprecated Será removido em favor do <b>commons-lang3</b>.
-     */
-    public static boolean isYearEquals(Date d1, Date d2) {
-        return getTimeField(d1, Calendar.YEAR) == getTimeField(d2, Calendar.YEAR);
-    }
-
-    /**
-     * Retorna se as datas informadas possuem mesmo dia, mês e ano.
-     * @param d1 Data 1
-     * @param d2 Data 2
-     * @return <code>boolean</code>
-     * @deprecated Será removido em favor do <b>commons-lang3</b>.
-     */
-    public static boolean isDMYEquals(Date d1, Date d2) {
-    	return isDayEquals(d1, d2) && isMonthEquals(d1, d2) && isYearEquals(d1, d2);
-    }
-
-    /**
-     * Retorna se a string informada representa uma data válida de acordo com a
-     * localidade padrão.
-     * @param s String com a data
-     * @return boolean
-     * @deprecated Será removido em favor do <b>commons-lang3</b>.
-     */
-    public static boolean isDate(String s) {
-        return formatDate(s) != null;
-    }
 
     /**
      * <p>Retorna um <i>long</i> representando o intervalo de tempo especificado
@@ -270,20 +146,6 @@ public final class DateToys {
     }
 
     /**
-     * Retorna um objeto do tipo <i>java.sql.Date</i> a partir da string informada.
-     * @param date String com a data a ser processada.
-     * @return Retorna um <i>java.sql.Date</i> obtido da conversão da string ou <b>null</b>
-     * caso a data especificada na string não seja válida.
-     */
-    public static java.sql.Date createDate(String date) {
-        Date d = formatDate(date);
-        if (d != null) {
-            return new java.sql.Date(d.getTime());
-        }
-        return null;
-    }
-
-    /**
      * Retorna um objeto do tipo <code>java.sql.Time</code> a partir da string
      * informada.
      * @param time String representando a hora. Pode estar nos formatos <b>hh:mm:ss</b>
@@ -313,34 +175,6 @@ public final class DateToys {
             }
         }
         return null;
-    }
-
-    /**
-     * Processa as strings de data e hora retornando sua representação de tempo
-     * em milissegundos.
-     * @param date String com a data no formado especificado no método
-     * <code>{@link #formatDate(String) formatDate}</code>
-     * @param time String com a hora no formato especificado no método
-     * <code>{@link #time2ms(String) time2ms}</code>
-     * @return O valor retornado será um <code>long</code> calculado à partir do
-     * número de milissegundos da data acrescido ao número de milissegundos da hora.
-     */
-    public static long dateTime2ms(String date, String time) {
-        long d = formatDate(date).getTime();
-        long t = time2ms(time);
-        return d + t;
-    }
-
-    /**
-     * Método de conveniência para invocar o
-     * <code>{@link #dateTime2ms(String) dateTime2ms}</code> informando a data e a
-     * hora separados.
-     * @param dt String de data e hora
-     * @return <code>long</code>
-     */
-    public static long dateTime2ms(String dt) {
-        String[] s = dt.split(" +");
-        return dateTime2ms(s[0], s[1]);
     }
 
     /**
@@ -501,9 +335,9 @@ public final class DateToys {
             delta = t1 - t2;
         else
             delta = t2 - t1;
-        long r = delta / DateToys.MILLIS_PER_DAY;
+        long r = delta / DateUtils.MILLIS_PER_DAY;
         if (!diasInteiros)
-            if (delta % DateToys.MILLIS_PER_DAY > 0)
+            if (delta % DateUtils.MILLIS_PER_DAY > 0)
                 r++;
         return (int)r;
     }
@@ -532,60 +366,6 @@ public final class DateToys {
     }
 
     /**
-     * Seta os campos de hora do calendário para o início do dia.
-     * @param c Calendário que será modificado.
-     */
-    public static void inicioDia(Calendar c) {
-        if (c == null)
-        	return;
-        c.set(Calendar.MILLISECOND, c.getActualMinimum(Calendar.MILLISECOND));
-        c.set(Calendar.SECOND, c.getActualMinimum(Calendar.SECOND));
-        c.set(Calendar.MINUTE, c.getActualMinimum(Calendar.MINUTE));
-        c.set(Calendar.HOUR_OF_DAY, c.getActualMinimum(Calendar.HOUR_OF_DAY));
-    }
-
-    /**
-     * Seta a hora da data informada para o início do dia.
-     * @param d Data a ser modificada
-     * @deprecated Utilizar {@link DateUtils#truncate(Date, int)}
-     */
-    public static void inicioDia(Date d) {
-        if (d == null)
-            return;
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        inicioDia(c);
-        d.setTime(c.getTimeInMillis());
-    }
-
-    /**
-     * Seta os campos de hora do calendário informado para o final do dia.
-     * @param c Calendário a ser modificado
-     */
-    public static void terminoDia(Calendar c) {
-        if (c == null)
-        	return;
-        c.set(Calendar.MILLISECOND, c.getActualMaximum(Calendar.MILLISECOND));
-        c.set(Calendar.SECOND, c.getActualMaximum(Calendar.SECOND));
-        c.set(Calendar.MINUTE, c.getActualMaximum(Calendar.MINUTE));
-        c.set(Calendar.HOUR_OF_DAY, c.getActualMaximum(Calendar.HOUR_OF_DAY));
-    }
-
-    /**
-     * Seta os campos de hora da data para o término do dia.
-     * @param d Data a ser modificada.
-     * @deprecated Utilizar {@link DateUtils#ceiling(Date, int)}
-     */
-    public static void terminoDia(Date d) {
-    	if (d == null)
-    		return;
-    	Calendar c = Calendar.getInstance();
-    	c.setTime(d);
-    	terminoDia(c);
-    	d.setTime(c.getTimeInMillis());
-    }
-
-    /**
      * Torna iguais os campos de milisegundos de duas datas.
      * @param reference Data que será tomada como referência
      * @param target Data que será modificada
@@ -606,42 +386,6 @@ public final class DateToys {
     public static void normalizeSeconds(Date reference, Date target) {
 		setTimeField(target, Calendar.SECOND, getTimeField(reference, Calendar.SECOND));
 		normalizeMilliseconds(reference, target);
-    }
-
-    /**
-     * Retorna, a partir de uma string com uma data, um objeto do tipo
-     * <code>java.sql.Timestamp</code> correspondendo à data informada com os campos
-     * de hora ajustados para o início do dia.
-     * @param date String de data para ser convertida
-     * @return Retorna um {@link Timestamp Timestamp} ou <b>null</b> caso a data
-     * fornecida não seja válida
-     */
-    public static Timestamp createDayBeginningTimestamp(String date) {
-        Date d = formatDate(date);
-        if (d != null) {
-            inicioDia(d);
-            return new Timestamp(d.getTime());
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Retorna, a partir de uma string com uma data, um objeto do tipo
-     * <code>java.sql.Timestamp</code> correspondendo à data informada com os campos
-     * de hora ajustados para final do dia.
-     * @param date Data a ser convertida
-     * @return Retorna um {@link Timestamp Timestamp} ou <b>null</b> caso a data
-     * fornecida não seja válida
-     */
-    public static Timestamp createDayEndingTimestamp(String date) {
-        Date d = formatDate(date);
-        if (d != null) {
-            terminoDia(d);
-            return new Timestamp(d.getTime());
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -686,69 +430,13 @@ public final class DateToys {
     }
 
     /**
-     * Cria um <code>java.sql.Timestamp</code> a partir de uma data e hora informados.
-     * @param date Data que será modificada. Se o valor for nulo o método retornará
-     * um valor nulo também.
-     * @param time Hora que será adicionada à data.
-     * @return Retorna um <code>{@link Timestamp Timestamp}</code> com o resultado da
-     * soma da data e a hora
-     */
-    public static Timestamp createTimestamp(Date date, Date time) {
-        if (date != null) {
-            Timestamp t = new Timestamp(date.getTime());
-            if (time != null)
-                setTimeFields(t, time);
-            else
-                inicioDia(t);
-            return t;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Cria e retorna um {@link Timestamp} a partir da data e hora informados como string.
-     * @param date Representação string da data. Caso a conversão deste campo resulte
-     * num valor nulo, o método também retornará um valor nulo.
-     * @param time Representação string da hora. Caso a conversão deste campo resulte
-     * num valor nulo, será considerada a hora <b>00:00:00.000</b>.
-     * @return <code>{@link Timestamp Timestamp}</code>
-     */
-    public static Timestamp createTimestamp(String date, String time) {
-        Date d = formatDate(date);
-        Time t = createTime(time);
-        if (d != null) {
-            return createTimestamp(d, t);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Cria e retorna um {@link Timestamp} a partir da data e da string de hora informados.
-     * @param d Data. Caso o valor informado seja nulo, retorna um valor nulo.
-     * @param time String com a representação da hora no formado especificado no método {@link #time2ms(String)}.
-     * Caso o valor informado seja nulo, o timestamp retornado será a hora do início do dia.
-     * @return {@link Timestamp}
-     */
-    public static Timestamp createTimestamp(Date d, String time) {
-    	if (d == null)
-    		return null;
-    	inicioDia(d);
-    	long t = d.getTime();
-    	if (time != null)
-    		t += time2ms(time);
-    	return new Timestamp(t);
-    }
-
-    /**
      * Retorna o número de dias nos milissegundos informados.
      * @param ms Milissegundos
      * @return <code>int</code>
      */
     public static int toDays(long ms) {
-        if (ms >= DateToys.MILLIS_PER_DAY) {
-            return (int)(ms / DateToys.MILLIS_PER_DAY);
+        if (ms >= DateUtils.MILLIS_PER_DAY) {
+            return (int)(ms / DateUtils.MILLIS_PER_DAY);
         } else {
             return 0;
         }
@@ -760,8 +448,8 @@ public final class DateToys {
      * @return <code>int</code>
      */
     public static int toHours(long ms) {
-        if (ms >= DateToys.MILLIS_PER_HOUR) {
-            return (int)(ms / DateToys.MILLIS_PER_HOUR);
+        if (ms >= DateUtils.MILLIS_PER_HOUR) {
+            return (int)(ms / DateUtils.MILLIS_PER_HOUR);
         } else {
             return 0;
         }
@@ -775,8 +463,8 @@ public final class DateToys {
      * @return <code>int</code>
      */
     public static int toMinutes(long ms) {
-        if (ms >= DateToys.MILLIS_PER_MINUTE) {
-            return (int)(ms / DateToys.MILLIS_PER_MINUTE);
+        if (ms >= DateUtils.MILLIS_PER_MINUTE) {
+            return (int)(ms / DateUtils.MILLIS_PER_MINUTE);
         } else {
             return 0;
         }
@@ -798,12 +486,12 @@ public final class DateToys {
      * @return <code>String</code>
      */
     public static String formatTime(long ms, int pattern) {
-        int h = (int)(ms / DateToys.MILLIS_PER_HOUR);
-        ms = ms % DateToys.MILLIS_PER_HOUR;
-        int m = (int)(ms / DateToys.MILLIS_PER_MINUTE);
-        ms = ms % DateToys.MILLIS_PER_MINUTE;
-        int s = (int)(ms / DateToys.MILLIS_PER_SECOND);
-        ms = ms % DateToys.MILLIS_PER_SECOND;
+        int h = (int)(ms / DateUtils.MILLIS_PER_HOUR);
+        ms = ms % DateUtils.MILLIS_PER_HOUR;
+        int m = (int)(ms / DateUtils.MILLIS_PER_MINUTE);
+        ms = ms % DateUtils.MILLIS_PER_MINUTE;
+        int s = (int)(ms / DateUtils.MILLIS_PER_SECOND);
+        ms = ms % DateUtils.MILLIS_PER_SECOND;
         switch (pattern) {
 		case 0: return String.format("%02d:%02d", h, m);
 		case 1: return String.format("%02d:%02d:%02d", h, m, s);
@@ -854,17 +542,35 @@ public final class DateToys {
 
     /**
      * Retorna se uma data está contida entre o início e o término especificados.
-     * @param date Data de referência
-     * @param start Data inicial da faixa
-     * @param end Data final da faixa
+     * @param d Data de referência
+     * @param d1 Data inicial da faixa
+     * @param d2 Data final da faixa
      * @return <code>boolean</code>
      */
-    public static boolean isBetween(Date date, Date start, Date end) {
+    public static boolean estaEntre(Date d, Date d1, Date d2) {
         return
-            ((date.getTime() >= start.getTime())) &&
-            ((date.getTime() <= end.getTime()));
+        		d != null &&
+        		d1 != null &&
+        		d1.getTime() <= d.getTime() &&
+        		d2 != null &&
+        		d2.getTime() >= d.getTime();
     }
 
+    /**
+     * Retorna se o momento atual está entre as duas datas/horas informadas.
+     * @param d1 Data e hora iniciais.
+     * @param d2 Data e hora finais.
+     * @return Retorna TRUE se o valor retornado por {@link System#currentTimeMillis()} estiver contido
+     * entre as duas datas.
+     */
+    public static boolean estaEntre(Date d1, Date d2) {
+    	long agora = System.currentTimeMillis();
+    	return
+    			d1 != null &&
+    			d1.getTime() <= agora &&
+    			d2 != null &&
+    			d2.getTime() >= agora;
+    }
 
     /**
      * Retorna uma coleção de nomes de dias da semana a partir do locale informado.

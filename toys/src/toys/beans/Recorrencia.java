@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import toys.utils.DateToys;
 import toys.utils.NumberToys;
 
@@ -222,7 +224,7 @@ public class Recorrencia {
 	 * @param c Calendar a ser alterado
 	 */
 	public void setProximaOcorrencia(Calendar c) {
-		DateToys.inicioDia(c);
+		DateUtils.truncate(c, Calendar.HOUR_OF_DAY);
 		if (isDiaria())
 			setProximaOcorrenciaDiaria(c);
 		else
