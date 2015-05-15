@@ -153,7 +153,7 @@ public class HibernateUtils {
 
 		return o;
 	}
-	
+
 	/**
 	 * Retorna um objeto do array de tuplas a partir do índice do seu alias no array de aliases.
 	 * @param alias Alias do objeto.
@@ -161,9 +161,9 @@ public class HibernateUtils {
 	 * @param tuples Array com todas as tuplas.
 	 * @return Object
 	 */
-	public static Object getTupleByAlias(String alias, String[] aliases, Object[] tuples) {
+	public static Object getTupleByAlias(String alias, String[] aliases, Object[] tuple) {
 		int i = ArrayToys.indexOf(alias, aliases);
-		return i >= 0 ? tuples[i] : null;
+		return i >= 0 ? tuple[i] : null;
 	}
 
 }
