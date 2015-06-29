@@ -8,7 +8,7 @@ public interface RegExprConsts {
 	/**
 	 * Formato de e-mail.
 	 */
-	String EMAIL = "^[a-zA-Z0-9_]([\\.\\-_]?[a-zA-Z0-9_]+)*@[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+";
+	String EMAIL = "^[a-zA-Z0-9_]([\\.\\-_]?[a-zA-Z0-9_\\-]+)*@[a-zA-Z0-9]+(\\.[a-zA-Z0-9]+)+";
 
 	/**
 	 * Formato para validação de números com separador decimal.
@@ -16,7 +16,7 @@ public interface RegExprConsts {
 	 * o ponto ou a vírgula.
 	 */
 	String DECIMAL_NUMBER = "^\\d+([,\\.]\\d+)?$";
-	
+
 	/**
 	 * Formato de moeda brasileira.
 	 */
