@@ -14,4 +14,5 @@ public interface EmailConsts {
 	String HOST = "mail.host";
 	String USER = "mail.user";
 	String FROM = "mail.from";
+	String DEBUG = "mail.debug";
 }
