@@ -144,8 +144,8 @@ public class NumberToys {
 	}
 
 	/**
-	 * Retorna o objeto informado convertido para um <code>int</code>.
-	 * @param n Qualquer objeto que seja uma instância da classe {@link Number}.
+	 * Retorna o objeto de número informado convertido para <code>int</code>.
+	 * @param n Uma instância da classe {@link Number}.
 	 * @return <code>int</code>
 	 */
 	public static int toInt(Number n) {
@@ -157,6 +157,16 @@ public class NumberToys {
 			return ((BigDecimal)n).intValue();
 		throw new RuntimeException(String.format("Tipo nao reconhecido para conversao: %s",
 				n.getClass().getName()));
+	}
+
+	/**
+	 * Retorna o objeto de número informado convertido para <code>int</code>.
+	 * @param n Uma instância da classe {@link Number}.
+	 * @param valorDefault Valor que deve ser retornado caso o objeto informado seja nulo.
+	 * @return <code>int</code>
+	 */
+	public static int toInt(Number n, int valorDefault) {
+		return n != null ? toInt(n) : valorDefault;
 	}
 
 	/**
