@@ -1,9 +1,5 @@
 package toys.utils;
 
-import java.math.BigDecimal;
-
-
-
 /**
  * Esta classe possui métodos utilitários para operações com valores numéricos.
  * @author Iran Marcius
@@ -146,27 +142,11 @@ public class NumberToys {
 	/**
 	 * Retorna o objeto de número informado convertido para <code>int</code>.
 	 * @param n Uma instância da classe {@link Number}.
-	 * @return <code>int</code>
-	 */
-	public static int toInt(Number n) {
-		if (n instanceof Integer)
-			return ((Integer)n).intValue();
-		if (n instanceof Long)
-			return ((Long)n).intValue();
-		if (n instanceof BigDecimal)
-			return ((BigDecimal)n).intValue();
-		throw new RuntimeException(String.format("Tipo nao reconhecido para conversao: %s",
-				n.getClass().getName()));
-	}
-
-	/**
-	 * Retorna o objeto de número informado convertido para <code>int</code>.
-	 * @param n Uma instância da classe {@link Number}.
 	 * @param valorDefault Valor que deve ser retornado caso o objeto informado seja nulo.
 	 * @return <code>int</code>
 	 */
 	public static int toInt(Number n, int valorDefault) {
-		return n != null ? toInt(n) : valorDefault;
+		return n != null ? n.intValue() : valorDefault;
 	}
 
 	/**
