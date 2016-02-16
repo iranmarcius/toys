@@ -35,6 +35,26 @@ public class CollectionToys {
 	}
 
 	/**
+	 * Fragmenta uma lista original em várias sublistas obedecendo o tamanho máximo especificado.
+	 * @param l Liwsta original.
+	 * @param tamanho Tamanho máximo das sublistas.
+	 * @return <code>List&lt;List&lt;?&gt;&gt;</code>
+	 */
+	public static List<List<?>> fragmentar(List<?> l, int tamanho) {
+		int i = 0;
+		int f = 0;
+		List<List<?>> listas = new ArrayList<>();
+		while (i < l.size()) {
+			f = i + tamanho;
+			if (f > l.size())
+				f = l.size();
+			listas.add(l.subList(i, f));
+			i += tamanho;
+		}
+		return listas;
+	}
+
+	/**
 	 * Cria um mapa de chave/valor a partir da lista informada. A conversão será executada
 	 * apenas em objetos do tipo {@link KeyValue}, {@link StringPair} e <code>Object[]</code>,
 	 * neste último considerando apenas os dois primeiros elementos do array.
