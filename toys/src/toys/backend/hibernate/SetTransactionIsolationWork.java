@@ -7,52 +7,28 @@ package toys.backend.hibernate;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.hibernate.jdbc.Work;
+import org.hibernate.jdbc.ReturningWork;
 
 /**
  * Este work seta o nível de isolamento da transação na conexão de uma sessão.
- * o nível de isolamento anterior é armazenado na propriedade <code>oldLevel</code>.
  * @author Iran
  */
-public class SetTransactionIsolationWork implements Work {
+public class SetTransactionIsolationWork implements ReturningWork<Integer> {
 	private int level;
-	private int oldLevel;
 
 	public SetTransactionIsolationWork() {
 		super();
 	}
 
 	public SetTransactionIsolationWork(int level) {
-		super();
+		this();
 		this.level = level;
 	}
 
 	@Override
-	public void execute(Connection connection) throws SQLException {
-		oldLevel = connection.getTransactionIsolation();
-		if (level != oldLevel)
-			connection.setTransactionIsolation(level);
-	}
-
-	public SetTransactionIsolationWork change(int level) {
-		setLevel(level);
-		return this;
-	}
-
-	public SetTransactionIsolationWork restore() {
-		setLevel(oldLevel);
-		return this;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public int getOldLevel() {
+	public Integer execute(Connection connection) throws SQLException {
+		int oldLevel = connection.getTransactionIsolation();
+		connection.setTransactionIsolation(level);
 		return oldLevel;
 	}
 
