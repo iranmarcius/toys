@@ -52,7 +52,7 @@ public class Crypt {
 	 * @return <code>String</code>
 	 */
 	public static String gorgonzolaEncode(String string, String chave) {
-		int r = new Random(System.currentTimeMillis()).nextInt(255);
+		int r = new Random(System.currentTimeMillis()).nextInt(255) + 2;
 		int k = makeKey(chave) - r;
 		char[] chars = string.toCharArray();
 		StringBuffer sb = new StringBuffer();
