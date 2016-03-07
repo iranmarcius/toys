@@ -14,6 +14,10 @@ import java.util.Random;
  * @author Iran Marcius
  */
 public class Crypt {
+	private static final char CPOS = '!';
+	private static final char CNEG = '*';
+	private static final char HLPOS = '#';
+	private static final char HLNEG = '@';
 
 	/**
 	 * Método utilitário para retornar uma string criptografada com seus bytes
@@ -52,7 +56,7 @@ public class Crypt {
 	 * @return <code>String</code>
 	 */
 	public static String gorgonzolaEncode(String string, String chave) {
-		int r = new Random(System.currentTimeMillis()).nextInt(255) + 2;
+		int r = new Random(System.currentTimeMillis()).nextInt(253) + 2;
 		int k = makeKey(chave) - r;
 		char[] chars = string.toCharArray();
 		StringBuffer sb = new StringBuffer();
@@ -66,13 +70,12 @@ public class Crypt {
 			} else {
 				int ca = Math.abs(cs);
 				if (NumberToys.inRange(ca, 0, 255)) {
-					sb.append(cs < 0 ? "-" : "+").append(String.format("%02x", ca));
+					sb.append(cs < 0 ? CNEG : CPOS).append(String.format("%02x", ca));
 				} else {
 					int h = ca / 256;
 					int l = ca % 256;
 					sb
-						.append(".")
-						.append(cs < 0 ? "-" : "+")
+						.append(cs < 0 ? HLNEG : HLPOS)
 						.append(String.format("%02x", h))
 						.append(String.format("%02x", l));
 				}
@@ -100,18 +103,18 @@ public class Crypt {
 		int i = 1;
 		while (i < chars.length - 1) {
 			short c = 0;
-			if (chars[i] == '.') {
+			if (chars[i] == HLNEG || chars[i] == HLPOS) {
 				String hs = String.format("%c%c", chars[i + 2], chars[i + 3]);
 				String ls = String.format("%c%c", chars[i + 4], chars[i + 5]);
 				short h = Short.valueOf(hs, 16);
 				short l = Short.valueOf(ls, 16);
 				c = (short)((h * 256) + l);
-				if (chars[i + 1] == '-') c *= -1;
+				if (chars[i + 1] == HLNEG) c *= -1;
 				i += 5;
-			} else if ((chars[i] == '-') || (chars[i] == '+')) {
+			} else if ((chars[i] == CNEG) || (chars[i] == CPOS)) {
 				String hexa = String.format("%c%c", chars[i + 1], chars[i + 2]);
 				c = Short.valueOf(hexa, 16);
-				if (chars[i] == '-') c *= -1;
+				if (chars[i] == CNEG) c *= -1;
 				i += 2;
 			} else {
 				c = (short)chars[i];
