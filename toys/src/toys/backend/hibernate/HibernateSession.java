@@ -33,7 +33,7 @@ public class HibernateSession {
 		log.debug(String.format("Obtendo sessao (params=%s)", params));
 		SessionFactory sf = sfm.get(params);
 		if (sf == null) {
-			log.debug("SessionFactory nao encontrado. Um novo sera criado.");
+			log.debug("Criando novo SessionFactory.");
 
 			try {
 				Properties props = new Properties();
@@ -53,6 +53,8 @@ public class HibernateSession {
 				throw new RuntimeException(e);
 			}
 
+		} else {
+			log.debug("Utilizando SessionFactory instanciado previamente.");
 		}
 		return sf;
 	}
