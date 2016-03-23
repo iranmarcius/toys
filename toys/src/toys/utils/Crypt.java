@@ -14,10 +14,10 @@ import java.util.Random;
  * @author Iran Marcius
  */
 public class Crypt {
-	private static final char CPOS = '!';
-	private static final char CNEG = '*';
-	private static final char HLPOS = '#';
-	private static final char HLNEG = '@';
+	private static final char CPOS = 'a';
+	private static final char CNEG = 'b';
+	private static final char HLPOS = 'c';
+	private static final char HLNEG = 'd';
 
 	/**
 	 * Método utilitário para retornar uma string criptografada com seus bytes
@@ -65,7 +65,7 @@ public class Crypt {
 			cs += k;
 			if (NumberToys.inRange(cs, 48, 57) ||
 				NumberToys.inRange(cs, 65, 90) ||
-				NumberToys.inRange(cs, 97, 122)) {
+				NumberToys.inRange(cs, 101, 122)) {
 				sb.append((char)cs);
 			} else {
 				int ca = Math.abs(cs);
