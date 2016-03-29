@@ -133,6 +133,22 @@ public class StringToys {
 	}
 
 	/**
+	 * Converte um valor string numa lista de valores considerando a vírgula e os finais de linha como separadores de itens.
+	 * @param str Valor string.
+	 * @return <code>List&lt;String&gt;</code>
+	 */
+	public static List<String> toList(String str) {
+		List<String> l = new ArrayList<>();
+		String[] sa = str.split("\r\n");
+		for (String s: sa) {
+			String[] ss = s.split(" *, *");
+			for (String sss: ss)
+				l.add(sss);
+		}
+		return l;
+	}
+
+	/**
 	 * Retorna uma string que está delimitada entre outras duas informadas ou
 	 * <code>null</code> caso não haja uma string entre as duas informadas.
 	 * @param s String a ser pesquisada
@@ -229,72 +245,6 @@ public class StringToys {
 	}
 
 	/**
-	 * Retorna se a string informada está vazia ou é nula.
-	 * @param s String a ser analizada
-	 * @return Retorna verdadeiro no caso do parâmetro ser nulo ou
-	 * conter apenas caracteres de espaço.
-	 * @deprecated Será removido em favor do <b>commons-lang</b>.
-	 */
-	public static boolean empty(String s) {
-		return (s == null) || (s.trim().length() == 0);
-	}
-
-	/**
-	 * Retorna um valor default caso o valor da string informada seja nulo.
-	 * @param s String a ser verificada
-	 * @param defaultValue Valor default
-	 * @return String
-	 * @deprecated Será removido em favor do <b>commons-lang</b>.
-	 */
-	public static String defaultString(String s, String defaultValue) {
-		return s == null ? defaultValue : s;
-	}
-
-	/**
-	 * Retorna uma string vazia caso a string informada seja nula.
-	 * @param s String a ser verificada
-	 * @return String
-	 * @deprecated Será removido em favor do <b>commons-lang</b>.
-	 */
-	public static String defaultString(String s) {
-		return defaultString(s, "");
-	}
-
-	/**
-	 * Retorna uma string abreviada de acordo com o tamanho máximo fornecido.
-	 * @param s String a ser abreviada
-	 * @param maxLength Tamanho máximo da string resultante
-	 * @return String
-	 * @deprecated Será removido em favor do <b>commons-lang</b>.
-	 */
-	public static String abbreviate(String s, int maxLength) {
-		if (s.length() <= maxLength) {
-			return s;
-		}
-		return s.substring(0, maxLength - 3) + "...";
-	}
-
-	/**
-	 * Retorna a igualdade entre duas strings prevenindo valores nulos
-	 * e desconsiderando espaços em branco no início e no final.
-	 * @param s1 String 1
-	 * @param s2 String 2
-	 * @return <code>boolean</code>
-	 * @deprecated Será removido em favor do <b>commons-lang</b>.
-	 */
-	public static boolean isEqual(String s1, String s2) {
-		if ((s1 == null) && (s2 == null)) {
-			return true;
-		} else if ((s1 == null) && (s2 != null)) {
-			return false;
-		} else if ((s1 != null) && (s2 == null)) {
-			return false;
-		} else {
-			return s1.trim().equals(s2.trim());
-		}
-	}
-
-	/**
 	 * Retorna uma nova string criada a partir da string informada, preenchida com espaços à
 	 * direita de acordo com o tamanho especificado.
 	 * @param s String original
@@ -304,46 +254,6 @@ public class StringToys {
 	public static String forceLength(String s, int length) {
 		String format = new StringBuffer().append("%-").append(length).append("s").toString();
 		return String.format(format, s).substring(0, length);
-	}
-
-	/**
-	 * Separa uma string utilizando o separador informado mas considerando frases
-	 * fechadas entre aspas como uma palavra só.
-	 * @param s String a ser cortada
-	 * @param separator Separador de palavras
-	 * @param quote Caractere utilizado para envolver palavras
-	 * @return Retorna uma lista de strings onde cada item é um
-	 * @deprecated Será removido em favor do <b>commons-lang</b>.
-	 */
-	public static List<String> wordSplit(String s, char separator, char quote) {
-
-		if (separator == quote)
-			throw new RuntimeException("Separador de palavras e quote não podem ser iguais");
-
-		StringBuffer word = new StringBuffer();
-		int i = 0;
-		boolean quoted = false;
-		List<String> words = new ArrayList<String>();
-		while (i < s.length()) {
-			char c = s.charAt(i);
-			if (c == quote) {
-				quoted = !quoted;
-			} else if (c == separator) {
-				if (quoted) {
-					word.append(c);
-				} else {
-					words.add(word.toString());
-					word.setLength(0);
-				}
-			} else {
-				word.append(c);
-			}
-			i++;
-		}
-
-		if (word.length() > 0) words.add(word.toString());
-
-		return words;
 	}
 
 	/**
