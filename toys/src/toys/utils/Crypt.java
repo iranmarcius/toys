@@ -1,8 +1,3 @@
-/*
- * Departamento de Desenvolvimento - ISIC Brasil
- * Todos os direitos reservados
- */
-
 package toys.utils;
 
 import java.io.UnsupportedEncodingException;
