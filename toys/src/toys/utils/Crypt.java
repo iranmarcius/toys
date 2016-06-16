@@ -5,9 +5,18 @@
 
 package toys.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Random;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 
 /**
  * Fornece métodos utilitários para criptografia.
@@ -124,6 +133,42 @@ public class Crypt {
 			i++;
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Criotograma uma string utilizando a chave informada e retorna o resultado codificado em Base64.
+	 * @param valor Valor a ser codificado.
+	 * @param key Chave que será utilizada na codificação.
+	 * @return <code>String</code>
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
+	 * @throws UnsupportedEncodingException
+	 * @throws BadPaddingException
+	 * @throws IllegalBlockSizeException
+	 */
+	public static String encode(String valor, SecretKey key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+		Cipher cipher = Cipher.getInstance(key.getAlgorithm());
+		cipher.init(Cipher.ENCRYPT_MODE, key);
+		return Base64.getEncoder().encodeToString(cipher.doFinal(valor.getBytes("UTF-8")));
+	}
+
+	/**
+	 * Descriptograva um valor codificado em Base64 utilizando a chave informada.
+	 * @param base64 Valor codificado em base64.
+	 * @param key Chave que será utilizada na decodificação.
+	 * @return <code>String</code>
+	 * @throws NoSuchPaddingException
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
+	 * @throws BadPaddingException
+	 * @throws IllegalBlockSizeException
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String decode(String base64, SecretKey key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException {
+		Cipher cipher = Cipher.getInstance(key.getAlgorithm());
+		cipher.init(Cipher.DECRYPT_MODE, key);
+		return new String(cipher.doFinal(Base64.getDecoder().decode(base64)), "UTF-8");
 	}
 
 }
