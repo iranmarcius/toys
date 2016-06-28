@@ -2,21 +2,22 @@
 
 <project name="BuildBase" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<property environment="env"/>
+	<property name="mvn.repo" value="${env.HOMEDRIVE}${env.HOMEPATH}/.m2/repository"/>
 	<path
-		id="maven-ant-tasks.classpath" 
-		path="${env.HOMEDRIVE}${env.HOMEPATH}\.m2\repository\org\apache\maven\maven-ant-tasks\2.1.3\maven-ant-tasks-2.1.3.jar"/>
-	
+		id="maven-ant-tasks.classpath"
+		path="${mvn.repo}/org/apache/maven/maven-ant-tasks/2.1.3/maven-ant-tasks-2.1.3.jar"/>
+
 	<typedef
 		resource="org/apache/maven/artifact/ant/antlib.xml"
 		uri="antlib:org.apache.maven.artifact.ant"
 		classpathref="maven-ant-tasks.classpath"/>
-	
+
 	<target name="init">
 		<artifact:pom id="pom" file="pom.xml"/>
 		<property name="artifact.path" value="${env.HOMEDRIVE}${env.HOMEPATH}\.m2\repository"/>
 		<echo>Repositório local: ${artifact.path}</echo>
 	</target>
-	
+
 	<target name="jar" depends="init">
 		<delete file="target/${pom.artifactId}-${pom.version}.jar"/>
 		<artifact:mvn>
