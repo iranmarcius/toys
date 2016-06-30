@@ -22,6 +22,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * Métodos utilitários para processamento de imagens.
  * @author Iran Marcius
  */
+@SuppressWarnings("restriction")
 public class ImageToys {
 
 	/**
