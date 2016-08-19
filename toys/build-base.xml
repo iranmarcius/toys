@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<project name="BuildBase" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+<project name="BuildBase" xmlns:artifact="antlib:org.apache.maven.artifact.ant" default="install">
 	<property environment="env"/>
 	<property name="mvn.repo" value="${env.HOMEDRIVE}${env.HOMEPATH}/.m2/repository"/>
 	<path
