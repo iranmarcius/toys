@@ -4,21 +4,21 @@
 	xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>toys</groupId>
 	<artifactId>toys</artifactId>
 	<version>1.2</version>
 	<name>Toys</name>
 	<description>API com classes e métodos utilitários genéricos.</description>
-	
+
 	<parent>
 		<groupId>config</groupId>
 		<artifactId>parent-pom</artifactId>
 		<version>noversion</version>
 		<relativePath>../../../pom.xml</relativePath>
 	</parent>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>commons-logging</groupId>

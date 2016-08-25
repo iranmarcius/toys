@@ -1,6 +1,5 @@
 package toys.utils;
 
-
 import static toys.constants.LDAPConsts.*;
 
 import java.io.UnsupportedEncodingException;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -38,7 +36,6 @@ import toys.constants.LDAPConsts;
  * @author Iran
  */
 public class LDAPUtils {
-	private Logger logger;
 	private String host;
 	private String bindDN;
 	private String baseDN;
@@ -71,8 +68,6 @@ public class LDAPUtils {
 	 */
 	public LDAPUtils(String host, String bindDN, String password, String baseDN) {
 		super();
-		logger= Logger.getLogger(getClass().getName());
-		logger.fine(String.format("Inicializando utilitario LDAP. host=%s, bindDN=%s, baseDN=%s", host, bindDN, baseDN));
 		this.host = host;
 		this.bindDN = bindDN;
 		this.password = password;
@@ -171,8 +166,8 @@ public class LDAPUtils {
 					mods.add(new Modification(ModificationType.REPLACE, LA_PWD_LAST_SET, "0"));
 
 				LDAPResult ldpr = conn.modify(dn, mods);
-
-				logger.info(String.format("Troca de senha realizada para a entrada %s. result=%s", accountName, ldpr.getResultString()));
+				if (!ldpr.getResultCode().equals(ResultCode.SUCCESS))
+					throw new RuntimeException(String.format("Ocorreu um erro durante a alteracao da senha. %s", ldpr.getResultString()));
 
 			} else {
 				throw new RuntimeException(result.getEntryCount() == 0 ?
