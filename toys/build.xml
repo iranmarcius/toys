@@ -2,4 +2,9 @@
 
 <project name="Toys" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<import file="build-base.xml"/>
+
+	<target name="deploy-tomcat" depends="install" description="Faz o deploy da biblioteca no Tomcat local">
+		<copy file="target/${pom.artifactId}-${pom.version}.jar" todir="${env.CATALINA_HOME}/lib"/>
+	</target>
+
 </project>

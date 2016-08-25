@@ -47,4 +47,19 @@ public interface AttributeConsts {
 	 */
 	String XSTREAM = "application.xstream";
 
+	/**
+	 * Mensagem por módulo de autenticação.
+	 */
+	String LOGIN_MODULE_MESSAGE = "loginModule.message";
+
+	/**
+	 * Código de detalhe de erro de credenciais gerado por uma operação de autenticação num servidor LDAP.
+	 */
+	String LDAP_INVALID_CREDENTIAS_DETAIL = "ldap.invalidCredentials.errorCode";
+
+	/**
+	 * Especificação do caminho para a página de troca de senha.
+	 */
+	String PAGINA_TROCA_SENHA = "webapp.pagina.alteracaoSenha";
+
 }
