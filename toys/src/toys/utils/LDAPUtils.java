@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.net.ssl.SSLSocketFactory;
 
-import com.unboundid.ldap.sdk.Attribute;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPConnection;
 import com.unboundid.ldap.sdk.LDAPException;
@@ -141,11 +141,12 @@ public class LDAPUtils {
 	 * Altera a senha de uma conta para a nova senha.
 	 * @param accountName Nome da conta.
 	 * @param novaSenha Nova senha que será atribuida à conta.
+	 * @param forcarTroca Flag indicando se o usuário deve trocar a senha no próximo login.
 	 * @throws GeneralSecurityException
 	 * @throws LDAPException
 	 * @throws UnsupportedEncodingException
 	 */
-	public synchronized void alterarSenha(String accountName, String novaSenha) throws GeneralSecurityException, LDAPException, UnsupportedEncodingException {
+	public synchronized void alterarSenha(String accountName, String novaSenha, boolean forcarTroca) throws GeneralSecurityException, LDAPException, UnsupportedEncodingException {
 		SSLUtil sslUtil = new SSLUtil(new TrustAllTrustManager());
 		SSLSocketFactory sslSocketFactory = sslUtil.createSSLSocketFactory();
 		LDAPConnection conn = null;
@@ -157,12 +158,22 @@ public class LDAPUtils {
 			if (result.getEntryCount() == 1) {
 				List<SearchResultEntry> entries = result.getSearchEntries();
 				SearchResultEntry entry = entries.get(0);
-				Attribute attribute = entry.getAttribute(LA_DN);
+				String dn = entry.getAttributeValue(LA_DN);
 
+				List<Modification> mods = new ArrayList<>();
+
+				// Modificação de troca de senha
 				byte[] b = ('"' + novaSenha + '"').getBytes("UTF-16LE");
-				Modification mod = new Modification(ModificationType.REPLACE, LA_UNICODE_PWD, b);
-				LDAPResult ldpr = conn.modify(attribute.getValue(), mod);
+				mods.add(new Modification(ModificationType.REPLACE, LA_UNICODE_PWD, b));
+
+				// Modificação para forçar a troca de senha no próximo logon
+				if (forcarTroca)
+					mods.add(new Modification(ModificationType.REPLACE, LA_PWD_LAST_SET, "0"));
+
+				LDAPResult ldpr = conn.modify(dn, mods);
+
 				logger.info(String.format("Troca de senha realizada para a entrada %s. result=%s", accountName, ldpr.getResultString()));
+
 			} else {
 				throw new RuntimeException(result.getEntryCount() == 0 ?
 						String.format("Entrada nao encontrada. accountName=%s", accountName) :
@@ -172,6 +183,17 @@ public class LDAPUtils {
 			if (conn != null)
 				conn.close();
 		}
+	}
+
+	/**
+	 * Método de conveniência para efetuar troca de senha sem forçar troca.
+	 * @throws GeneralSecurityException
+	 * @throws UnsupportedEncodingException
+	 * @throws LDAPException
+	 * @see #alterarSenha(String, String, boolean)
+	 */
+	public synchronized void alterarSenha(String accountName, String novaSenha) throws LDAPException, UnsupportedEncodingException, GeneralSecurityException {
+		alterarSenha(accountName, novaSenha, false);
 	}
 
 	/**
