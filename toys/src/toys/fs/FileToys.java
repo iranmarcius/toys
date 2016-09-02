@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.text.DecimalFormat;
 
 /**
  * Métodos utilitários para operações envolvendo o sistema de arquivos.
@@ -190,29 +189,6 @@ public class FileToys {
 		if (!o.exists()) return false;
 		if (!t.exists()) return false;
 		return o.lastModified() <= t.lastModified();
-	}
-
-	/**
-	 * Retorna ums string formatada com o tamanho de um arquivo.
-	 * @param size Tamanho original do arquivo
-	 * @return Retorna uma string formatada num do dos seguintes formados:
-	 * <b><i>size</i>K</b>, <b><i>size</i>M</b> ou <b><i>size</i>G</b>, de acordo
-	 * com o tamanho original informado.
-	 * @return <code>String</code>
-	 */
-	public static String formatFileSize(long size) {
-		if (size > 1024 * 1024 * 1024) {
-			DecimalFormat df = new DecimalFormat("#0.#G");
-			return df.format((double)size / 1024 / 1024 / 1024);
-		} else if (size > 1024 * 1024) {
-			DecimalFormat df = new DecimalFormat("#0.#M");
-			return df.format((double)size / 1024 / 1024);
-		} else if (size > 1024) {
-			DecimalFormat df = new DecimalFormat("#,##0.#k");
-			return df.format((double)size / 1024);
-		} else {
-			return Long.toString(size);
-		}
 	}
 
 	/**
