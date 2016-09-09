@@ -62,4 +62,14 @@ public interface AttributeConsts {
 	 */
 	String PAGINA_TROCA_SENHA = "webapp.pagina.alteracaoSenha";
 
+	/**
+	 * Nome do atributo para armazenar a sessão.
+	 */
+	String CONTENT = "toys.web.servlet.content";
+
+	/**
+	 * Nome do atributo para armazenar o tipo de conteúdo.
+	 */
+	String CONTENT_TYPE = "toys.web.servlet.contentType";
+
 }
