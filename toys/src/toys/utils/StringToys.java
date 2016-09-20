@@ -7,6 +7,7 @@ package toys.utils;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -217,34 +218,6 @@ public class StringToys {
 	}
 
 	/**
-	 * Converte um nome composto cujas palavras estejam separadas por underscores,
-	 * em um nome apropriado para ser utilizado de acordo com as especificações
-	 * de nomes de propriedades para JavaBeans.
-	 * @param name Nome composto separado por underscores
-	 * @return Retorna o nome formatado como um nome de propriedade. Ex.:
-	 * <b>total_coast</b> será retornado <b>totalCoast</b>, <b>tree_words_name</b>
-	 * será retornado como <b>treeWordsName</b> e assim por diante.
-	 */
-	public static String propertyName(String name) {
-		if (name != null) {
-			StringBuffer n = new StringBuffer(name.toLowerCase());
-			if (n.indexOf("_") > -1) {
-				int i = 0;
-				while (i < n.length()) {
-					if (n.charAt(i) == '_') {
-						n.delete(i, i + 1);
-						char c = n.charAt(i);
-						n.setCharAt(i, Character.toUpperCase(c));
-					}
-					i++;
-				}
-			}
-			name = n.toString();
-		}
-		return name;
-	}
-
-	/**
 	 * Retorna uma nova string criada a partir da string informada, preenchida com espaços à
 	 * direita de acordo com o tamanho especificado.
 	 * @param s String original
@@ -273,138 +246,6 @@ public class StringToys {
 	}
 
 	/**
-	 * Separa uma string retornando um array com todas as palavras, grupos de espaços, tabulações
-	 * e separadores de linha.
-	 * @param str String a ser processada
-	 * @return <code>String[]</code>
-	 */
-	public static String[] split(String str) {
-		List<String> l = new ArrayList<String>();
-		int i = 0;
-		char ca = 0;
-		StringBuffer sb = new StringBuffer();
-		while (i < str.length()) {
-			char c = str.charAt(i);
-
-			if (c == ' ') {
-				if (ca == ' ') {
-					sb.append(c);
-				} else {
-					if (sb.length() > 0) {
-						l.add(sb.toString());
-						sb.setLength(0);
-					}
-					sb.append(c);
-				}
-			} else {
-				if ((c == '\t') || (c == '\n')) {
-					if (sb.length() > 0) {
-						l.add(sb.toString());
-						sb.setLength(0);
-					}
-					l.add(Character.toString(c));
-				} else {
-					if (ca == ' ') {
-						l.add(sb.toString());
-						sb.setLength(0);
-					}
-					sb.append(c);
-				}
-			}
-
-			ca = c;
-			i++;
-		}
-
-		// caso ainda haja alguma palavra não adicionada à lista, adiciona agora
-		if (sb.length() > 0)
-			l.add(sb.toString());
-
-		String[] palavras = new String[l.size()];
-		for (i = 0; i < palavras.length; i++)
-			palavras[i] = l.get(i);
-		return palavras;
-	}
-
-	/**
-	 * Formata uma string utilizando o padrão e os valores passados. Caso algum dos valores
-	 * seja nulo, retorna o valor default.
-	 * @param pattern Padrão para a formatação
-	 * @param defaultValue Valor padrão a ser retornado caso algum dos valores seja nulo
-	 * @param valores Valores a serem utilizados na formatação
-	 * @return <code>String</code>
-	 */
-	public static String format(String pattern, String defaultValue, Object... valores) {
-		for (Object o: valores)
-			if (o == null)
-				return defaultValue;
-		return String.format(pattern, valores);
-	}
-
-	/**
-	 * Formata uma string utilizando o padrão e os valores passados. Caso algum dos valores
-	 * seja nulo, retorna uma string vazia.
-	 * @param pattern Padrão para a formatação
-	 * @param valores Valores a serem utilizados na formatação
-	 * @return <code>String</code>
-	 * @see #format(String, String, Object...)
-	 */
-	public static String format(String pattern, Object... valores) {
-		return format(pattern, "", valores);
-	}
-
-	/**
-	 * Este método funciona como o método {@link String#substring(int, int)} exceto pelo fato de que
-	 * caso a porção desejada esteja além do tamanho da string original, será retornado o valor padrão.
-	 * @param s String original
-	 * @param i Posição inicial
-	 * @param f Posição final
-	 * @param padrao Valor qeu será retornado em caso de estouro
-	 * @return <code>String</code>
-	 */
-	public static String substring(String s, int i, int f, String padrao) {
-		return f <= s.length() ? s.substring(i, f) : padrao;
-	}
-
-	/**
-	 * Este método funciona como o método {@link String#substring(int)} exceto pelo fato de que
-	 * caso a porção desejada esteja além do tamanho da string original, será retornado o valor padrão.
-	 * @param s String original
-	 * @param i Posição inicial
-	 * @param padrao Valor qeu será retornado em caso de estouro
-	 * @return <code>String</code>
-	 */
-	public static String substring(String s, int i, String padrao) {
-		return i <= s.length() ? s.substring(i) : padrao;
-	}
-
-	/**
-	 * Método de conveniência para invocar o {@link #substring(String, int, int, String)} utilizando
-	 * um valro padrão vazio.
-	 */
-	public static String substring(String s, int i, int f) {
-		return substring(s, i, f, "");
-	}
-
-	/**
-	 * Método de conveniência para invocar o {@link #substring(String, int, String)} com um valor padrão
-	 * vazio.
-	 */
-	public static String substring(String s, int i) {
-		return substring(s, i, "");
-	}
-
-	/**
-	 * Retorna uma nova string com n caracteres a partir do lado direito da string original.
-	 * @param s String original.
-	 * @param i Número de caracteres que serão considerados a partir da direita.
-	 * @return <code>String</code>
-	 */
-	public static String right(String s, int i) {
-		return s.substring(s.length() - i);
-	}
-
-	/**
 	 * Retorna uma string criada a partir do erro informado.
 	 * @param t Objeto com o erro
 	 * @return <code>String</code>
@@ -429,31 +270,6 @@ public class StringToys {
 	}
 
 	/**
-	 * Retorna o valor de um atributo de uma string cujo conteúdo esteja no formado XML.
-	 * @param tag Tag XML.
-	 * @param attr Nome do atributo.
-	 * @return <code>String</code>
-	 */
-	public static String getTagAttribute(String tag, String attr) {
-		int i = tag.indexOf(" " + attr + "=");
-		if (i < 0)
-			return null;
-		String value = tag.substring(i + attr.length() + 2);
-		if (value.charAt(0) == '"' || value.charAt(0) == '\'') {
-			char quote = value.charAt(0);
-			value = value.substring(1);
-			if ((i = value.indexOf(quote)) < 0)
-				i = value.length();
-		} else {
-			if ((i = value.indexOf(" ")) < 0)
-				if ((i = value.indexOf("/")) < 0)
-					if ((i = value.indexOf(">")) < 0)
-						i = value.length();
-		}
-		return value.substring(0, i);
-	}
-
-	/**
 	 * Retorna a primeira letra de uma string convertida para maiúsculo. Caso a letra seja uma vogal
 	 * acentuada retorna ela sem o acento.
 	 * @param s String que será anlisada.
@@ -475,6 +291,21 @@ public class StringToys {
 			return "U";
 		else
 			return l;
+	}
+
+	/**
+	 * Retorna um mapa de chaves e valores a partir de uma string com um formato específico.
+	 * @param s String com os nomes de chaves e valores. Deve estar no formado <code>chave1=valor1|chave2=valor2|...chaveN=valorN</code>.
+	 * @return {@link Map}
+	 */
+	public static Map<String, String> toMap(String s) {
+		String[] kvs = s.split("\\|");
+		Map<String, String> m = new HashMap<>();
+		for (String kv: kvs) {
+			String[] ss = kv.split("\\=");
+			m.put(ss[0], ss[1]);
+		}
+		return m;
 	}
 
 }

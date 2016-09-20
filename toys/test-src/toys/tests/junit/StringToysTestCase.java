@@ -22,19 +22,6 @@ public class StringToysTestCase extends TestCase {
 		assertEquals("Garibaldi - Garibaldi - 1972", s);
 	}
 
-	public void testSplit() {
-		String s[] = StringToys.split("Texto de teste");
-		assertTrue(s.length == 5);
-		s = StringToys.split("Texto  de    teste");
-		assertTrue(s.length == 5);
-		s = StringToys.split("Texto\t\tde\n  teste");
-		assertTrue(s.length == 7);
-		s = StringToys.split("Texto\nde\nteste  ");
-		assertTrue(s.length == 6);
-		s = StringToys.split("  Texto\nde\nteste  ");
-		assertTrue(s.length == 7);
-	}
-
 	public void testPrimeiraLetra() {
 		assertEquals(StringToys.primeiraLetraSemAcento("Âasdhfdks"), "A");
 		assertEquals(StringToys.primeiraLetraSemAcento("Áasdhfdks"), "A");
@@ -53,10 +40,6 @@ public class StringToysTestCase extends TestCase {
 		assertEquals(StringToys.primeiraLetraSemAcento("Úasdhfdks"), "U");
 		assertEquals(StringToys.primeiraLetraSemAcento("Ùasdhfdks"), "U");
 		assertEquals(StringToys.primeiraLetraSemAcento("Ûasdhfdks"), "U");
-	}
-
-	public void testRight() {
-		assertEquals(StringToys.right("000001234", 5), "01234");
 	}
 
 	public void testSpacesRight() {
