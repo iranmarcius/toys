@@ -72,4 +72,9 @@ public interface AttributeConsts {
 	 */
 	String CONTENT_TYPE = "toys.web.servlet.contentType";
 
+	/**
+	 * Nome do atributo para armazenar o nome do arquivo que será utilizado no conteúdo stream.
+	 */
+	String CONTENT_FILENAME = "toys.web.servlet.contentFilename";
+
 }
