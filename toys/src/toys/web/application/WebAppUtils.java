@@ -23,17 +23,16 @@ public class WebAppUtils {
 	 * @return Retorna uma mensagem para registro de logs no seguinte formato:
 	 * <code>username - IP - mensagem</code>.
 	 */
-	public static String logMsg(HttpServletRequest request, String msg, boolean detalhes, Object... data) {
+	public static String logMsg(HttpServletRequest request, String msg, Object... data) {
 		StringBuffer sb = new StringBuffer().append(data == null || data.length == 0 ? msg : String.format(msg, data));
 		Principal p = request.getUserPrincipal();
 		if (p != null)
 			sb.append(", username=").append(p.getName());
-		sb.append(", ip=").append(request.getRemoteAddr());
-		if (detalhes)
-			sb
+		return sb
+				.append(", ip=").append(request.getRemoteAddr())
 				.append(", uri=").append(request.getRequestURI())
-				.append(", referer=").append(request.getHeader("Referer"));
-		return sb.toString();
+				.append(", referer=").append(request.getHeader("Referer"))
+				.toString();
 	}
 
 }
