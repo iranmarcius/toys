@@ -1,60 +1,60 @@
 package toys.beans;
 
-import toys.fs.FileToys;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Contém especificações de uma imagem.
- * @author Iran Marcius 
+ * @author Iran Marcius
  */
 public class ImageSpecs {
-	
+
 	/**
 	 * Largura mínima.
 	 */
 	protected int minWidth;
-	
+
 	/**
 	 * Altura mínima.
 	 */
 	protected int minHeight;
-	
+
 	/**
 	 * Largura máxima.
 	 */
 	protected int maxWidth;
-	
+
 	/**
 	 * Altura máxima.
 	 */
 	protected int maxHeight;
-	
+
 	/**
 	 * Tamanho máximo da imagem em bytes.
 	 */
 	protected long maxBytes;
-	
+
 	/**
 	 * Indica se o formato deverá ser levado em conta na validação.
 	 */
 	protected boolean validateFormat;
-	
+
 	/**
 	 * Indica se a especificação aceita o formato JPEG.
 	 */
 	protected boolean acceptJpeg;
-	
+
 	/**
 	 * Indica se a especificação aceita o formato GIF.
 	 */
 	protected boolean acceptGif;
-	
+
 	/**
 	 * Construtor default.
 	 */
 	public ImageSpecs() {
 		super();
 	}
-	
+
 	/**
 	 * Retorna se existe alguma especificação de tamanho.
 	 * @return <code>boolean</code>
@@ -68,7 +68,7 @@ public class ImageSpecs {
 			(getMaxBytes() > 0) ||
 			isValidateFormat();
 	}
-	
+
 	/**
 	 * Retorna se um valor está dentro dos limites de largura especificados.
 	 * @param width Valor da largura a ser verificado.
@@ -80,7 +80,7 @@ public class ImageSpecs {
 		if (getMaxWidth() > -1) inRange = inRange && (width <= getMaxWidth());
 		return inRange;
 	}
-	
+
 	/**
 	 * Retorna se um valor está dentro dos limites de altura especificados.
 	 * @param height Valor da altura a ser verificado.
@@ -92,7 +92,7 @@ public class ImageSpecs {
 		if (getMaxHeight() > -1) inRange = inRange && (height<= getMaxHeight());
 		return inRange;
 	}
-	
+
 	/**
 	 * Retorna se o tamanho fornecido está dentro do limite estabelecido.
 	 * @param size Tamanho em bytes
@@ -101,7 +101,7 @@ public class ImageSpecs {
 	public boolean isInSizeRange(long size) {
 		return getMaxBytes() > 0 ? size <= getMaxBytes() : true;
 	}
-	
+
 	/**
 	 * Verifica e valida o formato da imagem com base em seu conteúdo.
 	 * @param bytes Bytes de dados da imagem
@@ -110,23 +110,23 @@ public class ImageSpecs {
 	public boolean isValidFormat(byte[] bytes) {
 		return true;
 	}
-	
+
 	/**
 	 * Retorna se o nome do arquivo é válido de acordo com os tipos permitidos.
 	 * @param filename Nome do arquivo
 	 * @return <code>boolean</code>
 	 */
 	public boolean isValidFileExt(String filename) {
-		String ext = FileToys.extractExtension(filename).toLowerCase();
+		String ext = FilenameUtils.getExtension(filename).toLowerCase();
 		return
 			(ext.equals(".jpg") && isAcceptJpeg()) ||
 			(ext.equals(".gif") && isAcceptGif());
 	}
-	
+
 	/*
 	 * Acessors
 	 */
-	 
+
 	public int getMaxHeight() {
 		return maxHeight;
 	}

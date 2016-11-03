@@ -14,6 +14,7 @@ import java.io.Writer;
  * Métodos utilitários para operações envolvendo o sistema de arquivos.
  * @author Iran Marcius
  */
+@Deprecated
 public class FileToys {
 
 	/**

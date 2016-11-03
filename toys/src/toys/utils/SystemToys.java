@@ -17,7 +17,7 @@ public class SystemToys {
 	 * @return <code>String</code>
 	 */
 	private static String removerSeparadorFinal(String value) {
-		return value.endsWith(getPathSeparator()) ? value.substring(0, value.length() - 1) : value;
+		return value.endsWith("/") || value.endsWith("\\") ? value.substring(0, value.length() - 1) : value;
 	}
 
 	/**
