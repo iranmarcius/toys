@@ -29,7 +29,7 @@ public class HibernateSession {
 	 * @return {@link SessionFactory}
 	 * @throws HibernateException
 	 */
-	private static SessionFactory createSessionFactory(SessionFactoryParams params) throws HibernateException {
+	public static SessionFactory getSessionFactory(SessionFactoryParams params) throws HibernateException {
 		log.debug(String.format("Obtendo sessao (params=%s)", params));
 		SessionFactory sf = sfm.get(params);
 		if (sf == null) {
@@ -54,7 +54,7 @@ public class HibernateSession {
 			}
 
 		} else {
-			log.debug("Utilizando SessionFactory instanciado previamente.");
+			log.debug("Retornando SessionFactory ja inicializado.");
 		}
 		return sf;
 	}
@@ -66,7 +66,7 @@ public class HibernateSession {
 	 * @return {@link Session}
 	 */
 	public static Session getSession(SessionFactoryParams params) {
-		return createSessionFactory(params).openSession();
+		return getSessionFactory(params).openSession();
 	}
 
 }
