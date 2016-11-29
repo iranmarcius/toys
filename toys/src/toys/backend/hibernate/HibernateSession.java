@@ -29,7 +29,7 @@ public class HibernateSession {
 	 * @return {@link SessionFactory}
 	 * @throws HibernateException
 	 */
-	public static SessionFactory getSessionFactory(SessionFactoryParams params) throws HibernateException {
+	private static SessionFactory getSessionFactory(SessionFactoryParams params) throws HibernateException {
 		log.debug(String.format("Obtendo sessao (params=%s)", params));
 		SessionFactory sf = sfm.get(params);
 		if (sf == null) {
