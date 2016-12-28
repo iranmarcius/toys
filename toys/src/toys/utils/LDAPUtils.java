@@ -20,6 +20,7 @@ import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPConnection;
 import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.LDAPResult;
+import com.unboundid.ldap.sdk.LDAPSearchException;
 import com.unboundid.ldap.sdk.Modification;
 import com.unboundid.ldap.sdk.ModificationType;
 import com.unboundid.ldap.sdk.ResultCode;
@@ -83,26 +84,47 @@ public class LDAPUtils {
 	}
 
 	/**
+	 * Retorna uma conexão segura com o servidor LDAP utilizando os parâmetros.
+	 */
+	public LDAPConnection getSSLConnection() throws GeneralSecurityException, LDAPException {
+		SSLUtil sslUtil = new SSLUtil(new TrustAllTrustManager());
+		SSLSocketFactory sslSocketFactory = sslUtil.createSSLSocketFactory();
+		LDAPConnection conn = new LDAPConnection(sslSocketFactory);
+		conn.connect(host, LDAPS_PORT);
+		conn.bind(bindDN, password);
+		return conn;
+
+	}
+
+	/**
 	 * Pesquisa uma entrada pelo nome da conta.
 	 * @param accountName Nome da conta.
 	 * @return Retorna a entrada encontrada ou null caso nenhuma seja correspondente.
-	 * @throws LDAPException
 	 */
 	public synchronized Entry pesquisar(String accountName) throws LDAPException {
 		LDAPConnection conn = null;
 		try {
 			conn = new LDAPConnection(host, LDAP_PORT, bindDN, password);
-			SearchResult result = conn.search(baseDN, SearchScope.SUB, String.format("(%s=%s)", LDAPConsts.LA_ACC_NAME, accountName));
-			if (result.getEntryCount() == 1)
-				return result.getSearchEntries().get(0);
-			else if (result.getEntryCount() > 1)
-				throw new RuntimeException(String.format("Foram encontrados %d resultados.", result.getEntryCount()));
-			else
-				return null;
+			return pesquisar(conn, accountName);
 		} finally {
 			if (conn != null)
 				conn.close();
 		}
+	}
+
+	/**
+	 * Pesquisa uma conta de usuário no servidor LDAP utilizando uma conexão previamente estabelecida.
+	 * @param conn Conexão com o servidor.
+	 * @return Retorna a entrada encontrada ou nulo.
+	 */
+	public synchronized Entry pesquisar(LDAPConnection conn, String accountName) throws LDAPSearchException {
+		SearchResult result = conn.search(baseDN, SearchScope.SUB, String.format("(%s=%s)", LDAPConsts.LA_ACC_NAME, accountName));
+		if (result.getEntryCount() == 1)
+			return result.getSearchEntries().get(0);
+		else if (result.getEntryCount() > 1)
+			throw new RuntimeException(String.format("Foram encontrados %d resultados.", result.getEntryCount()));
+		else
+			return null;
 	}
 
 	/**
