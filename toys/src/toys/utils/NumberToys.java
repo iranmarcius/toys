@@ -165,6 +165,13 @@ public class NumberToys {
 	}
 
 	/**
+	 * Retorna o valor padrão para um número.
+	 */
+	public static <T> T defaultValue(T n, T defaultValue) {
+		return n != null ? n : defaultValue;
+	}
+
+	/**
 	 * Compara os dois inteiros fornecidos retornando se são iguais. Este método
 	 * trata também valores nulos, ou seja, caso um dos valores seja nulo e o outro
 	 * não seja, o resultado da comparação será falso.
