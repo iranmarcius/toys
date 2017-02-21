@@ -270,30 +270,6 @@ public class StringToys {
 	}
 
 	/**
-	 * Retorna a primeira letra de uma string convertida para maiúsculo. Caso a letra seja uma vogal
-	 * acentuada retorna ela sem o acento.
-	 * @param s String que será anlisada.
-	 * @return <code>String</code>
-	 */
-	public static String primeiraLetraSemAcento(String s) {
-		if (s == null || s.length() < 2)
-			return "";
-		String l = s.toUpperCase().substring(0, 1);
-		if ("ÁÀÃÂ".indexOf(l) > -1)
-			return "A";
-		else if ("ÉÈÊ".indexOf(l) > -1)
-			return "E";
-		else if ("ÍÌÎ".indexOf(l) > -1)
-			return "I";
-		else if ("ÓÒÕÔ".indexOf(l) > -1)
-			return "O";
-		else if ("ÚÙÛ".indexOf(l) > -1)
-			return "U";
-		else
-			return l;
-	}
-
-	/**
 	 * Retorna um mapa de chaves e valores a partir de uma string com um formato específico.
 	 * @param s String com os nomes de chaves e valores. Deve estar no formado <code>chave1=valor1|chave2=valor2|...chaveN=valorN</code>.
 	 * @return {@link Map}

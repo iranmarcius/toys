@@ -22,26 +22,6 @@ public class StringToysTestCase extends TestCase {
 		assertEquals("Garibaldi - Garibaldi - 1972", s);
 	}
 
-	public void testPrimeiraLetra() {
-		assertEquals(StringToys.primeiraLetraSemAcento("Âasdhfdks"), "A");
-		assertEquals(StringToys.primeiraLetraSemAcento("Áasdhfdks"), "A");
-		assertEquals(StringToys.primeiraLetraSemAcento("Àasdhfdks"), "A");
-		assertEquals(StringToys.primeiraLetraSemAcento("Ãasdhfdks"), "A");
-		assertEquals(StringToys.primeiraLetraSemAcento("Éasdhfdks"), "E");
-		assertEquals(StringToys.primeiraLetraSemAcento("Èasdhfdks"), "E");
-		assertEquals(StringToys.primeiraLetraSemAcento("Êasdhfdks"), "E");
-		assertEquals(StringToys.primeiraLetraSemAcento("Íasdhfdks"), "I");
-		assertEquals(StringToys.primeiraLetraSemAcento("Ìasdhfdks"), "I");
-		assertEquals(StringToys.primeiraLetraSemAcento("Îasdhfdks"), "I");
-		assertEquals(StringToys.primeiraLetraSemAcento("Óasdhfdks"), "O");
-		assertEquals(StringToys.primeiraLetraSemAcento("Òasdhfdks"), "O");
-		assertEquals(StringToys.primeiraLetraSemAcento("Õasdhfdks"), "O");
-		assertEquals(StringToys.primeiraLetraSemAcento("Ôasdhfdks"), "O");
-		assertEquals(StringToys.primeiraLetraSemAcento("Úasdhfdks"), "U");
-		assertEquals(StringToys.primeiraLetraSemAcento("Ùasdhfdks"), "U");
-		assertEquals(StringToys.primeiraLetraSemAcento("Ûasdhfdks"), "U");
-	}
-
 	public void testSpacesRight() {
 		assertEquals(StringToys.spacesRight("teste", 10), "teste     ");
 		assertEquals(StringToys.spacesRight("teste", 5), "teste");
