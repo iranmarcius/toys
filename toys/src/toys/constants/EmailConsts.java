@@ -1,5 +1,5 @@
 /*
- * Criado em 15/03/2012 15:14:23 
+ * Criado em 15/03/2012 15:14:23
  */
 
 package toys.constants;
@@ -15,4 +15,5 @@ public interface EmailConsts {
 	String USER = "mail.user";
 	String FROM = "mail.from";
 	String DEBUG = "mail.debug";
+	String AUTH_SMTP = "mail.smtp.auth.login.disable";
 }
