@@ -16,7 +16,6 @@
 		<groupId>config</groupId>
 		<artifactId>parent-pom</artifactId>
 		<version>noversion</version>
-		<relativePath>../../../pom.xml</relativePath>
 	</parent>
 
 	<dependencies>
