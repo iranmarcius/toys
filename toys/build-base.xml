@@ -2,7 +2,7 @@
 
 <!DOCTYPE poroject>
 
-<project name="BuildBase" xmlns:artifact="antlib:org.apache.maven.artifact.ant" default="install">
+<project name="BuildBase" xmlns:artifact="antlib:org.apache.maven.artifact.ant">
 	<property environment="env"/>
 	<property name="mvn.repo" value="${env.HOMEDRIVE}${env.HOMEPATH}/.m2/repository"/>
 	<path
@@ -25,13 +25,6 @@
 		<artifact:mvn>
 			<arg value="jar:jar"/>
 		</artifact:mvn>
-	</target>
-
-	<target name="install" depends="jar">
-		<delete dir="${artifact.path}" includes="**/${pom.artifactId}/${pom.version}/**/*"/>
-		<artifact:install file="target/${pom.artifactId}-${pom.version}.jar">
-			<pom refid="pom"/>
-		</artifact:install>
 	</target>
 
 	<target name="buildcp">
