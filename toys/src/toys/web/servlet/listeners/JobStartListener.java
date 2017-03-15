@@ -46,7 +46,7 @@ public abstract class JobStartListener implements ServletContextListener {
 	/**
 	 * Método padrão para mensagens de log.
 	 */
-	protected void log(Class<?> jobClass, String schedule) {
+	protected void stdLog(Class<?> jobClass, String schedule) {
 		if (StringUtils.isNotBlank(schedule))
 			log.info(String.format("Inicializando job %s com o agendamento %s.", jobClass.getName(), schedule));
 		else
