@@ -20,16 +20,18 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
  */
 public class HibernateSession {
 	private static final Log log = LogFactory.getLog(HibernateSession.class);
-	private static Map<SessionFactoryParams, SessionFactory> sfm = new HashMap<SessionFactoryParams, SessionFactory>();
+	private static Map<SessionFactoryParams, SessionFactory> sfm = new HashMap<>();
+
+	private HibernateSession() {
+	}
 
 	/**
 	 * Retorna um <code>SessionFactory</code>.
 	 * @param params Objeto do tipo {@link SessionFactoryParams} com as informações de arquivos de
 	 * propriedades e mapeamentos que serão utilizados na obtenção do <code>SessionFactory</code>.
 	 * @return {@link SessionFactory}
-	 * @throws HibernateException
 	 */
-	private static SessionFactory getSessionFactory(SessionFactoryParams params) throws HibernateException {
+	private static synchronized SessionFactory getSessionFactory(SessionFactoryParams params) {
 		log.debug(String.format("Obtendo sessao (params=%s)", params));
 		SessionFactory sf = sfm.get(params);
 		if (sf == null) {
@@ -50,7 +52,7 @@ public class HibernateSession {
 
 				sfm.put(params, sf);
 			} catch (IOException e) {
-				throw new RuntimeException(e);
+				throw new HibernateException(e);
 			}
 
 		} else {
@@ -65,7 +67,7 @@ public class HibernateSession {
 	 * propriedades e mapeamentos.
 	 * @return {@link Session}
 	 */
-	public static Session getSession(SessionFactoryParams params) {
+	public static synchronized Session getSession(SessionFactoryParams params) {
 		return getSessionFactory(params).openSession();
 	}
 
