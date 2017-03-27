@@ -13,7 +13,7 @@ public class NumeroExtenso {
 	private List<Integer> nro;
 	private BigInteger num;
 
-	private String qualificadores[][] = {
+	private String[][] qualificadores = {
 			{"centavo", "centavos"},
 			{"", ""},
 			{"mil", "mil"},
@@ -26,7 +26,7 @@ public class NumeroExtenso {
 			{"septilhão", "septilhões"}
 	};
 
-	private String numeros[][] = {
+	private String[][] numeros = {
 			{
 				"zero",
 				"um",
@@ -76,7 +76,7 @@ public class NumeroExtenso {
 	 */
 	public NumeroExtenso() {
 		super();
-		nro = new ArrayList<Integer>();
+		nro = new ArrayList<>();
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class NumeroExtenso {
 	}
 
 	public void setNumber(double dec) {
-		setNumber(new BigDecimal(dec));
+		setNumber(BigDecimal.valueOf(dec));
 	}
 
 	/**
@@ -148,8 +148,9 @@ public class NumeroExtenso {
 	 * Description of the Method
 	 * @return Description of the Returned Value
 	 */
+	@Override
 	public String toString() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int ct = nro.size() - 1; ct > 0; ct--) {
 			// Se ja existe texto e o atual não é zero
 			if (buf.length() > 0 && !ehGrupoZero(ct))
@@ -228,7 +229,7 @@ public class NumeroExtenso {
 	boolean ehGrupoZero(int ps) {
 		if (ps <= 0 || ps >= nro.size())
 			return true;
-		return ((Integer) nro.get(ps)).intValue() == 0;
+		return nro.get(ps) == 0;
 	}
 
 	/**
@@ -241,7 +242,7 @@ public class NumeroExtenso {
 		int unidade = numero % 10;
 		int dezena = numero % 100;
 		int centena = numero / 100;
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		if (numero != 0) {
 			if (centena != 0) {
 				if ((dezena == 0) && (centena == 1)) {
