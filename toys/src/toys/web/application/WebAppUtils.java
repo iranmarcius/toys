@@ -14,6 +14,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class WebAppUtils {
 
+	private WebAppUtils() {
+		super();
+	}
+
 	/**
 	 * Cria uma mensagem padrão para os logs de aplicações de web.
 	 * @param request Requisição original
@@ -23,16 +27,15 @@ public class WebAppUtils {
 	 * @return Retorna uma mensagem para registro de logs no seguinte formato:
 	 * <code>username - IP - mensagem</code>.
 	 */
-	public static String logMsg(HttpServletRequest request, String msg, Object... data) {
-		StringBuffer sb = new StringBuffer().append(data == null || data.length == 0 ? msg : String.format(msg, data));
+	public static synchronized String logMsg(HttpServletRequest request, String msg, Object... data) {
+		String s = data == null || data.length == 0 ? msg : String.format(msg, data);
 		Principal p = request.getUserPrincipal();
 		if (p != null)
-			sb.append(", username=").append(p.getName());
-		return sb
-				.append(", ip=").append(request.getRemoteAddr())
-				.append(", uri=").append(request.getRequestURI())
-				.append(", referer=").append(request.getHeader("Referer"))
-				.toString();
+			s += ", username=" + p.getName();
+		return s +
+				", ip=" + request.getRemoteAddr() +
+				", uri=" + request.getRequestURI() +
+				", referer=" + request.getHeader("Referer");
 	}
 
 }
