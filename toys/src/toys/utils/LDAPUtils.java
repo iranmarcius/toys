@@ -140,12 +140,10 @@ public class LDAPUtils {
 			conn = new LDAPConnection(host, LDAP_PORT, bindDN, password);
 			return null;
 		} catch (LDAPException e) {
-			if (e.getResultCode().equals(ResultCode.INVALID_CREDENTIALS)) {
-				if (e.getDiagnosticMessage() != null) {
-					String[] ss = e.getDiagnosticMessage().split(" *, *");
-					if (ss.length > 2 && ss[2].matches("^data .+$"))
-						return ss[2].substring(5);
-				}
+			if (e.getResultCode().equals(ResultCode.INVALID_CREDENTIALS) && e.getDiagnosticMessage() != null) {
+				String[] ss = e.getDiagnosticMessage().split(" *, *");
+				if (ss.length > 2 && ss[2].matches("^data .+$"))
+					return ss[2].substring(5);
 			}
 			throw e;
 		} finally {
