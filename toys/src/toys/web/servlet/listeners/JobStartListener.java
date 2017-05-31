@@ -15,52 +15,47 @@ import org.quartz.impl.StdSchedulerFactory;
  * @author Iran
  */
 public abstract class JobStartListener implements ServletContextListener {
-	protected Log log;
-	protected Scheduler scheduler;
+    protected final Log log = LogFactory.getLog(getClass());
+    protected Scheduler scheduler;
 
-	public JobStartListener() {
-		super();
-		log = LogFactory.getLog(getClass());
-	}
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        try {
+            scheduler = StdSchedulerFactory.getDefaultScheduler();
+            scheduleJobs(sce);
+            scheduler.start();
+        } catch (SchedulerException e) {
+            handleSchedulerException("Erro incializando o Quartz.", e);
+        }
+    }
 
-	@Override
-	public void contextInitialized(ServletContextEvent sce) {
-		try {
-			scheduler = StdSchedulerFactory.getDefaultScheduler();
-			scheduleJobs(sce);
-			scheduler.start();
-		} catch (SchedulerException e) {
-			handleSchedulerException("Erro incializando o Quartz.", e);
-		}
-	}
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        try {
+            scheduler.shutdown();
+        } catch (SchedulerException e) {
+            handleSchedulerException("Erro finalizando Quartz.", e);
+        }
+    }
 
-	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
-		try {
-			scheduler.shutdown();
-		} catch (SchedulerException e) {
-			handleSchedulerException("Erro finalizando Quartz.", e);
-		}
-	}
+    /**
+     * Método padrão para mensagens de log.
+     */
+    protected void stdLog(Class<?> jobClass, String schedule) {
+        if (StringUtils.isNotBlank(schedule))
+            log.info(String.format("Inicializando job %s com o agendamento %s.", jobClass.getName(), schedule));
+        else
+            log.warn(String.format("Ignorando job %s. Nenhum agendamento especificado.", jobClass.getName()));
+    }
 
-	/**
-	 * Método padrão para mensagens de log.
-	 */
-	protected void stdLog(Class<?> jobClass, String schedule) {
-		if (StringUtils.isNotBlank(schedule))
-			log.info(String.format("Inicializando job %s com o agendamento %s.", jobClass.getName(), schedule));
-		else
-			log.warn(String.format("Ignorando job %s. Nenhum agendamento especificado.", jobClass.getName()));
-	}
+    /**
+     * Gerenciamento de erros.
+     */
+    protected abstract void handleSchedulerException(String msg, Throwable e);
 
-	/**
-	 * Gerenciamento de erros.
-	 */
-	protected abstract void handleSchedulerException(String msg, Throwable e);
-
-	/**
-	 * Neste método os jobs serão criados e suas agendas serão definidas.
-	 */
-	protected abstract void scheduleJobs(ServletContextEvent sce) throws SchedulerException;
+    /**
+     * Neste método os jobs serão criados e suas agendas serão definidas.
+     */
+    protected abstract void scheduleJobs(ServletContextEvent sce) throws SchedulerException;
 
 }
