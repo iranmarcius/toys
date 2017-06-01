@@ -4,8 +4,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
@@ -15,7 +15,7 @@ import org.quartz.impl.StdSchedulerFactory;
  * @author Iran
  */
 public abstract class JobStartListener implements ServletContextListener {
-    protected final Log log = LogFactory.getLog(getClass());
+    protected final Logger logger = LogManager.getFormatterLogger();
     protected Scheduler scheduler;
 
     @Override
@@ -43,9 +43,9 @@ public abstract class JobStartListener implements ServletContextListener {
      */
     protected void stdLog(Class<?> jobClass, String schedule) {
         if (StringUtils.isNotBlank(schedule))
-            log.info(String.format("Inicializando job %s com o agendamento %s.", jobClass.getName(), schedule));
+            logger.info("Inicializando job %s com o agendamento %s.", jobClass.getName(), schedule);
         else
-            log.warn(String.format("Ignorando job %s. Nenhum agendamento especificado.", jobClass.getName()));
+            logger.warn("Ignorando job %s. Nenhum agendamento especificado.", jobClass.getName());
     }
 
     /**

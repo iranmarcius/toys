@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <p>Este filtro permite ou bloqueia requisições através da verificação do cabeçalho <b>REFERER</b> do
@@ -50,91 +50,88 @@ import org.apache.commons.logging.LogFactory;
  * @author Iran Marcius
  */
 public class RefererFilter implements Filter {
-	private static final Log log = LogFactory.getLog(RefererFilter.class);
+    private final Logger logger = LogManager.getFormatterLogger();
 
-	private String[] allowedReferers;
-	private String[] ignoredURLs;
+    private String[] allowedReferers;
+    private String[] ignoredURLs;
 
-	/**
-	 * Inicialização do filtro.
-	 * @param config Configuração do filtro
-	 */
-	public void init(FilterConfig config) throws ServletException {
-		ServletContext sc = config.getServletContext();
-		sc.log("Iniciando filtro verificador de referers");
-		log.info("Verificador de referers iniciado");
+    /**
+     * Inicialização do filtro.
+     * @param config Configuração do filtro
+     */
+    public void init(FilterConfig config) throws ServletException {
+        ServletContext sc = config.getServletContext();
+        sc.log("Iniciando filtro verificador de referers");
+        logger.info("Inicializando filtro para verificaco de referers.");
 
-		// cria a lista de referers permitidos para a requisição
-		String allowed = config.getInitParameter("allowedReferers");
-		if (StringUtils.isNotBlank(allowed)) {
-			allowedReferers = allowed.split("\\n");
-			for (int i = 0; i < allowedReferers.length; i++) {
-				allowedReferers[i] = allowedReferers[i].trim();
-				log.debug("Padrao de referer permitido: " + allowedReferers[i]);
-			}
-		}
+        // cria a lista de referers permitidos para a requisição
+        String allowed = config.getInitParameter("allowedReferers");
+        if (StringUtils.isNotBlank(allowed)) {
+            allowedReferers = allowed.split("\\n");
+            for (int i = 0; i < allowedReferers.length; i++) {
+                allowedReferers[i] = allowedReferers[i].trim();
+                logger.debug("Padrao de referer permitido: %s", allowedReferers[i]);
+            }
+        }
 
-		// cria a lista de urls ignoradas na verificação
-		String ignored = config.getInitParameter("ignoredURLs");
-		if (StringUtils.isNotBlank(ignored)) {
-			ignoredURLs = ignored.split("\\n");
-			for (int i = 0; i < ignoredURLs.length; i++) {
-				ignoredURLs[i] = ignoredURLs[i].trim();
-				log.debug("Padrao de URL ignorada: " + ignoredURLs[i]);
-			}
-		}
-	}
+        // cria a lista de urls ignoradas na verificação
+        String ignored = config.getInitParameter("ignoredURLs");
+        if (StringUtils.isNotBlank(ignored)) {
+            ignoredURLs = ignored.split("\\n");
+            for (int i = 0; i < ignoredURLs.length; i++) {
+                ignoredURLs[i] = ignoredURLs[i].trim();
+                logger.debug("Padrao de URL ignorada: ", ignoredURLs[i]);
+            }
+        }
+    }
 
-	/**
-	 * Verifica se o referer recebido está dentro da lista de referers válidos.
-	 * @param request Requisição
-	 * @param response Resposta
-	 * @param fc Cadeia de filtros
-	 */
-	public void doFilter(ServletRequest request, ServletResponse response,
-		FilterChain fc) throws IOException, ServletException {
+    /**
+     * Verifica se o referer recebido está dentro da lista de referers válidos.
+     * @param request Requisição
+     * @param response Resposta
+     * @param fc Cadeia de filtros
+     */
+    public void doFilter(ServletRequest request, ServletResponse response,
+        FilterChain fc) throws IOException, ServletException {
 
-		HttpServletRequest req = (HttpServletRequest)request;
-		HttpServletResponse resp = (HttpServletResponse)response;
+        HttpServletRequest req = (HttpServletRequest)request;
+        HttpServletResponse resp = (HttpServletResponse)response;
 
-		// verifica se a URL está na lista de URLs ignoradas
-		if ((ignoredURLs != null) && (ignoredURLs.length > 0)) {
-			String requestURL = req.getRequestURL().toString();
-			for (String ignored: ignoredURLs) {
-				if (requestURL.matches(ignored)) {
-					log.debug(String.format("URL ignorada: %1$s (%2$s)", requestURL, ignored));
-					fc.doFilter(req, resp);
-					return;
-				}
-			}
-		}
+        // verifica se a URL está na lista de URLs ignoradas
+        if ((ignoredURLs != null) && (ignoredURLs.length > 0)) {
+            String requestURL = req.getRequestURL().toString();
+            for (String ignored: ignoredURLs) {
+                if (requestURL.matches(ignored)) {
+                    logger.debug("URL ignorada: %s (%s)", requestURL, ignored);
+                    fc.doFilter(req, resp);
+                    return;
+                }
+            }
+        }
 
-		// verifica se o referer recebido é permitido
-		if ((allowedReferers != null) && (allowedReferers.length > 0)) {
-			boolean isAllowed = false;
-			String referer = req.getHeader("REFERER");
-			if (StringUtils.isNotBlank(referer)) {
-				for (String allowed: allowedReferers) {
-					isAllowed = isAllowed || referer.matches(allowed);
-				}
-			}
-			if (isAllowed) {
-				log.debug(String.format("Referer %1$s permitido para URL %2$s", referer,
-						req.getRequestURL()));
-			} else {
-				log.debug(String.format("Referer %1$s bloqueado para URL %2$s",
-						referer, req.getRequestURL()));
-				resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Requisicao nao permitida");
-				return;
-			}
-		}
+        // verifica se o referer recebido é permitido
+        if ((allowedReferers != null) && (allowedReferers.length > 0)) {
+            boolean isAllowed = false;
+            String referer = req.getHeader("REFERER");
+            if (StringUtils.isNotBlank(referer)) {
+                for (String allowed: allowedReferers) {
+                    isAllowed = isAllowed || referer.matches(allowed);
+                }
+            }
+            if (isAllowed) {
+                logger.debug("Referer %s permitido para URL %s", referer, req.getRequestURL());
+            } else {
+                logger.debug("Referer %s bloqueado para URL %s", referer, req.getRequestURL());
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Requisicao nao permitida");
+                return;
+            }
+        }
 
-		fc.doFilter(request, response);
-	}
+        fc.doFilter(request, response);
+    }
 
-	/**
-	 * Nenhuma ação é executada aqui.
-	 */
-	public void destroy() {}
+    public void destroy() {
+        // Nada acontece aqui.
+    }
 
 }
