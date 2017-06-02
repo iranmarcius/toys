@@ -23,78 +23,82 @@ import toys.collections.CollectionToys;
  */
 public class StringListType implements UserType {
 
-	@Override
-	public int[] sqlTypes() {
-		return new int[] {StringType.INSTANCE.sqlType()};
-	}
+    @Override
+    public int[] sqlTypes() {
+        return new int[] {StringType.INSTANCE.sqlType()};
+    }
 
-	@Override
-	@SuppressWarnings("rawtypes")
-	public Class<List> returnedClass() {
-		return List.class;
-	}
+    @Override
+    @SuppressWarnings("rawtypes")
+    public Class<List> returnedClass() {
+        return List.class;
+    }
 
-	@Override
-	public boolean equals(Object x, Object y) throws HibernateException {
-		return Objects.equals(x, y);
-	}
+    @Override
+    public boolean equals(Object x, Object y) throws HibernateException {
+        return Objects.equals(x, y);
+    }
 
-	@Override
-	public int hashCode(Object x) throws HibernateException {
-		return Objects.hashCode(x);
-	}
+    @Override
+    public int hashCode(Object x) throws HibernateException {
+        return Objects.hashCode(x);
+    }
 
-	@Override
-	public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws HibernateException, SQLException {
-		String columnName = names[0];
-		String columnValue = rs.getString(columnName);
-		if (columnValue != null) {
-			String[] ss = columnValue.split(",");
-			List<String> l = new ArrayList<>(ss.length);
-			for (String s: ss)
-				if (s != null && s.trim().length() > 0)
-					l.add(s);
-			return l;
-		} else {
-			return null;
-		}
-	}
+    @Override
+    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws HibernateException, SQLException {
+        String columnName = names[0];
+        String columnValue = rs.getString(columnName);
+        if (columnValue != null) {
+            String[] ss = columnValue.split(",");
+            List<String> l = new ArrayList<>(ss.length);
+            for (String s: ss)
+                if (s != null && s.trim().length() > 0)
+                    l.add(s);
+            return l;
+        } else {
+            return null;
+        }
+    }
 
-	@Override
-	public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws HibernateException, SQLException {
-		if (value != null)
-			st.setString(index, CollectionToys.toString((List<?>)value, ","));
-		else
-			st.setNull(index, Types.VARCHAR);
-	}
+    @Override
+    public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws HibernateException, SQLException {
+        if (value != null)
+            st.setString(index, CollectionToys.toString((List<?>)value, ","));
+        else
+            st.setNull(index, Types.VARCHAR);
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public Object deepCopy(Object value) throws HibernateException {
-		List<String> l1 = (List<String>)value;
-		List<String> l2 = new ArrayList<>(l1.size());
-		l2.addAll(l1);
-		return l2;
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public Object deepCopy(Object value) throws HibernateException {
+        if (value != null) {
+            List<String> l1 = (List<String>)value;
+            List<String> l2 = new ArrayList<>(l1.size());
+            l2.addAll(l1);
+            return l2;
+        } else {
+            return new ArrayList<>();
+        }
+    }
 
-	@Override
-	public boolean isMutable() {
-		return true;
-	}
+    @Override
+    public boolean isMutable() {
+        return true;
+    }
 
-	@Override
-	public Serializable disassemble(Object value) throws HibernateException {
-		return (Serializable)value;
-	}
+    @Override
+    public Serializable disassemble(Object value) throws HibernateException {
+        return (Serializable)value;
+    }
 
-	@Override
-	public Object assemble(Serializable cached, Object owner) throws HibernateException {
-		return cached;
-	}
+    @Override
+    public Object assemble(Serializable cached, Object owner) throws HibernateException {
+        return cached;
+    }
 
-	@Override
-	public Object replace(Object original, Object target, Object owner) throws HibernateException {
-		return deepCopy(original);
-	}
+    @Override
+    public Object replace(Object original, Object target, Object owner) throws HibernateException {
+        return deepCopy(original);
+    }
 
 }
