@@ -32,10 +32,10 @@ public class HibernateSession {
      * @return {@link SessionFactory}
      */
     private static synchronized SessionFactory getSessionFactory(SessionFactoryParams params) {
-        logger.debug("Obtendo sessao (params=%s)", params);
+        logger.trace("Obtendo sessao (params=%s)", params);
         SessionFactory sf = sfm.get(params);
         if (sf == null) {
-            logger.debug("Criando novo SessionFactory.");
+            logger.trace("Criando novo SessionFactory.");
             try {
                 Properties props = new Properties();
                 props.load(HibernateSession.class.getClassLoader().getResourceAsStream(params.getProperties()));
@@ -55,7 +55,7 @@ public class HibernateSession {
             }
 
         } else {
-            logger.debug("Retornando SessionFactory ja inicializado.");
+            logger.trace("Retornando SessionFactory do cache.");
         }
         return sf;
     }
