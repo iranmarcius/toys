@@ -14,7 +14,7 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.StringType;
 import org.hibernate.usertype.UserType;
 
-import toys.collections.CollectionToys;
+import toys.CollectionToys;
 
 /**
  * Este tipo armazena propriedades de entidades declaradas com tipo <code>List&lt;String&gt;</code> em colunas do tipo <code>VARCHAR</code> no banco de dados

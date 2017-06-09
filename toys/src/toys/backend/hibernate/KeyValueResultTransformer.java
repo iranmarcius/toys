@@ -3,7 +3,7 @@ package toys.backend.hibernate;
 import org.hibernate.transform.BasicTransformerAdapter;
 import org.hibernate.transform.ResultTransformer;
 
-import toys.beans.pairs.KeyValue;
+import toys.KeyValue;
 
 /**
  * Este {@link ResultTransformer} converte o resultado de uma consulta em um objeto {@link KeyValue}.

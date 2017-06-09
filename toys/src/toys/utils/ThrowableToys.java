@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import toys.beans.pairs.StringPair;
+import toys.StringPair;
 
 /**
  * Esta classe possui uma lista de chaves e mensagens de erro associadas a essa chaves, e pode retornar uma mensagem
