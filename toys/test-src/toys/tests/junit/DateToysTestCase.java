@@ -18,8 +18,8 @@ import junit.framework.TestSuite;
 
 import org.apache.commons.lang3.time.DateUtils;
 
-import toys.application.LocaleUtils;
 import toys.utils.DateToys;
+import toys.utils.LocaleToys;
 
 /**
  * Testes para a classe {@link DateToys DateToys}.
@@ -30,7 +30,7 @@ public class DateToysTestCase extends TestCase {
 
 	public DateToysTestCase(String name) {
 		super(name);
-		Locale.setDefault(LocaleUtils.BRAZIL);
+		Locale.setDefault(LocaleToys.BRAZIL);
 	}
 
 	public static Test suite() {

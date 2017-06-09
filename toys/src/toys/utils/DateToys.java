@@ -15,8 +15,6 @@ import java.util.Vector;
 
 import org.apache.commons.lang3.time.DateUtils;
 
-import toys.application.LocaleUtils;
-
 /**
  * Provê diversos métodos para manipulação e conversão datas e horas.
  * @author Iran Marcius
@@ -525,7 +523,7 @@ public final class DateToys {
      */
     public static String toString(Date d, Locale locale) {
         String format = null;
-        if (locale.equals(LocaleUtils.BRAZIL)) format = "%1$td/%1$tm/%1$tY"; else
+        if (locale.equals(LocaleToys.BRAZIL)) format = "%1$td/%1$tm/%1$tY"; else
         if (locale.equals(Locale.ENGLISH)) format = "%1$tm/%1$td/%1$tY";
         else format = "%1$tY-%1$tm-%1$td";
         return String.format(format, d);
