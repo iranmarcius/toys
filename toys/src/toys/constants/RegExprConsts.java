@@ -52,6 +52,11 @@ public class RegExprConsts {
     */
     public static final String IPV4 = "^(\\d{1,3}\\.){3,3}\\d{1,3}$";
 
+    /**
+     * Caracteres separadores e de pontuação.
+     */
+    public static final String SEPARADORES_PONTUACAO = "[\\.\\-\\/\\(\\)]";
+
     /*
      * Formatos localizados para o Brasil
      */
