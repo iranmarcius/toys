@@ -1,18 +1,17 @@
 package toys.tests.junit;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-/**
- * Esta classe executa todos os testes do pacote atual.
- */
+@RunWith(Suite.class)
+@SuiteClasses({
+    ArrayToysTest.class,
+    CollectionToysTest.class,
+    DateToysTestCase.class,
+    NumberToysTestCase.class,
+    RegExprsTest.class,
+    StringToysTestCase.class })
 public class AllTests {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Todos os testes");
-		suite.addTest(RegExprsTest.suite());
-		suite.addTest(StringToysTestCase.suite());
-		return suite;
-	}
 
 }

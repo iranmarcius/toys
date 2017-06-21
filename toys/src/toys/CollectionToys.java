@@ -21,20 +21,6 @@ public class CollectionToys {
     }
 
     /**
-     * Retorna uma sub-lista construída a partir dos índices informados.
-     * @param source Lista de onde os elementos serão copiados
-     * @param index Array de índices dos elementos que farão parte da nova lista.
-     * @return <code>{@link List List}</code>
-     */
-    public static <T> List<T> subList(List<T> source, int[] index) {
-        List<T> l = new ArrayList<>();
-        for (int i = 0; i < index.length; i++) {
-            l.add(source.get(index[i]));
-        }
-        return l;
-    }
-
-    /**
      * Fragmenta uma lista original em várias sublistas obedecendo o tamanho máximo especificado.
      * @param l Liwsta original.
      * @param tamanho Tamanho máximo das sublistas.
@@ -89,14 +75,17 @@ public class CollectionToys {
      * @return <code>String</code>
      */
     public static String toString(List<?> l, String sep, String quote) {
-        if ((l == null) || l.isEmpty())
+        if (l == null || l.isEmpty())
             return "";
         StringBuilder sb = new StringBuilder();
         for (Object o: l) {
-            if (quote != null) sb.append(quote);
+            if (quote != null)
+                sb.append(quote);
             sb.append(o.toString());
-            if (quote != null) sb.append(quote);
-            if (sep != null) sb.append(sep);
+            if (quote != null)
+                sb.append(quote);
+            if (sep != null)
+                sb.append(sep);
         }
         if (sep != null && sb.length() > sep.length())
             sb.setLength(sb.length() - sep.length());
@@ -114,12 +103,12 @@ public class CollectionToys {
     }
 
     /**
-     * Retorna uma lista convertida para string com seus itens separados por vírgula.
+     * Retorna uma lista convertida em string com seus itens separados por vírgula.
      * @param l
      * @return <code>String</code>
      */
     public static String toString(List<?> l) {
-        return toString(l, ", ");
+        return toString(l, ", ", null);
     }
 
 }
