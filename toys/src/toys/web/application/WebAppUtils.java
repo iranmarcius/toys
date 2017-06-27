@@ -19,23 +19,23 @@ public class WebAppUtils {
     }
 
     /**
-     * Cria uma mensagem padrão para os logs de aplicações de web.
+     * Retorna uma mensagem padrão para logs de aplicações web.
      * @param request Requisição original
+     * @param detalhes Se for especificado TRUE inclui URI e REFERER na texto gerado.
      * @param msg Mensagem que será criada
-     * @param detalhes Se for especificado TRUE inclui URI e REFERER na mensagem.
-     * @param data Dados que serão utilizados na formatação da mensagem através do método {@link String#format(String, Object...)}.
+     * @param params Dados que serão utilizados na formatação da mensagem através do método {@link String#format(String, Object...)}.
      * @return Retorna uma mensagem para registro de logs no seguinte formato:
-     * <code>username - IP - mensagem</code>.
+     * <code>username - IP - [uri - referer - ] mensagem</code>.
      */
-    public static synchronized String logMsg(HttpServletRequest request, String msg, Object... data) {
-        String s = data == null || data.length == 0 ? msg : String.format(msg, data);
+    public static synchronized String logMsg(HttpServletRequest request, boolean detalhes, String msg, Object... params) {
+        String s = params == null || params.length == 0 ? msg : String.format(msg, params);
         Principal p = request.getUserPrincipal();
         if (p != null)
             s += ", username=" + p.getName();
-        return s +
-                ", ip=" + request.getRemoteAddr() +
-                ", uri=" + request.getRequestURI() +
-                ", referer=" + request.getHeader("Referer");
+        s += ", ip=" + request.getRemoteAddr();
+        if (detalhes)
+            s += ", uri=" + request.getRequestURI() +", referer=" + request.getHeader("Referer");
+        return s;
     }
 
 }
