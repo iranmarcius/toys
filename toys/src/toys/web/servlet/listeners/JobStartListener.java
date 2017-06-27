@@ -25,7 +25,7 @@ public abstract class JobStartListener implements ServletContextListener {
             scheduleJobs(sce);
             scheduler.start();
         } catch (SchedulerException e) {
-            handleSchedulerException("Erro incializando o Quartz.", e);
+            getErrorLogger().fatal("Erro incializando o Quartz.", e);
         }
     }
 
@@ -34,7 +34,7 @@ public abstract class JobStartListener implements ServletContextListener {
         try {
             scheduler.shutdown();
         } catch (SchedulerException e) {
-            handleSchedulerException("Erro finalizando Quartz.", e);
+            getErrorLogger().fatal("Erro finalizando Quartz.", e);
         }
     }
 
@@ -49,13 +49,14 @@ public abstract class JobStartListener implements ServletContextListener {
     }
 
     /**
-     * Gerenciamento de erros.
-     */
-    protected abstract void handleSchedulerException(String msg, Throwable e);
-
-    /**
      * Neste método os jobs serão criados e suas agendas serão definidas.
      */
     protected abstract void scheduleJobs(ServletContextEvent sce) throws SchedulerException;
+
+    /**
+     * Retorna o logger utilizado para erros. Deve ser uma instância retornada pelo método
+     * {@link LogManager#getFormatterLogger()} ou algum log que aceite formatação de mensagens.
+     */
+    protected abstract Logger getErrorLogger();
 
 }
