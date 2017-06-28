@@ -81,7 +81,7 @@ public class QuartzStartListener implements ServletContextListener {
             while (names.hasMoreElements())
                 agendarTarefa(scheduler, names.nextElement().getName(), sce.getServletContext());
             scheduler.start();
-            logger.info("Agendador de taredas iniciado com sucesso.");
+            logger.info("Agendador de tarefas iniciado com sucesso.");
         } catch (SchedulerException e) {
             logger.fatal("Erro geral agendando tarefas.", e);
         }
