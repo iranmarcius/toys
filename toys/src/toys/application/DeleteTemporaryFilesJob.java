@@ -1,7 +1,6 @@
 package toys.application;
 
 import java.io.File;
-import java.io.FileFilter;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -35,12 +34,9 @@ public class DeleteTemporaryFilesJob implements Job {
         logger.info(String.format("Iniciando exclusao de arquivos temporarios. regex=%s, idade maxima=%dms", regex, maxAge));
 
         // Filtra os arquivos que se enquadrem no critério de deleção
-        File[] tempFiles = FileUtils.getTempDirectory().listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File f) {
-                return f.isFile() && f.canWrite() && (System.currentTimeMillis() - f.lastModified() > maxAge) && f.getName().matches(regex);
-            }
-        });
+        File[] tempFiles = FileUtils.getTempDirectory().listFiles(f ->
+            f.isFile() && f.canWrite() && (System.currentTimeMillis() - f.lastModified() > maxAge) && f.getName().matches(regex)
+        );
 
         logger.info(String.format("%d arquivos temporarios encontrados.", tempFiles.length));
         for (File f: tempFiles)
