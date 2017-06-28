@@ -8,6 +8,7 @@ import javax.naming.NameClassPair;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -78,7 +79,7 @@ public class QuartzStartListener implements ServletContextListener {
         try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
             while (names.hasMoreElements())
-                agendarTarefa(scheduler, names.nextElement().getName());
+                agendarTarefa(scheduler, names.nextElement().getName(), sce.getServletContext());
             scheduler.start();
             logger.info("Agendador de taredas iniciado com sucesso.");
         } catch (SchedulerException e) {
@@ -91,10 +92,11 @@ public class QuartzStartListener implements ServletContextListener {
      * Agenda uma tarefa no agendador.
      * @param scheduler Referência para o agendador.
      * @param jobName Nome da tarefa de onde serão lidas as configurações.
+     * @param sc Referência para o contexto da servlet que pode ser utilizado na obtenção de algumas informações.
      * @throws NamingException
      */
     @SuppressWarnings("unchecked")
-    private void agendarTarefa(Scheduler scheduler, String jobName) {
+    private void agendarTarefa(Scheduler scheduler, String jobName, ServletContext sc) {
         logger.info("Agendando tarefa %s.", jobName);
         try {
 
@@ -121,7 +123,7 @@ public class QuartzStartListener implements ServletContextListener {
                     else
                         schedule = null;
                 } else {
-                    Object value = context.lookup(cfg);
+                    Object value = processarSubstituicoes(context.lookup(cfg), sc);
                     jobData.put(cfg, value);
                     logger.info("\t%s=%s", cfg, value);
                 }
@@ -164,6 +166,8 @@ public class QuartzStartListener implements ServletContextListener {
             logger.fatal("Erro instanciando a tarefa %s.", jobName, e);
         } catch (SchedulerException e) {
             logger.fatal("Ocorreu um erro no agendamento da tarefa %s.", jobName, e);
+        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+            logger.fatal("Ocorreu um erro no processamento dos parametros", e);
         }
     }
 
@@ -177,6 +181,45 @@ public class QuartzStartListener implements ServletContextListener {
                 logger.fatal("Erro finalizando Quartz.", e);
             }
         }
+    }
+
+    /**
+     * Verifica se o valor é do tipo String e, caso seja, processa as substituições existentes, caso haja alguma.
+     * @throws ClassNotFoundException
+     * @throws SecurityException
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     */
+    private Object processarSubstituicoes(Object value, ServletContext sc) throws ClassNotFoundException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+
+        // Processa somente valores string
+        if (!(value instanceof String))
+            return value;
+
+        StringBuilder sb = new StringBuilder((String)value);
+        int i = -1;
+        int j = -1;
+        while ((i = sb.indexOf("${")) > -1 && (j = sb.indexOf("}")) > -1) {
+            String expr = sb.substring(i, j + 1);
+            String replace = null;
+            if (expr.equals("${appRoot}")) {
+                replace = sc.getRealPath(".");
+            } else if (expr.startsWith("${const:")) {
+                String constPath = expr.substring(8, expr.length() - 1);
+                int k = constPath.lastIndexOf('.');
+                String className = constPath.substring(0, k);
+                String fieldName = constPath.substring(k + 1);
+                Class<?> clazz = Class.forName(className);
+                replace = clazz.getField(fieldName).get(clazz).toString();
+            }
+
+            if (replace != null)
+                sb.replace(i, j + 1, replace);
+
+        }
+
+        return sb.toString();
     }
 
     /**
