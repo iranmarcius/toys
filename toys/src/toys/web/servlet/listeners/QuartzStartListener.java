@@ -36,19 +36,24 @@ import toys.utils.LocaleToys;
 public class QuartzStartListener implements ServletContextListener {
 
     /**
-     * caminho base para os agendamentos
+     * Caminho base para os agendamentos no JNDI.
      */
     private static final String JNDI_QUARTZ_PATH = "java:comp/env/quartz";
 
     /**
+     * Nome da classe da tarefa.
+     */
+    private static final String CFG_JOB_CLASS = "jobClass";
+
+    /**
      * Agendamento da tarefa no formato cron do Quartz.
      */
-    private static final String CFG_AGENDA = "agenda";
+    private static final String CFG_SCHEDULE = "schedule";
 
     /**
      * Tempo de átraso na execução da tarefa em segundos.
      */
-    private static final String CFG_ATRASO = "atraso";
+    private static final String CFG_DELAY = "delay";
 
     protected final Logger logger = LogManager.getFormatterLogger();
     protected Scheduler scheduler;
@@ -85,32 +90,36 @@ public class QuartzStartListener implements ServletContextListener {
     /**
      * Agenda uma tarefa no agendador.
      * @param scheduler Referência para o agendador.
-     * @param jobClassName Nome da tarefa que será utilizado para obter as configurações.
+     * @param jobName Nome da tarefa de onde serão lidas as configurações.
      * @throws NamingException
      */
     @SuppressWarnings("unchecked")
-    private void agendarTarefa(Scheduler scheduler, String jobClassName) {
-        logger.info("Agendando tarefa %s.", jobClassName);
+    private void agendarTarefa(Scheduler scheduler, String jobName) {
+        logger.info("Agendando tarefa %s.", jobName);
         try {
 
             // Obtém as configurações do job
-            String path = JNDI_QUARTZ_PATH + "/" + jobClassName;
+            String path = JNDI_QUARTZ_PATH + "/" + jobName;
             Context context = (Context)JNDIUtils.getInitialContext().lookup(path);
             NamingEnumeration<NameClassPair> cfgs = JNDIUtils.getInitialContext().list(path);
-            String agenda = null;
-            Long atraso = null;
+            String jobClass = null;
+            String schedule = null;
+            Integer delay = null;
             JobDataMap jobData = new JobDataMap();
             while (cfgs.hasMoreElements()) {
                 String cfg = cfgs.nextElement().getName();
-                if (cfg.equals(CFG_ATRASO)) {
-                    atraso = (Long)context.lookup(CFG_ATRASO);
-                    logger.info("\tatraso=%ds", atraso);
-                } else if (cfg.equals(CFG_AGENDA)) {
-                    agenda = (String)context.lookup(CFG_AGENDA);
-                    if (StringUtils.isNotEmpty(agenda))
-                        logger.info("\tagenda=%s", agenda);
+                if (cfg.equals(CFG_JOB_CLASS)) {
+                    jobClass = (String)context.lookup(CFG_JOB_CLASS);
+                    logger.info("\tclass=%s", jobClass);
+                } else if (cfg.equals(CFG_DELAY)) {
+                    delay = (Integer)context.lookup(CFG_DELAY);
+                    logger.info("\tatraso na execucao=%ds", delay);
+                } else if (cfg.equals(CFG_SCHEDULE)) {
+                    schedule = (String)context.lookup(CFG_SCHEDULE);
+                    if (StringUtils.isNotEmpty(schedule))
+                        logger.info("\tagenda=%s", schedule);
                     else
-                        agenda = null;
+                        schedule = null;
                 } else {
                     Object value = context.lookup(cfg);
                     jobData.put(cfg, value);
@@ -119,23 +128,27 @@ public class QuartzStartListener implements ServletContextListener {
             }
 
             // Configura as informações do job
-            Class<? extends Job> jobClazz = (Class<Job>)Class.forName(jobClassName);
+            if (StringUtils.isBlank(jobClass)) {
+                logger.error("Nome da classe nao foi especificado para o job %s.", jobName);
+                return;
+            }
+            Class<? extends Job> jobClazz = (Class<Job>)Class.forName(jobClass);
             JobBuilder jb = JobBuilder.newJob().ofType(jobClazz);
             if (!jobData.isEmpty())
                 jb.usingJobData(jobData);
             JobDetail jobDetail = jb.build();
 
             // Configura a trigger
-            if (agenda == null && atraso != null) {
-                agenda = execucaoUnica(atraso);
-                atraso = null;
-                logger.info("\tagendamento de execucao unica=%s", agenda);
+            if (schedule == null && delay != null) {
+                schedule = execucaoUnica(delay);
+                delay = null;
+                logger.info("\tagenda de execucao unica=%s", schedule);
             }
             Trigger trigger = null;
-            if (agenda != null) {
-                TriggerBuilder<CronTrigger> tb = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule(agenda));
-                if (atraso != null)
-                    tb.startAt(new Date(System.currentTimeMillis() + atraso));
+            if (schedule != null) {
+                TriggerBuilder<CronTrigger> tb = TriggerBuilder.newTrigger().withSchedule(CronScheduleBuilder.cronSchedule(schedule));
+                if (delay != null)
+                    tb.startAt(new Date(System.currentTimeMillis() + delay));
                 trigger = tb.build();
             }
 
@@ -143,14 +156,14 @@ public class QuartzStartListener implements ServletContextListener {
             if (trigger != null)
                 scheduler.scheduleJob(jobDetail, trigger);
             else
-                logger.warn("Tarefa %s nao foi agendado pois nao possui uma agenda definida.", jobClassName);
+                logger.warn("Tarefa %s nao foi agendado pois nao possui uma agenda definida.", jobName);
 
         } catch (NamingException e) {
-            logger.fatal("Job %s/%s nao encontrado no JNDI.", JNDI_QUARTZ_PATH, jobClassName, e);
+            logger.fatal("Job %s/%s nao encontrado no JNDI.", JNDI_QUARTZ_PATH, jobName, e);
         } catch (ClassNotFoundException e) {
-            logger.fatal("Erro instanciando a tarefa %s.", jobClassName, e);
+            logger.fatal("Erro instanciando a tarefa %s.", jobName, e);
         } catch (SchedulerException e) {
-            logger.fatal("Ocorreu um erro no agendamento da tarefa %s.", jobClassName, e);
+            logger.fatal("Ocorreu um erro no agendamento da tarefa %s.", jobName, e);
         }
     }
 
@@ -169,9 +182,9 @@ public class QuartzStartListener implements ServletContextListener {
     /**
      * Cria um agendamento com execução única para disparar após decorridos os milissegundos especificados no offset.
      */
-    private String execucaoUnica(Long offset) {
+    private String execucaoUnica(Integer offset) {
         Calendar c = Calendar.getInstance(LocaleToys.BRAZIL);
-        c.add(Calendar.SECOND, offset.intValue());
+        c.add(Calendar.SECOND, offset);
         return String.format("%d %d %d * * ?", c.get(Calendar.SECOND), c.get(Calendar.MINUTE), c.get(Calendar.HOUR_OF_DAY));
     }
 
