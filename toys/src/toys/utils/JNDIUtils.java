@@ -25,7 +25,7 @@ public final class JNDIUtils {
     /**
      * Retorna uma instância contexto inicial JNDI.
      */
-    public synchronized static Context getInitialContext() throws NamingException {
+    public static synchronized Context getInitialContext() throws NamingException {
         if (ic == null)
             ic = new InitialContext();
         return ic;
@@ -37,7 +37,7 @@ public final class JNDIUtils {
      * @see #DEFAULT_MAIL_SESSION_PATH
      * @throws NamingException
      */
-    public synchronized static Session getMailSession() throws NamingException {
+    public static synchronized Session getMailSession() throws NamingException {
         return getMailSession(DEFAULT_MAIL_SESSION_PATH);
     }
 
@@ -48,7 +48,7 @@ public final class JNDIUtils {
      * @throws NamingException
      * @see #DEFAULT_MAIL_SESSION_PATH
      */
-    public synchronized static Session getMailSession(String jndiPath) throws NamingException {
+    public static synchronized Session getMailSession(String jndiPath) throws NamingException {
         Object o = getInitialContext().lookup(jndiPath != null ? jndiPath : DEFAULT_MAIL_SESSION_PATH);
         return (Session)PortableRemoteObject.narrow(o, Session.class);
     }
@@ -57,7 +57,7 @@ public final class JNDIUtils {
      * Retorna o valor da propriedade <b>ambienteDesenvolvimento</b> armazenada no contexto JNDI.
      * @throws NamingException
      */
-    public synchronized static boolean isAmbienteDesenvolvimento() throws NamingException {
+    public static synchronized boolean isAmbienteDesenvolvimento() throws NamingException {
         return (Boolean)getInitialContext().lookup("java:comp/env/ambienteDesenvolvimento");
     }
 
