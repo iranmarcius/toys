@@ -63,7 +63,7 @@ public final class Crypt {
      * @param chave Palavra chave
      * @return <code>String</code>
      */
-    public static String gorgonzolaEncode(String string, String chave) {
+    public static String gorgonzolaEnc(String string, String chave) {
         int r = new Random(System.currentTimeMillis()).nextInt(253) + 2;
         int k = makeKey(chave) - r;
         char[] chars = string.toCharArray();
@@ -102,7 +102,7 @@ public final class Crypt {
      * @param chave Chave para decodificação
      * @return <code>String</code>
      */
-    public static String gorgonzolaDecode(String string, String chave) {
+    public static String gorgonzolaDec(String string, String chave) {
         char[] chars = string.toCharArray();
         String rs = String.format("%c%c", chars[0], chars[chars.length - 1]);
         int r = Integer.valueOf(rs, 16);
