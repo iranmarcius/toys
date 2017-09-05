@@ -48,16 +48,6 @@ public class AttributeConsts {
 	public static final String XSTREAM = "application.xstream";
 
 	/**
-	 * Mensagem por módulo de autenticação.
-	 */
-	public static final String LOGIN_MODULE_MESSAGE = "loginModule.message";
-
-	/**
-	 * Código de detalhe de erro de credenciais gerado por uma operação de autenticação num servidor LDAP.
-	 */
-	public static final String LDAP_INVALID_CREDENTIAS_DETAIL = "ldap.invalidCredentials.errorCode";
-
-	/**
 	 * Especificação do caminho para a página de troca de senha.
 	 */
 	public static final String PAGINA_TROCA_SENHA = "webapp.pagina.alteracaoSenha";
