@@ -191,6 +191,7 @@ public class QuartzStartListener implements ServletContextListener {
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      */
+    @SuppressWarnings("el-syntax")
     private Object processarSubstituicoes(Object value, ServletContext sc) throws ClassNotFoundException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 
         // Processa somente valores string
