@@ -141,12 +141,12 @@ public final class FreemarkerUtils {
      * Envia um email HTML utilizando o template e os dados informados.
      * @param templateId Identificador do template. O template será obtido através da função {@link getEmailTemplate}.
      * @param data dados que serão utilizados na criação do conteúdo do e-mail.
-     * @param nomeDestinatario Nome do destinatário.
      * @param emailDestinatario Email do destinatário.
+     * @param nomeDestinatario Nome do destinatário. Este parâmetro é opcional.
      * @param subjectParams Parâmetros do assunto do email caso haja necessidade. Este parâmetro é utilizado na chamada do método
      * {@link getEmailTemplate}.
      */
-    public static synchronized void enviarEmailHtml(String templateId, Map<String, Object> data, String nomeDestinatario, String emailDestinatario, Object... subjectParams)
+    public static synchronized void enviarEmailHtml(String templateId, Map<String, Object> data, String emailDestinatario, String nomeDestinatario, Object... subjectParams)
             throws TemplateException, IOException {
         FreemarkerTemplatePojo t = getEmailTemplate(templateId, subjectParams);
         StringWriter sw = new StringWriter();
