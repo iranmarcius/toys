@@ -1,5 +1,8 @@
 package toys.constants;
 
+import toys.utils.FreemarkerUtils;
+import toys.web.servlet.listeners.FreemarkerInitListener;
+
 /**
  * Definições de constantes com nomes que podem ser utilizados para armazenamento
  * de atributos em sessões, requests ou no contexto da aplicação.
@@ -66,6 +69,11 @@ public class AttributeConsts {
 	 * Nome do atributo para armazenar o nome do arquivo que será utilizado no conteúdo stream.
 	 */
 	public static final String CONTENT_FILENAME = "toys.web.servlet.contentFilename";
+
+	/**
+	 * Nome do atributo sob o qual será armazenada a instância do {@link FreemarkerUtils} através do {@link FreemarkerInitListener}.
+	 */
+	public static final String FREEMARKER_UTILS = "toys.utils.freemarkerUtils";
 
 	private AttributeConsts() {
 	}

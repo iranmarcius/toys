@@ -1,7 +1,6 @@
 package toys.utils;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -10,7 +9,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 
-import freemarker.cache.FileTemplateLoader;
+import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -22,32 +21,22 @@ import toys.pojos.FreemarkerTemplatePojo;
  * @author Iran
  */
 public final class FreemarkerUtils {
-    private static Configuration cfg;
+    private Configuration cfg;
 
-    private FreemarkerUtils() {
+    public FreemarkerUtils(TemplateLoader loader) {
         super();
-    }
-
-    /**
-     * Inicializa a configuração do Freemarker com o diretório de templates informado.
-     */
-    public static synchronized void init(String templatesDir) throws IOException {
-        if (cfg == null) {
-            LogManager.getFormatterLogger().info("Inicializando utilitario Freemarker. templatesDir=%s", templatesDir);
-            cfg =  new Configuration(Configuration.VERSION_2_3_22);
-            cfg.setTemplateLoader(new FileTemplateLoader(new File(templatesDir)));
-            cfg.setDefaultEncoding("utf-8");
-            cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        } else {
-            LogManager.getLogger().warn("Utilitario Freemarker ja foi inicializado.");
-        }
+        LogManager.getFormatterLogger().debug("Inicializando utilitario Freemarker. templateLoader=%s", loader.getClass().getName());
+        cfg =  new Configuration(Configuration.VERSION_2_3_22);
+        cfg.setTemplateLoader(loader);
+        cfg.setDefaultEncoding("utf-8");
+        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
     }
 
     /**
      * Retorna um template.
      * @param name Nome do template sem a extensão.
      */
-    public static synchronized Template getTemplate(String name) throws IOException {
+    public synchronized Template getTemplate(String name) throws IOException {
         if (name == null)
             throw new NullPointerException("Nome do template nao foi informado.");
         if (cfg == null)
@@ -75,8 +64,7 @@ public final class FreemarkerUtils {
      * @throws IOException
      * @see #getTemplate(String)
      */
-    public static synchronized FreemarkerTemplatePojo getEmailTemplate(String name, Object... subjectParams) throws IOException {
-
+    public synchronized FreemarkerTemplatePojo getEmailTemplate(String name, Object... subjectParams) throws IOException {
         Template t = getTemplate(name);
 
         // Determina a sessão de cabeçalhos
@@ -146,7 +134,7 @@ public final class FreemarkerUtils {
      * @param subjectParams Parâmetros do assunto do email caso haja necessidade. Este parâmetro é utilizado na chamada do método
      * {@link getEmailTemplate}.
      */
-    public static synchronized void enviarEmailHtml(String templateId, Map<String, Object> data, String emailDestinatario, String nomeDestinatario, Object... subjectParams)
+    public synchronized void enviarEmailHtml(String templateId, Map<String, Object> data, String emailDestinatario, String nomeDestinatario, Object... subjectParams)
             throws TemplateException, IOException {
         FreemarkerTemplatePojo t = getEmailTemplate(templateId, subjectParams);
         StringWriter sw = new StringWriter();
