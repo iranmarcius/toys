@@ -21,22 +21,29 @@ import toys.pojos.FreemarkerTemplatePojo;
  * @author Iran
  */
 public final class FreemarkerUtils {
-    private Configuration cfg;
+    private static Configuration cfg;
 
-    public FreemarkerUtils(TemplateLoader loader) {
+    private FreemarkerUtils() {
         super();
+    }
+
+    /**
+     * Inicializa a classe utilizando o {@link TemplateLoader} informado.
+     * @param loader
+     */
+    public static void init(TemplateLoader loader) {
         LogManager.getFormatterLogger().debug("Inicializando utilitario Freemarker. templateLoader=%s", loader.getClass().getName());
         cfg =  new Configuration(Configuration.VERSION_2_3_22);
-        cfg.setTemplateLoader(loader);
         cfg.setDefaultEncoding("utf-8");
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        cfg.setTemplateLoader(loader);
     }
 
     /**
      * Retorna um template.
      * @param name Nome do template sem a extensão.
      */
-    public synchronized Template getTemplate(String name) throws IOException {
+    public static synchronized Template getTemplate(String name) throws IOException {
         if (name == null)
             throw new NullPointerException("Nome do template nao foi informado.");
         if (cfg == null)
@@ -64,7 +71,7 @@ public final class FreemarkerUtils {
      * @throws IOException
      * @see #getTemplate(String)
      */
-    public synchronized FreemarkerTemplatePojo getEmailTemplate(String name, Object... subjectParams) throws IOException {
+    public static synchronized FreemarkerTemplatePojo getEmailTemplate(String name, Object... subjectParams) throws IOException {
         Template t = getTemplate(name);
 
         // Determina a sessão de cabeçalhos
@@ -134,7 +141,7 @@ public final class FreemarkerUtils {
      * @param subjectParams Parâmetros do assunto do email caso haja necessidade. Este parâmetro é utilizado na chamada do método
      * {@link getEmailTemplate}.
      */
-    public synchronized void enviarEmailHtml(String templateId, Map<String, Object> data, String emailDestinatario, String nomeDestinatario, Object... subjectParams)
+    public static synchronized void enviarEmailHtml(String templateId, Map<String, Object> data, String emailDestinatario, String nomeDestinatario, Object... subjectParams)
             throws TemplateException, IOException {
         FreemarkerTemplatePojo t = getEmailTemplate(templateId, subjectParams);
         StringWriter sw = new StringWriter();

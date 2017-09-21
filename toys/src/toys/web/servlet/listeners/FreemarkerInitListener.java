@@ -9,7 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import freemarker.cache.FileTemplateLoader;
-import toys.constants.AttributeConsts;
 import toys.utils.FreemarkerUtils;
 
 /**
@@ -27,8 +26,7 @@ public class FreemarkerInitListener implements ServletContextListener {
         // Inicializa a classe utilitária do Freemarker
         try {
             String templatesPath = sce.getServletContext().getRealPath("/WEB-INF/templates/freemarker");
-            FreemarkerUtils fmu = new FreemarkerUtils(new FileTemplateLoader(new File(templatesPath)));
-            sce.getServletContext().setAttribute(AttributeConsts.FREEMARKER_UTILS, fmu);
+            FreemarkerUtils.init(new FileTemplateLoader(new File(templatesPath)));
             logger.info("Caminho para os templates: %s", templatesPath);
         } catch (Exception e) {
             LogManager.getLogger().fatal("Erro inicializando o utilitario Freemarker. As operacoes que utilizarem templates nao funcionarao.", e);
