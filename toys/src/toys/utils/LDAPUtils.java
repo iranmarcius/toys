@@ -153,6 +153,13 @@ public class LDAPUtils {
     }
 
     /**
+     * Método de conveniência para invocar o {@link #autenticar(String, String)} utilizando um {@link Entry}.
+     */
+    public synchronized String autenticar(Entry entry, String password) throws LDAPException {
+        return autenticar(entry.getAttributeValue("distinguishedName"), password);
+    }
+
+    /**
      * Altera a senha de uma conta para a nova senha.
      * @param accountName Nome da conta.
      * @param novaSenha Nova senha que será atribuida à conta.
