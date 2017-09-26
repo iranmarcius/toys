@@ -67,6 +67,17 @@ public class AttributeConsts {
 	 */
 	public static final String CONTENT_FILENAME = "toys.web.servlet.contentFilename";
 
+	/**
+	 * Nome do atributo para armazenar o código do detalhamento do erro LDAP.
+	 */
+	public static final String ATTR_LDAP_INVALID_CREDENTIALS_DETAIL = "ldap.invalidCredentials.errorCode";
+
+	/**
+	 * Attributoi utilizado para armazenar a mensagem de erro do módulo de autenticação.
+	 */
+	public static final String ATTR_LOGIN_MODULE_MESSAGE = "loginModule.message";
+
+
 	private AttributeConsts() {
 	}
 
