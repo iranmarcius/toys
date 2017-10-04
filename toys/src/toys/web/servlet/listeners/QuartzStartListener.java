@@ -27,7 +27,7 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
-import toys.utils.JNDIUtils;
+import toys.utils.JNDIToys;
 import toys.utils.LocaleToys;
 
 /**
@@ -66,7 +66,7 @@ public class QuartzStartListener implements ServletContextListener {
         // Verifica se existem tarefas configuradas
         NamingEnumeration<NameClassPair> names = null;
         try {
-            names = JNDIUtils.getInitialContext().list(JNDI_QUARTZ_PATH);
+            names = JNDIToys.getInitialContext().list(JNDI_QUARTZ_PATH);
         } catch (NameNotFoundException e) {
             logger.info("Nenhuma tarefa agendada foi definida.");
         } catch (NamingException e) {
@@ -102,8 +102,8 @@ public class QuartzStartListener implements ServletContextListener {
 
             // Obtém as configurações do job
             String path = JNDI_QUARTZ_PATH + "/" + jobName;
-            Context context = (Context)JNDIUtils.getInitialContext().lookup(path);
-            NamingEnumeration<NameClassPair> cfgs = JNDIUtils.getInitialContext().list(path);
+            Context context = (Context)JNDIToys.getInitialContext().lookup(path);
+            NamingEnumeration<NameClassPair> cfgs = JNDIToys.getInitialContext().list(path);
             String jobClass = null;
             String schedule = null;
             Integer delay = null;

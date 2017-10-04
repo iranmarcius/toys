@@ -6,11 +6,16 @@ package toys.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JFormattedTextField;
+import javax.swing.text.MaskFormatter;
+
+import toys.constants.MaskConsts;
 import toys.constants.RegExprConsts;
 
 /**
@@ -243,6 +248,16 @@ public class StringToys {
             m.put(ss[0], ss[1]);
         }
         return m;
+    }
+
+    /**
+     * Retorna uma string representando úm número de CPF formatada de acordo com a máscara do CPF.
+     * @throws ParseException
+     */
+    public static String formatCPF(String cpf) throws ParseException {
+        JFormattedTextField fmt = new JFormattedTextField(new MaskFormatter(MaskConsts.CPF));
+        fmt.setText(cpf);
+        return fmt.getText();
     }
 
 }

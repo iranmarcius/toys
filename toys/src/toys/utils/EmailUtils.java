@@ -40,7 +40,7 @@ public final class EmailUtils {
             email.setCharset("utf-8");
             email.setSubject(subject);
             email.setHtmlMsg(content);
-            email.setMailSessionFromJNDI(JNDIUtils.DEFAULT_MAIL_SESSION_PATH);
+            email.setMailSessionFromJNDI(JNDIToys.DEFAULT_MAIL_SESSION_PATH);
             email.send();
             LogManager.getFormatterLogger().debug("E-mail enviado para %s <%s>.", toName, to);
             return true;

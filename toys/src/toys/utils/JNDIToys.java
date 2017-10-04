@@ -10,7 +10,7 @@ import javax.rmi.PortableRemoteObject;
  * Métodos utilitários para operaçoes JNDI.
  * @author Iran Marcius
  */
-public final class JNDIUtils {
+public final class JNDIToys {
     private static Context ic;
 
     /**
@@ -18,7 +18,7 @@ public final class JNDIUtils {
      */
     public static final String DEFAULT_MAIL_SESSION_PATH = "java:comp/env/mail/Session";
 
-    protected JNDIUtils() {
+    protected JNDIToys() {
         super();
     }
 
