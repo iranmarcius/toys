@@ -12,7 +12,8 @@ import org.quartz.JobExecutionException;
 
 /**
  * Este processo apaga arquivos no diretório temporário do sistema cujo nome corresponda à expressão regular informada e
- * cuja idade seja maior que o tempo especificado. Na execução deste job dois valores devem ser informados no contexto:
+ * cuja idade seja maior que o tempo especificado. O diretório temporário do sistema é obtido à partir da chamada ao método
+ * {@link FileUtils#getTempDirectory()} do Apache Commons-IO. Na execução deste job dois valores devem ser informados no contexto:
  * <ul>
  * 	<li><b>regex:</b> a expressão regular que será utilizada para filtrar os nomes dos arquivos a serem removidos.</li>
  * 	<li><b>maxAge:</b> a idade máxima em milissegundos que um arquivo poderá ser mantido quando o processo for executado.
