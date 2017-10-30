@@ -8,10 +8,11 @@ package toys.utils;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
-import java.util.Vector;
 
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -38,6 +39,10 @@ public final class DateToys {
      */
     public static final int MINUTES_PER_WEEK = 10080;
 
+    private DateToys() {
+        super();
+    }
+
     /**
      * <p>Retorna um <i>long</i> representando o intervalo de tempo especificado
      * na string. Nenhum objeto de manipulação de datas e horas (<code>Date</code> ou
@@ -54,19 +59,19 @@ public final class DateToys {
         long t = 0;
         int i;
 
-        if ((i = time.indexOf("d")) > -1) {
+        if ((i = time.indexOf('d')) > -1) {
             t += Long.parseLong(time.substring(0, i)) * DateUtils.MILLIS_PER_DAY;
             time = time.substring(i + 1);
         }
-        if ((i = time.indexOf("h")) > -1) {
+        if ((i = time.indexOf('h')) > -1) {
             t += Long.parseLong(time.substring(0, i)) *  DateUtils.MILLIS_PER_HOUR;
             time = time.substring(i + 1);
         }
-        if ((i = time.indexOf("m")) > -1) {
+        if ((i = time.indexOf('m')) > -1) {
             t += Long.parseLong(time.substring(0, i)) * DateUtils.MILLIS_PER_MINUTE;
             time = time.substring(i + 1);
         }
-        if ((i = time.indexOf("s")) > -1) {
+        if ((i = time.indexOf('s')) > -1) {
             t += Long.parseLong(time.substring(0, i)) * DateUtils.MILLIS_PER_SECOND;
         }
         if (time.matches("^\\d+$")) {
@@ -90,7 +95,7 @@ public final class DateToys {
         long ms = Long.parseLong(s[0]) * DateUtils.MILLIS_PER_HOUR;
         ms += Long.parseLong(s[1]) * DateUtils.MILLIS_PER_MINUTE;
         if (s.length > 2)
-        	ms += Long.parseLong(s[2]) * DateUtils.MILLIS_PER_SECOND;
+            ms += Long.parseLong(s[2]) * DateUtils.MILLIS_PER_SECOND;
         return ms;
     }
 
@@ -104,27 +109,18 @@ public final class DateToys {
      * do dia. A porção da data é obrigatória.
      * @return <code>{@link Date}</code>
      */
-    public static Date dateTimeStr2Date(String dateTimeStr, Locale locale) {
-    	try {
-	        String[] p = dateTimeStr.split(" +");
-	        Date d = DateUtils.parseDate(p[0], new String[] {"dd/MM/yyyy"});
-	        if (p.length > 1) {
-	            long ms = time2ms(p[1]);
-	            d.setTime(d.getTime() + ms);
-	        }
-	        return d;
-    	} catch (Exception e) {
-    		return null;
-    	}
-    }
-
-    /**
-     * Método de conveniência para invocar o método
-     * <code>{@link #dateTimeStr2Date(String, Locale)}</code> com a localidade padrão.
-     * @see #dateTimeStr2Date(String, Locale)
-     */
     public static Date dateTimeStr2Date(String dateTimeStr) {
-        return dateTimeStr2Date(dateTimeStr, Locale.getDefault());
+        try {
+            String[] p = dateTimeStr.split(" +");
+            Date d = DateUtils.parseDate(p[0], "dd/MM/yyyy");
+            if (p.length > 1) {
+                long ms = time2ms(p[1]);
+                d.setTime(d.getTime() + ms);
+            }
+            return d;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -170,40 +166,61 @@ public final class DateToys {
                     return new Time(c.getTimeInMillis());
                 }
             } catch (Exception e) {
+                // Nada acontece
             }
         }
         return null;
     }
 
     /**
+     * Seta a hora do calendário informado para o início do dia.
+     */
+    public static void inicioDia(Calendar c) {
+        c.set(Calendar.MILLISECOND, c.getMinimum(Calendar.MILLISECOND));
+        c.set(Calendar.SECOND, c.getMinimum(Calendar.SECOND));
+        c.set(Calendar.MINUTE, c.getMinimum(Calendar.MINUTE));
+        c.set(Calendar.HOUR_OF_DAY, c.getMinimum(Calendar.HOUR_OF_DAY));
+    }
+
+    /**
+     * Seta a hora do calendário informado para o início do dia.
+     */
+    public static void finalDia(Calendar c) {
+        c.set(Calendar.HOUR_OF_DAY, c.getMaximum(Calendar.HOUR_OF_DAY));
+        c.set(Calendar.MINUTE, c.getMaximum(Calendar.MINUTE));
+        c.set(Calendar.SECOND, c.getMaximum(Calendar.SECOND));
+        c.set(Calendar.MILLISECOND, c.getMaximum(Calendar.MILLISECOND));
+    }
+
+    /**
      * Seta o calendário para o primeiro dia do mês.
      */
     public static void inicioMes(Calendar c) {
-        c.set(Calendar.DAY_OF_MONTH, c.getActualMinimum(Calendar.DAY_OF_MONTH));
+        c.set(Calendar.DAY_OF_MONTH, c.getMinimum(Calendar.DAY_OF_MONTH));
     }
 
     /**
      * Seta o calendário para o último dia do mês corrente;
      */
     public static void finalMes(Calendar c) {
-        c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+        c.set(Calendar.DAY_OF_MONTH, c.getMaximum(Calendar.DAY_OF_MONTH));
     }
 
     /**
      * Seta o calendário para o primeiro dia do ano.
      */
     public static void inicioAno(Calendar c) {
-    	inicioMes(c);
-    	c.set(Calendar.MONTH, c.getActualMinimum(Calendar.MONTH));
+        inicioMes(c);
+        c.set(Calendar.MONTH, c.getMinimum(Calendar.MONTH));
     }
 
     /**
      * Seta o calendário para o último dia do ano.
      */
     public static void finalAno(Calendar c) {
-    	inicioMes(c);
-    	c.set(Calendar.MONTH, c.getActualMaximum(Calendar.MONTH));
-    	finalMes(c);
+        inicioMes(c);
+        c.set(Calendar.MONTH, c.getMaximum(Calendar.MONTH));
+        finalMes(c);
     }
 
     /**
@@ -223,7 +240,7 @@ public final class DateToys {
      * @param c Calendário que será modificado
      */
     public static void finalSemana(Calendar c) {
-        c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+        c.set(Calendar.DAY_OF_MONTH, c.getMaximum(Calendar.DAY_OF_MONTH));
         int d = c.get(Calendar.DAY_OF_WEEK);
         c.add(Calendar.DAY_OF_MONTH, 7 - d);
     }
@@ -334,9 +351,8 @@ public final class DateToys {
         else
             delta = t2 - t1;
         long r = delta / DateUtils.MILLIS_PER_DAY;
-        if (!diasInteiros)
-            if (delta % DateUtils.MILLIS_PER_DAY > 0)
-                r++;
+        if (!diasInteiros && delta % DateUtils.MILLIS_PER_DAY > 0)
+            r++;
         return (int)r;
     }
 
@@ -382,8 +398,8 @@ public final class DateToys {
      * @param target Data que será modificada
      */
     public static void normalizeSeconds(Date reference, Date target) {
-		setTimeField(target, Calendar.SECOND, getTimeField(reference, Calendar.SECOND));
-		normalizeMilliseconds(reference, target);
+        setTimeField(target, Calendar.SECOND, getTimeField(reference, Calendar.SECOND));
+        normalizeMilliseconds(reference, target);
     }
 
     /**
@@ -491,11 +507,11 @@ public final class DateToys {
         int s = (int)(ms / DateUtils.MILLIS_PER_SECOND);
         ms = ms % DateUtils.MILLIS_PER_SECOND;
         switch (pattern) {
-		case 0: return String.format("%02d:%02d", h, m);
-		case 1: return String.format("%02d:%02d:%02d", h, m, s);
-		case 3: return String.format("%02d:%02d:%02d.%03d", h, m, s, ms);
-		default: return "";
-		}
+        case 0: return String.format("%02d:%02d", h, m);
+        case 1: return String.format("%02d:%02d:%02d", h, m, s);
+        case 3: return String.format("%02d:%02d:%02d.%03d", h, m, s, ms);
+        default: return "";
+        }
     }
 
     /**
@@ -547,11 +563,11 @@ public final class DateToys {
      */
     public static boolean estaEntre(Date d, Date d1, Date d2) {
         return
-        		d != null &&
-        		d1 != null &&
-        		d1.getTime() <= d.getTime() &&
-        		d2 != null &&
-        		d2.getTime() >= d.getTime();
+                d != null &&
+                d1 != null &&
+                d1.getTime() <= d.getTime() &&
+                d2 != null &&
+                d2.getTime() >= d.getTime();
     }
 
     /**
@@ -562,12 +578,12 @@ public final class DateToys {
      * entre as duas datas.
      */
     public static boolean estaEntre(Date d1, Date d2) {
-    	long agora = System.currentTimeMillis();
-    	return
-    			d1 != null &&
-    			d1.getTime() <= agora &&
-    			d2 != null &&
-    			d2.getTime() >= agora;
+        long agora = System.currentTimeMillis();
+        return
+                d1 != null &&
+                d1.getTime() <= agora &&
+                d2 != null &&
+                d2.getTime() >= agora;
     }
 
     /**
@@ -576,19 +592,19 @@ public final class DateToys {
      * locale default.
      * @return <code>Vector&lt;String&gt;</code>
      */
-    public static Vector<String> getWeekdays(Locale locale) {
+    public static List<String> getWeekdays(Locale locale) {
         DateFormatSymbols dfs = locale != null ? DateFormatSymbols.getInstance(locale) :
             DateFormatSymbols.getInstance();
         String[] s = dfs.getWeekdays();
-        Vector<String> v = new Vector<String>();
-        v.add(s[Calendar.SUNDAY]);
-        v.add(s[Calendar.MONDAY]);
-        v.add(s[Calendar.TUESDAY]);
-        v.add(s[Calendar.WEDNESDAY]);
-        v.add(s[Calendar.THURSDAY]);
-        v.add(s[Calendar.FRIDAY]);
-        v.add(s[Calendar.SATURDAY]);
-        return v;
+        List<String> l = new ArrayList<>();
+        l.add(s[Calendar.SUNDAY]);
+        l.add(s[Calendar.MONDAY]);
+        l.add(s[Calendar.TUESDAY]);
+        l.add(s[Calendar.WEDNESDAY]);
+        l.add(s[Calendar.THURSDAY]);
+        l.add(s[Calendar.FRIDAY]);
+        l.add(s[Calendar.SATURDAY]);
+        return l;
     }
 
     /**
@@ -596,7 +612,7 @@ public final class DateToys {
      * @see #getWeekdays(Locale)
      * @return <code>Vector&lt;String&gt;</code>
      */
-    public static Vector<String> getWeekdays() {
+    public static List<String> getWeekdays() {
         return getWeekdays(null);
     }
 
@@ -606,24 +622,24 @@ public final class DateToys {
      * nulo utiliza o locale default.
      * @return <code>Vector&lt;String&gt;</code>
      */
-    public static Vector<String> getMonths(Locale locale) {
+    public static List<String> getMonths(Locale locale) {
         DateFormatSymbols dfs = locale != null ? DateFormatSymbols.getInstance(locale) :
             DateFormatSymbols.getInstance();
         String[] s = dfs.getMonths();
-        Vector<String> v = new Vector<String>();
-        v.add(s[Calendar.JANUARY]);
-        v.add(s[Calendar.FEBRUARY]);
-        v.add(s[Calendar.MARCH]);
-        v.add(s[Calendar.APRIL]);
-        v.add(s[Calendar.MAY]);
-        v.add(s[Calendar.JUNE]);
-        v.add(s[Calendar.JULY]);
-        v.add(s[Calendar.AUGUST]);
-        v.add(s[Calendar.SEPTEMBER]);
-        v.add(s[Calendar.OCTOBER]);
-        v.add(s[Calendar.NOVEMBER]);
-        v.add(s[Calendar.DECEMBER]);
-        return v;
+        List<String> l = new ArrayList<>();
+        l.add(s[Calendar.JANUARY]);
+        l.add(s[Calendar.FEBRUARY]);
+        l.add(s[Calendar.MARCH]);
+        l.add(s[Calendar.APRIL]);
+        l.add(s[Calendar.MAY]);
+        l.add(s[Calendar.JUNE]);
+        l.add(s[Calendar.JULY]);
+        l.add(s[Calendar.AUGUST]);
+        l.add(s[Calendar.SEPTEMBER]);
+        l.add(s[Calendar.OCTOBER]);
+        l.add(s[Calendar.NOVEMBER]);
+        l.add(s[Calendar.DECEMBER]);
+        return l;
     }
 
     /**
@@ -632,7 +648,7 @@ public final class DateToys {
      * @see #getMonths(Locale)
      * @return <code>Vector&lt;String&gt;</code>
      */
-    public static Vector<String> getMonths() {
+    public static List<String> getMonths() {
         return getMonths(null);
     }
 
@@ -645,16 +661,16 @@ public final class DateToys {
      * @return <code>String</code>
      */
     public static String formatPlainTime(String plain, int pattern) {
-    	if (plain == null || !plain.matches("^\\d{4}\\d{0,5}$"))
-    		return "";
-    	StringBuilder sb = new StringBuilder();
-    	sb.append(plain.substring(0, 2)).append(":").append(plain.substring(2, 4));
-    	if (pattern >= 1 && plain.length() >= 6) {
-    		sb.append(":").append(plain.substring(4, 6));
-    		if (pattern == 2 && plain.length() == 9)
-    			sb.append(".").append(plain.substring(6, 9));
-    	}
-    	return sb.toString();
+        if (plain == null || !plain.matches("^\\d{4}\\d{0,5}$"))
+            return "";
+        StringBuilder sb = new StringBuilder();
+        sb.append(plain.substring(0, 2)).append(":").append(plain.substring(2, 4));
+        if (pattern >= 1 && plain.length() >= 6) {
+            sb.append(":").append(plain.substring(4, 6));
+            if (pattern == 2 && plain.length() == 9)
+                sb.append(".").append(plain.substring(6, 9));
+        }
+        return sb.toString();
 
     }
 
@@ -667,11 +683,11 @@ public final class DateToys {
      * @return <code>boolean</code>
      */
     public static boolean intersecao(Date f1d1, Date f1d2, Date f2d1, Date f2d2) {
-    	return
-    		NumberToys.inRange(f1d1.getTime(), f2d1.getTime(), f2d2.getTime()) ||
-    		NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime()) ||
-    		NumberToys.inRange(f2d1.getTime(), f1d1.getTime(), f1d2.getTime()) ||
-    		NumberToys.inRange(f2d2.getTime(), f1d1.getTime(), f1d2.getTime());
+        return
+            NumberToys.inRange(f1d1.getTime(), f2d1.getTime(), f2d2.getTime()) ||
+            NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime()) ||
+            NumberToys.inRange(f2d1.getTime(), f1d1.getTime(), f1d2.getTime()) ||
+            NumberToys.inRange(f2d2.getTime(), f1d1.getTime(), f1d2.getTime());
     }
 
     /**
@@ -683,9 +699,9 @@ public final class DateToys {
      * @return <code>boolean</code>
      */
     public static boolean contido(Date f1d1, Date f1d2, Date f2d1, Date f2d2) {
-    	return
-    		NumberToys.inRange(f1d1.getTime(), f2d1.getTime(), f2d2.getTime()) &&
-    		NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime());
+        return
+            NumberToys.inRange(f1d1.getTime(), f2d1.getTime(), f2d2.getTime()) &&
+            NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime());
     }
 
     /**
@@ -696,12 +712,12 @@ public final class DateToys {
      * @return <code>boolean</code>
      */
     public static boolean contido(Date d, Date i, Date f) {
-    	boolean contido = true;
-    	if (i != null)
-    		contido &= d.getTime() >= i.getTime();
-    	if (f != null)
-    		contido &= d.getTime() <= f.getTime();
-    	return contido;
+        boolean contido = true;
+        if (i != null)
+            contido &= d.getTime() >= i.getTime();
+        if (f != null)
+            contido &= d.getTime() <= f.getTime();
+        return contido;
     }
 
     /**
@@ -711,11 +727,11 @@ public final class DateToys {
      * @return {@link Timestamp}
      */
     public static Timestamp toTimestamp(String ts) {
-    	try {
-    		return Timestamp.valueOf(ts);
-    	} catch (Exception e) {
-    		return null;
-    	}
+        try {
+            return Timestamp.valueOf(ts);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }
