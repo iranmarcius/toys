@@ -11,9 +11,9 @@
 	<description>API com classes e métodos utilitários genéricos.</description>
 
 	<parent>
-		<groupId>config</groupId>
+		<groupId>br.unitoledo</groupId>
 		<artifactId>parent-pom</artifactId>
-		<version>noversion</version>
+		<version>1.0</version>
 	</parent>
 
 	<dependencies>
@@ -104,6 +104,12 @@
 					<groupId>c3p0</groupId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${dependency.version.junit}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>
