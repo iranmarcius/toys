@@ -109,7 +109,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${dependency.version.junit}</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
