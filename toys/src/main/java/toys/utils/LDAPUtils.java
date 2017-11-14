@@ -131,7 +131,7 @@ public class LDAPUtils {
      * Tenta realizar autenticação e retorna se houve sucesso ou não.
      * @param bindDN DN para conexão.
      * @param password Senha de conexão.
-     * @return Retorna o código de erro da autenticação ou nullo caso tenha ocorrido com sucesso.
+     * @return Retorna o código de erro da autenticação ou null caso tenha ocorrido com sucesso.
      * @throws LDAPException
      */
     public synchronized String autenticar(String bindDN, String password) throws LDAPException {
@@ -154,6 +154,9 @@ public class LDAPUtils {
 
     /**
      * Método de conveniência para invocar o {@link #autenticar(String, String)} utilizando um {@link Entry}.
+     * @param entry Dados da entrada para obter o nome de usuário.
+     * @param password Senha.
+     * @return Retorna o código de erro da autenticação ou null caso tenha ocorrido com sucesso.
      */
     public synchronized String autenticar(Entry entry, String password) throws LDAPException {
         return autenticar(entry.getAttributeValue("distinguishedName"), password);
