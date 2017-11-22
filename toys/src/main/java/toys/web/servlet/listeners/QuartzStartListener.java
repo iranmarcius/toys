@@ -158,7 +158,7 @@ public class QuartzStartListener implements ServletContextListener {
             if (trigger != null)
                 scheduler.scheduleJob(jobDetail, trigger);
             else
-                logger.warn("Tarefa %s nao foi agendado pois nao possui uma agenda definida.", jobName);
+                logger.warn("Tarefa %s nao iniciada pois nao possui agenda definida.", jobName);
 
         } catch (NamingException e) {
             logger.fatal("Job %s/%s nao encontrado no JNDI.", JNDI_QUARTZ_PATH, jobName, e);
