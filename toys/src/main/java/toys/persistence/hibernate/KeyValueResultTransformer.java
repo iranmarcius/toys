@@ -1,4 +1,4 @@
-package toys.backend.hibernate;
+package toys.persistence.hibernate;
 
 import org.hibernate.transform.BasicTransformerAdapter;
 import org.hibernate.transform.ResultTransformer;

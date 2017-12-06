@@ -2,7 +2,7 @@
  * Criado em 21/03/2011 12:17:26
  */
 
-package toys.backend.metadata;
+package toys.persistence.metadata;
 
 import java.util.List;
 

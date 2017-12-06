@@ -2,7 +2,7 @@
  * Criado em 31/08/2011 14:43:34 
  */
 
-package toys.backend.hibernate;
+package toys.persistence.hibernate;
 
 
 /**

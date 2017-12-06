@@ -1,4 +1,4 @@
-package toys.backend;
+package toys.persistence;
 
 /**
  * Exception para utilização com erros de integridade referencial.

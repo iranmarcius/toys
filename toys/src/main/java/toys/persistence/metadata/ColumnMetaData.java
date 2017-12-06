@@ -1,7 +1,7 @@
 /*
  * Criado em 31/10/2008
  */
-package toys.backend.metadata;
+package toys.persistence.metadata;
 
 
 /**

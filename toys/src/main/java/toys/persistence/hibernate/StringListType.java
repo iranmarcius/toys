@@ -1,4 +1,4 @@
-package toys.backend.hibernate;
+package toys.persistence.hibernate;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;

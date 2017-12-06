@@ -2,7 +2,7 @@
  * Criado em 12/08/2010 09:15:26
  */
 
-package toys.backend.hibernate;
+package toys.persistence.hibernate;
 
 import java.sql.Connection;
 import java.sql.SQLException;
