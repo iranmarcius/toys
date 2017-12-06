@@ -7,12 +7,13 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+
+import toys.persistence.ToysPersistenceRuntimeException;
 
 /**
  * Classe utilitária para obtenção de sessões do Hibernate.
@@ -51,7 +52,7 @@ public class HibernateSession {
 
                 sfm.put(params, sf);
             } catch (IOException e) {
-                throw new HibernateException(e);
+                throw new ToysPersistenceRuntimeException(e);
             }
 
         } else {
