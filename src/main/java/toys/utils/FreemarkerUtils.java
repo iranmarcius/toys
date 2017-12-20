@@ -29,7 +29,7 @@ public final class FreemarkerUtils {
 
     /**
      * Inicializa a classe utilizando o {@link TemplateLoader} informado.
-     * @param loader
+     * @param loader Loader utilizado na obtenção do template.
      */
     public static void init(TemplateLoader loader) {
         LogManager.getFormatterLogger().debug("Inicializando utilitario Freemarker. templateLoader=%s", loader.getClass().getName());
@@ -68,7 +68,7 @@ public final class FreemarkerUtils {
      * @param name Nome do template sem a extensão.
      * @param subjectParams Parâmetros opcionais que serão utilizados na formatação do assunto.
      * @return {@link FreemarkerTemplatePojo}
-     * @throws IOException
+     * @throws IOException Caso não seja possível obter o template.
      * @see #getTemplate(String)
      */
     public static synchronized FreemarkerTemplatePojo getEmailTemplate(String name, Object... subjectParams) throws IOException {
@@ -134,12 +134,12 @@ public final class FreemarkerUtils {
 
     /**
      * Envia um email HTML utilizando o template e os dados informados.
-     * @param templateId Identificador do template. O template será obtido através da função {@link getEmailTemplate}.
+     * @param templateId Identificador do template. O template será obtido através da função {@link #getEmailTemplate(String, Object...)}.
      * @param data dados que serão utilizados na criação do conteúdo do e-mail.
      * @param emailDestinatario Email do destinatário.
      * @param nomeDestinatario Nome do destinatário. Este parâmetro é opcional.
      * @param subjectParams Parâmetros do assunto do email caso haja necessidade. Este parâmetro é utilizado na chamada do método
-     * {@link getEmailTemplate}.
+     * {@link #getEmailTemplate(String, Object...)}.
      */
     public static synchronized void enviarEmailHtml(String templateId, Map<String, Object> data, String emailDestinatario, String nomeDestinatario, Object... subjectParams)
             throws TemplateException, IOException {
