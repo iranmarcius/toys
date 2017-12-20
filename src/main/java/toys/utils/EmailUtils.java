@@ -42,10 +42,10 @@ public final class EmailUtils {
             email.setHtmlMsg(content);
             email.setMailSessionFromJNDI(JNDIToys.DEFAULT_MAIL_SESSION_PATH);
             email.send();
-            LogManager.getFormatterLogger().debug(toName != null ? "Email enviado para %s <%s>." : "Email enviado para %s.", to);
+            LogManager.getFormatterLogger().debug("Email enviado para %s (%s).", to, toName);
             return true;
         } catch (Exception e) {
-            LogManager.getFormatterLogger().fatal("Erro enviando email para %s.", to, e);
+            LogManager.getFormatterLogger().fatal("Erro enviando email para %s, (%s).", to, toName, e);
             return false;
         }
     }
