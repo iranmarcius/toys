@@ -337,14 +337,17 @@ public final class DateToys {
     }
 
     /**
-     * Retorna a diferença em dias entre as duas representações de tempo em
-     * milissegundos.
-     * @param t1 Representação inicial do tempo
-     * @param t2 Representação final do tempo
-     * @param diasInteiros Especifica se serão considerados apenas dias inteiros
+     * Calcula a diferença em dias entre duas datas. A ordem cronológica das datas não importa.
+     * @param d1 Primeira data.
+     * @param d2 Segunda data.
+     * @param diasInteiros Caso esta flag seja verdadeira serão considerados somente dias inteiros, ou seja, cujos campos de hora tenham os valores
+     *                     do final do dia (23h59m59s.999ms). Uma data cujos cmapos de hora sejam anterioresm por exemplo, 07/07/1972 12:00, não será contada
+     *                     como dia completo.
      * @return <code>int</code>
      */
-    public static int deltaDays(long t1, long t2, boolean diasInteiros) {
+    public static int deltaDays(Date d1, Date d2, boolean diasInteiros) {
+        long t1 = d1.getTime();
+        long t2 = d2.getTime();
         long delta;
         if (t1 > t2)
             delta = t1 - t2;
@@ -354,19 +357,6 @@ public final class DateToys {
         if (!diasInteiros && delta % DateUtils.MILLIS_PER_DAY > 0)
             r++;
         return (int)r;
-    }
-
-    /**
-     * Método de conveniência para invocar o método
-     * {@link #deltaDays(long, long) deltaDays(long, long)} passando parâmetros
-     * do tipo <code>java.util.Date</code>.
-     * @param d1 Data inicial
-     * @param d2 Data final
-     * @param diasInteiros Especifica se serão considerados apenas dias inteiros
-     * @return <code>int</code>
-     */
-    public static int deltaDays(Date d1, Date d2, boolean diasInteiros) {
-        return deltaDays(d1.getTime(), d2.getTime(), diasInteiros);
     }
 
     /**
@@ -682,7 +672,7 @@ public final class DateToys {
      * @param f2d2 Data 2 da segunda faixa.
      * @return <code>boolean</code>
      */
-    public static boolean intersecao(Date f1d1, Date f1d2, Date f2d1, Date f2d2) {
+    public static boolean interseccao(Date f1d1, Date f1d2, Date f2d1, Date f2d2) {
         return
             NumberToys.inRange(f1d1.getTime(), f2d1.getTime(), f2d2.getTime()) ||
             NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime()) ||

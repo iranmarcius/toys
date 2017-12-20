@@ -8,7 +8,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
     ArrayToysTest.class,
     CollectionToysTest.class,
-    DateToysTestCase.class,
+    DateToysTest.class,
     NumberToysTestCase.class,
     RegExprsTest.class,
     StringToysTestCase.class })
