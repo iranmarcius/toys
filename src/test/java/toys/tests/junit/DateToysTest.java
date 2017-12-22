@@ -1,18 +1,15 @@
 package toys.tests.junit;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 import org.apache.commons.lang3.time.DateUtils;
-
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import toys.utils.DateToys;
 import toys.utils.LocaleToys;
+
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Locale;
 
 import static org.junit.Assert.*;
 
