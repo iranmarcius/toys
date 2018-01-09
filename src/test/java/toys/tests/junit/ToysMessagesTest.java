@@ -9,7 +9,7 @@ public class ToysMessagesTest {
 
     @Test
     public void getErro() {
-        assertEquals(ToysMessages.getErro(), "Erro");
+        assertEquals(ToysMessages.erro(), "Erro");
     }
 
 }

@@ -12,27 +12,27 @@ public final class ToysMessages {
         super();
     }
 
-    public static String getErro() {
+    public static String erro() {
         return res.getString("message.erro");
     }
 
-    public static String getTextoErroInterno() {
+    public static String erroInterno() {
         return res.getString("message.erroInterno");
     }
 
-    public static String getAviso() {
+    public static String aviso() {
         return res.getString("message.aviso");
     }
 
-    public static String getValidacao() {
+    public static String validacao() {
         return res.getString("message.validacao");
     }
 
-    public static String getSucesso() {
+    public static String sucesso() {
         return res.getString("message.sucesso");
     }
 
-    public static String getFalhaAutenticacao() {
+    public static String falhaAutenticacao() {
         return res.getString("message.falhaAutenticacao");
     }
 
