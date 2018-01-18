@@ -36,4 +36,8 @@ public final class ToysMessages {
         return res.getString("message.falhaAutenticacao");
     }
 
+    public static String informacao() {
+        return res.getString("message.informacao");
+    }
+
 }
