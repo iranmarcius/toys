@@ -1,9 +1,7 @@
 /*
  * Criado em 22/07/2004
  */
-
 package toys;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +26,7 @@ public class CollectionToys {
      */
     public static <T> List<List<T>> fragmentar(List<T> l, int tamanho) {
         int i = 0;
-        int f = 0;
+        int f;
         List<List<T>> listas = new ArrayList<>();
         while (i < l.size()) {
             f = i + tamanho;
@@ -71,17 +69,17 @@ public class CollectionToys {
      * envolvendo cada item com o quote informado.
      * @param l Lista de itens.
      * @param sep Separator de itens.
-     * @param quote
+     * @param quote Sinal para ser utilizado como quote.
      * @return <code>String</code>
      */
-    public static String toString(List<?> l, String sep, String quote) {
+    public static String asString(List<?> l, String sep, String quote) {
         if (l == null || l.isEmpty())
             return "";
         StringBuilder sb = new StringBuilder();
         for (Object o: l) {
             if (quote != null)
                 sb.append(quote);
-            sb.append(o.toString());
+            sb.append(o);
             if (quote != null)
                 sb.append(quote);
             if (sep != null)
@@ -98,17 +96,17 @@ public class CollectionToys {
      * @param separator Separador.
      * @return <code>String</code>
      */
-    public static String toString(List<?> l, String separator) {
-        return toString(l, separator, null);
+    public static String asString(List<?> l, String separator) {
+        return asString(l, separator, null);
     }
 
     /**
      * Retorna uma lista convertida em string com seus itens separados por vírgula.
-     * @param l
+     * @param l Lista com os valores.
      * @return <code>String</code>
      */
-    public static String toString(List<?> l) {
-        return toString(l, ", ", null);
+    public static String asString(List<?> l) {
+        return asString(l, ", ", null);
     }
 
 }

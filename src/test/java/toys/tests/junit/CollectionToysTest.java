@@ -28,9 +28,9 @@ public class CollectionToysTest {
 
     @Test
     public void testToStringList() {
-        assertEquals(CollectionToys.toString(lista), "0, 1, 2, 3, 4, 5");
-        assertEquals(CollectionToys.toString(lista, "-"), "0-1-2-3-4-5");
-        assertEquals(CollectionToys.toString(lista, "-", "'"), "'0'-'1'-'2'-'3'-'4'-'5'");
+        assertEquals(CollectionToys.asString(lista), "0, 1, 2, 3, 4, 5");
+        assertEquals(CollectionToys.asString(lista, "-"), "0-1-2-3-4-5");
+        assertEquals(CollectionToys.asString(lista, "-", "'"), "'0'-'1'-'2'-'3'-'4'-'5'");
     }
 
 }
