@@ -29,7 +29,7 @@ public class StringToys {
     }
 
     /**
-     * Retorna se uma string está num formato que represente um número com casas
+     * Retorna se uma string estfá num formato que represente um número com casas
      * decimais.
      * @param number String representando um número
      * @return <code>boolean</code>
