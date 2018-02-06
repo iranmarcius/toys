@@ -185,13 +185,7 @@ public class QuartzStartListener implements ServletContextListener {
 
     /**
      * Verifica se o valor é do tipo String e, caso seja, processa as substituições existentes, caso haja alguma.
-     * @throws ClassNotFoundException
-     * @throws SecurityException
-     * @throws NoSuchFieldException
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
      */
-    @SuppressWarnings("el-syntax")
     private Object processarSubstituicoes(Object value, ServletContext sc) throws ClassNotFoundException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
 
         // Processa somente valores string
