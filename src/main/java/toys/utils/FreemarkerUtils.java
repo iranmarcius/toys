@@ -1,5 +1,14 @@
 package toys.utils;
 
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import toys.pojos.FreemarkerTemplatePojo;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -7,20 +16,12 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-
-import freemarker.cache.TemplateLoader;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
-import toys.pojos.FreemarkerTemplatePojo;
-
 /**
  * Classe utilitária para gerenciamento de templates.
  * @author Iran
  */
 public final class FreemarkerUtils {
+    private static final Logger logger = LogManager.getFormatterLogger();
     private static Configuration cfg;
 
     private FreemarkerUtils() {
@@ -28,26 +29,21 @@ public final class FreemarkerUtils {
     }
 
     /**
-     * Inicializa a classe utilizando o {@link TemplateLoader} informado.
-     * @param loader Loader utilizado na obtenção do template.
-     */
-    public static void init(TemplateLoader loader) {
-        LogManager.getFormatterLogger().debug("Inicializando utilitario Freemarker. templateLoader=%s", loader.getClass().getName());
-        cfg =  new Configuration(Configuration.VERSION_2_3_22);
-        cfg.setDefaultEncoding("utf-8");
-        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        cfg.setTemplateLoader(loader);
-    }
-
-    /**
-     * Retorna um template.
+     * Retorna um template. Caso a configuração do Freemarker não esteja inicializada, ela será criada como um {@link ClassTemplateLoader}
+     * configurado para buscar os templates no pacote /freemarker.
      * @param name Nome do template sem a extensão.
      */
     public static synchronized Template getTemplate(String name) throws IOException {
         if (name == null)
             throw new NullPointerException("Nome do template nao foi informado.");
-        if (cfg == null)
-            throw new NullPointerException("Freemarker nao foi inicializado.");
+        if (cfg == null) {
+            logger.debug("Inicializando configuracao do Freemarker.");
+            cfg =  new Configuration(Configuration.VERSION_2_3_22);
+            cfg.setDefaultEncoding("utf-8");
+            cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+            cfg.setTemplateLoader(new ClassTemplateLoader(FreemarkerUtils.class, "/freemarker"));
+            logger.debug("Freemarker inicializado.");
+        }
         return cfg.getTemplate(name + ".ftl");
     }
 
@@ -82,9 +78,9 @@ public final class FreemarkerUtils {
         StringWriter tplSource = new StringWriter();
         t.dump(tplSource);
         try (BufferedReader reader = new BufferedReader(new StringReader(tplSource.toString()))) {
-            String linha = null;
+            String linha;
             int l = 1;
-            int i = -1;
+            int i;
             boolean inHeaders = false;
             while ((linha = reader.readLine()) != null) {
 
@@ -113,11 +109,11 @@ public final class FreemarkerUtils {
         // Se a seção de cabeçalhos foi determinada, extrai os cabeçalhos.
         Map<String, String> headers = new HashMap<>();
         if (li != -1 && ci != -1 && lf != -1 && cf != -1) {
-            String linha = null;
+            String linha;
             String secaoCabecalhos = t.getSource(ci, li, cf, lf);
             try (BufferedReader reader = new BufferedReader(new StringReader(secaoCabecalhos))) {
                 while ((linha = reader.readLine()) != null) {
-                    if (linha.matches("^[a-zA-Z0-9]+\\:.+$")) {
+                    if (linha.matches("^[a-zA-Z0-9]+:.+$")) {
                         String[] ss = linha.split(":");
                         String key = ss[0].trim();
                         String value = ss[1].trim();
