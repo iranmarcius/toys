@@ -8,6 +8,7 @@ import toys.utils.LocaleToys;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -30,8 +31,8 @@ public class DateToysTest {
 
     @Test
     public void testTime2Ms() {
-        assertEquals(36000000l, DateToys.time2ms("10:00:00"));
-        assertEquals(36000000l, DateToys.time2ms("10:00"));
+        assertEquals(36000000L, DateToys.time2ms("10:00:00"));
+        assertEquals(36000000L, DateToys.time2ms("10:00"));
     }
 
     @Test
@@ -111,6 +112,11 @@ public class DateToysTest {
         assertTrue(DateToys.contido(java.sql.Date.valueOf("1972-07-07"), java.sql.Date.valueOf("1972-07-09"), f1d1, f1d2));
         assertFalse(DateToys.contido(java.sql.Date.valueOf("1972-07-20"), java.sql.Date.valueOf("1972-08-25"), f1d1, f1d2));
         assertFalse(DateToys.contido(java.sql.Date.valueOf("1972-08-01"), java.sql.Date.valueOf("1972-08-25"), f1d1, f1d2));
+    }
+
+    @Test
+    public void testDiaSemana() {
+        assertEquals(Calendar.FRIDAY, DateToys.diaSemana(java.sql.Date.valueOf("1972-07-07")));
     }
 
 }

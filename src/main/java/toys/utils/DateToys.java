@@ -704,7 +704,7 @@ public final class DateToys {
     public static boolean contido(Date d, Date i, Date f) {
         boolean contido = true;
         if (i != null)
-            contido &= d.getTime() >= i.getTime();
+            contido = d.getTime() >= i.getTime();
         if (f != null)
             contido &= d.getTime() <= f.getTime();
         return contido;
@@ -722,6 +722,17 @@ public final class DateToys {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Retorna o doa da semana à partir da data informada.
+     * @param d Data.
+     * @return Dia da semana.
+     */
+    public static int diaSemana(Date d) {
+        Calendar c = Calendar.getInstance(LocaleToys.BRAZIL);
+        c.setTime(d);
+        return c.get(Calendar.DAY_OF_WEEK);
     }
 
 }
