@@ -1,7 +1,5 @@
 package toys.utils;
 
-import static toys.constants.LDAPConsts.*;
-
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
@@ -30,7 +28,7 @@ import com.unboundid.ldap.sdk.SearchScope;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
 
-import toys.constants.LDAPConsts;
+import toys.ToysConsts;
 
 /**
  * Classe utilitários para operações com o servidor LDAP.
@@ -90,7 +88,7 @@ public class LDAPUtils {
         SSLUtil sslUtil = new SSLUtil(new TrustAllTrustManager());
         SSLSocketFactory sslSocketFactory = sslUtil.createSSLSocketFactory();
         LDAPConnection conn = new LDAPConnection(sslSocketFactory);
-        conn.connect(host, LDAPS_PORT);
+        conn.connect(host, ToysConsts.LDAPS_PORT);
         conn.bind(bindDN, password);
         return conn;
 
@@ -104,7 +102,7 @@ public class LDAPUtils {
     public synchronized Entry pesquisar(String accountName) throws LDAPException {
         LDAPConnection conn = null;
         try {
-            conn = new LDAPConnection(host, LDAP_PORT, bindDN, password);
+            conn = new LDAPConnection(host, ToysConsts.LDAP_PORT, bindDN, password);
             return pesquisar(conn, accountName);
         } finally {
             if (conn != null)
@@ -118,7 +116,7 @@ public class LDAPUtils {
      * @return Retorna a entrada encontrada ou nulo.
      */
     public synchronized Entry pesquisar(LDAPConnection conn, String accountName) throws LDAPSearchException {
-        SearchResult result = conn.search(baseDN, SearchScope.SUB, String.format("(%s=%s)", LDAPConsts.LA_ACC_NAME, accountName));
+        SearchResult result = conn.search(baseDN, SearchScope.SUB, String.format("(%s=%s)", ToysConsts.LA_ACC_NAME, accountName));
         if (result.getEntryCount() == 1)
             return result.getSearchEntries().get(0);
         else if (result.getEntryCount() > 1)
@@ -137,7 +135,7 @@ public class LDAPUtils {
     public synchronized String autenticar(String bindDN, String password) throws LDAPException {
         LDAPConnection conn = null;
         try {
-            conn = new LDAPConnection(host, LDAP_PORT, bindDN, password);
+            conn = new LDAPConnection(host, ToysConsts.LDAP_PORT, bindDN, password);
             return null;
         } catch (LDAPException e) {
             if (e.getResultCode().equals(ResultCode.INVALID_CREDENTIALS) && e.getDiagnosticMessage() != null) {
@@ -177,23 +175,23 @@ public class LDAPUtils {
         LDAPConnection conn = null;
         try {
             conn = new LDAPConnection(sslSocketFactory);
-            conn.connect(host, LDAPS_PORT);
+            conn.connect(host, ToysConsts.LDAPS_PORT);
             conn.bind(bindDN, password);
-            SearchResult result = conn.search(baseDN, SearchScope.SUB, String.format("(%s=%s)", LA_ACC_NAME, accountName));
+            SearchResult result = conn.search(baseDN, SearchScope.SUB, String.format("(%s=%s)", ToysConsts.LA_ACC_NAME, accountName));
             if (result.getEntryCount() == 1) {
                 List<SearchResultEntry> entries = result.getSearchEntries();
                 SearchResultEntry entry = entries.get(0);
-                String dn = entry.getAttributeValue(LA_DN);
+                String dn = entry.getAttributeValue(ToysConsts.LA_DN);
 
                 List<Modification> mods = new ArrayList<>();
 
                 // Modificação de troca de senha
                 byte[] b = ('"' + novaSenha + '"').getBytes("UTF-16LE");
-                mods.add(new Modification(ModificationType.REPLACE, LA_UNICODE_PWD, b));
+                mods.add(new Modification(ModificationType.REPLACE, ToysConsts.LA_UNICODE_PW, b));
 
                 // Modificação para forçar a troca de senha no próximo logon
                 if (forcarTroca)
-                    mods.add(new Modification(ModificationType.REPLACE, LA_PWD_LAST_SET, "0"));
+                    mods.add(new Modification(ModificationType.REPLACE, ToysConsts.LA_PW_LAST_SET, "0"));
 
                 LDAPResult ldpr = conn.modify(dn, mods);
                 if (!ldpr.getResultCode().equals(ResultCode.SUCCESS))
@@ -226,7 +224,7 @@ public class LDAPUtils {
      */
     public synchronized Date ldapTimestamp2Date(long nanos) {
         long millis = nanos / 10000000;
-        return new Date((millis - UNIXTS) * 1000l);
+        return new Date((millis - ToysConsts.LDAP_UNIXTS) * 1000l);
     }
 
     public synchronized String getHost() {

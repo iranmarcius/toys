@@ -201,22 +201,6 @@ public class NumberToys {
     }
 
     /**
-     * Compara os dois inteiros fornecidos retornando se são iguais. Este método
-     * trata também valores nulos, ou seja, caso um dos valores seja nulo e o outro
-     * não seja, o resultado da comparação será falso.
-     * @param i1 Primeiro inteiro
-     * @param i2 Segundo inteiro
-     * @return <code>boolean</code>
-     */
-    public static boolean equals(Integer i1, Integer i2) {
-        if (i1 == null && i2 == null)
-            return true;
-        if (i1 != null && i2 != null)
-            return i1.equals(i2);
-        return false;
-    }
-
-    /**
      * Aplica o algorítmo modulo10 a um número.
      * @param numero Número a ser analisado
      * @return <code>int</code>

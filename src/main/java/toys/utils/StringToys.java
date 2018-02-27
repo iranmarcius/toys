@@ -15,8 +15,7 @@ import java.util.Map;
 import javax.swing.JFormattedTextField;
 import javax.swing.text.MaskFormatter;
 
-import toys.constants.MaskConsts;
-import toys.constants.RegExprConsts;
+import toys.ToysConsts;
 
 /**
  * Possui métodos utilitários para manipulação de strings.
@@ -35,7 +34,7 @@ public class StringToys {
      * @return <code>boolean</code>
      */
     public static boolean isDecimalFormat(String number) {
-        return (number != null) && number.matches(RegExprConsts.DECIMAL_NUMBER);
+        return (number != null) && number.matches(ToysConsts.RE_DECIMAL_NUMBER);
     }
 
     /**
@@ -251,11 +250,11 @@ public class StringToys {
     }
 
     /**
-     * Retorna uma string representando úm número de CPF formatada de acordo com a máscara do CPF.
+     * Retorna uma string representando úm número de RE_CPF formatada de acordo com a máscara do RE_CPF.
      * @throws ParseException
      */
     public static String formatCPF(String cpf) throws ParseException {
-        JFormattedTextField fmt = new JFormattedTextField(new MaskFormatter(MaskConsts.CPF));
+        JFormattedTextField fmt = new JFormattedTextField(new MaskFormatter(ToysConsts.CPF));
         fmt.setText(cpf);
         return fmt.getText();
     }

@@ -4,7 +4,7 @@
 
 package toys.utils;
 
-import toys.constants.RegExprConsts;
+import toys.ToysConsts;
 
 /**
  * Esta classe possui métodos utilitários para validação de informações.
@@ -28,13 +28,13 @@ public class ValidationToys {
             return false;
 
         // verifica o formato da string
-        if (!cpf.matches(RegExprConsts.CPF) && !cpf.matches("^\\d{11,11}$"))
+        if (!cpf.matches(ToysConsts.RE_CPF) && !cpf.matches("^\\d{11}$"))
             return false;
 
         // remove os caracteres indesejados
-        String cpfLimpo = cpf.replaceAll("[\\-\\.]", "");
+        String cpfLimpo = cpf.replaceAll("[\\-.]", "");
 
-        // verifica se o número do CPF é uma repetição do mesmo número
+        // verifica se o número do RE_CPF é uma repetição do mesmo número
         int d;
         StringBuilder sb = new StringBuilder()
             .append("^")
@@ -76,10 +76,10 @@ public class ValidationToys {
         if (cnpj == null)
             return false;
 
-        if (!cnpj.matches(RegExprConsts.CNPJ) && !cnpj.matches("^\\d{14,14}$"))
+        if (!cnpj.matches(ToysConsts.RE_CNPJ) && !cnpj.matches("^\\d{14}$"))
             return false;
 
-        String cnpjLimpo = cnpj.replaceAll("[\\.\\-\\/]", "");
+        String cnpjLimpo = cnpj.replaceAll("[.\\-/]", "");
 
         int d;
         int[] factor = {5, 6, 7, 8, 9, 2, 3, 4, 5, 6, 7, 8, 9};
@@ -119,7 +119,7 @@ public class ValidationToys {
      * @return <code>boolean</code>
      */
     public static boolean isEmailValido(String email) {
-        return email != null && email.matches(RegExprConsts.EMAIL);
+        return email != null && email.matches(ToysConsts.RE_EMAIL);
     }
 
 }
