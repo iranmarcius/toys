@@ -341,7 +341,7 @@ public final class DateToys {
      * @param d1 Primeira data.
      * @param d2 Segunda data.
      * @param diasInteiros Caso esta flag seja verdadeira serão considerados somente dias inteiros, ou seja, cujos campos de hora tenham os valores
-     *                     do final do dia (23h59m59s.999ms). Uma data cujos cmapos de hora sejam anterioresm por exemplo, 07/07/1972 12:00, não será contada
+     *                     do final do dia (23h59m59s.999ms). Uma data cujos campos de hora sejam anteriores, por exemplo, 07/07/1972 12:00, não será contada
      *                     como dia completo.
      * @return <code>int</code>
      */
