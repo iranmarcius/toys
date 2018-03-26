@@ -33,7 +33,7 @@ public final class EmailUtils {
         try {
             HtmlEmail email = new HtmlEmail();
             if (StringUtils.isNotBlank(toName))
-                email.addTo(to, toName, "iso-8859-1");
+                email.addTo(to, toName, "utf-8");
             else
                 email.addTo(to);
             email.setFrom(from);
