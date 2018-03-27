@@ -119,4 +119,11 @@ public class DateToysTest {
         assertEquals(Calendar.FRIDAY, DateToys.diaSemana(java.sql.Date.valueOf("1972-07-07")));
     }
 
+    @Test
+    public void tetSetTo() {
+        Date d = java.sql.Date.valueOf("1972-07-07");
+        assertEquals("1972-07-07 00:00:00", String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", DateToys.inicioDia(d, LocaleToys.BRAZIL)));
+        assertEquals("1972-07-07 23:59:59", String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", DateToys.finalDia(d, LocaleToys.BRAZIL)));
+    }
+
 }

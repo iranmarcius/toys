@@ -183,6 +183,18 @@ public final class DateToys {
     }
 
     /**
+     * Seta a hora da data para o início do dia.
+     * @param data Data que será alterada.
+     * @param locale Locale que será utilizado.
+     */
+    public static Date inicioDia(Date data, Locale locale) {
+        Calendar c = Calendar.getInstance(locale);
+        c.setTime(data);
+        inicioDia(c);
+        return c.getTime();
+    }
+
+    /**
      * Seta a hora do calendário informado para o início do dia.
      */
     public static void finalDia(Calendar c) {
@@ -190,6 +202,18 @@ public final class DateToys {
         c.set(Calendar.MINUTE, c.getMaximum(Calendar.MINUTE));
         c.set(Calendar.SECOND, c.getMaximum(Calendar.SECOND));
         c.set(Calendar.MILLISECOND, c.getMaximum(Calendar.MILLISECOND));
+    }
+
+    /**
+     * Seta a hora da data para o final do dia.
+     * @param data Data que será modificada.
+     * @param locale Locale que será utilizado.
+     */
+    public static Date finalDia(Date data, Locale locale) {
+        Calendar c = Calendar.getInstance(locale);
+        c.setTime(data);
+        finalDia(c);
+        return c.getTime();
     }
 
     /**
