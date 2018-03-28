@@ -69,7 +69,7 @@ public class ToysConsts {
     public static final String RE_TIME_MS = "^\\d{1,3}(:\\d{1,2}){2,2}\\.\\d{1,3}$";
     public static final String RE_SIMPLE_TIME = "^\\d{1,2}(:\\d{1,2}){0,2}$";
     public static final String RE_IPV4 = "^(\\d{1,3}\\.){3,3}\\d{1,3}$";
-    public static final String RE_SEPARADORES_PONTUACAO = "[.\\-/()]";
+    public static final String RE_SEPARADORES_PONTUACAO = "[.\\-/() ]";
     public static final String RE_DATE_BR = "^\\d{1,2}/\\d{1,2}/\\d{4}$";
     public static final String RE_DATE_SQL = "^\\d{4}\\-\\d{2}\\-\\d{2}$";
     public static final String RE_TIMESTAMP = "^\\d{4}\\-\\d{2}\\-\\d{2} \\d{2}:\\d{2}:{2}\\.\\d{3}$";
