@@ -3,13 +3,14 @@
  */
 package toys.utils.bancos;
 
+import toys.exceptions.ToysRuntimeException;
+import toys.utils.DateToys;
+import toys.utils.NumberToys;
+
+import javax.swing.*;
+import javax.swing.text.MaskFormatter;
 import java.text.ParseException;
 import java.util.Date;
-
-import javax.swing.JFormattedTextField;
-import javax.swing.text.MaskFormatter;
-
-import toys.utils.DateToys;
 
 /**
  * Gera códigos específicos utilizados pelo Banco Santander.
@@ -19,9 +20,7 @@ public class ProcessadorBoletoSantander extends ProcessadorBoleto {
     private String convenio;
 
     /**
-     * Construtor.
-     * @param convenio Número do convênio. Necessário para a geração dos valores.
-     * @see ProcessadorBoleto#ProcessadorBancoImpl(String, Date, Double, boolean)
+     * Construtor padrão com os parâmetros necessário à geração das informações.
      */
     public ProcessadorBoletoSantander(String convenio, String nossoNumero, Date vencimento, Double valor, boolean gerarDV) {
         super(nossoNumero, vencimento, valor, gerarDV);
@@ -33,7 +32,7 @@ public class ProcessadorBoletoSantander extends ProcessadorBoleto {
     @Override
     protected void gerarCodigoBarras() {
         if (codigo == null)
-            throw new RuntimeException("O codigo do banco deve ser gerado antes do codigo de barras");
+            throw new ToysRuntimeException("O codigo do banco deve ser gerado antes do codigo de barras");
 
         StringBuilder parte1 = new StringBuilder();
         StringBuilder parte2 = new StringBuilder();
@@ -43,7 +42,7 @@ public class ProcessadorBoletoSantander extends ProcessadorBoleto {
         int diferencaDias = DateToys.deltaDays(vencimento, dataBase, true);
         parte2
             .append(String.format("%04d", diferencaDias))
-            .append(String.format("%011.2f", valor).replaceAll("[,\\.]", ""))
+            .append(String.format("%011.2f", valor).replaceAll("[,.]", ""))
             .append("9")
             .append(convenio)
             .append(codigo)
@@ -69,49 +68,33 @@ public class ProcessadorBoletoSantander extends ProcessadorBoleto {
         codigoBarras = String.format("%s%s%s", parte1, dac, parte2);
     }
 
-    protected String modulo10(String numero) {
-        String sn = numero;
-        int m = 2;
-        int soma = 0;
-        for (int i = sn.length() - 1; i >= 0; i --) {
-            int n = Integer.parseInt(sn.substring(i, i + 1));
-            String ns = Integer.toString(n * m);
-            for (int j = 0; j < ns.length(); j++)
-                soma += Integer.valueOf(ns.substring(j, j + 1));
-            m = m == 1 ? 2 : 1;
-        }
-        int resto = soma % 10;
-        return String.valueOf(resto != 0 ? 10 - resto : 0);
-    }
-
-
     @Override
     protected void gerarLinhaDigitavel() {
         if (dac == null)
-            throw new RuntimeException("O codigo de barras deve ser gerado antes da linha digitavel");
+            throw new ToysRuntimeException("O codigo de barras deve ser gerado antes da linha digitavel");
 
         StringBuilder parte1 = new StringBuilder()
             .append(BANCO)
             .append("9")
             .append("9")
-            .append(convenio.substring(0, 4));
-        parte1.append(modulo10(parte1.toString()));
+            .append(convenio, 0, 4);
+        parte1.append(NumberToys.modulo10(parte1.toString()));
 
         StringBuilder parte2 = new StringBuilder()
             .append(convenio.substring(4))
-            .append(codigo.substring(0, 7));
-        parte2.append(modulo10(parte2.toString()));
+            .append(codigo, 0, 7);
+        parte2.append(NumberToys.modulo10(parte2.toString()));
 
         StringBuilder parte3 = new StringBuilder()
             .append(codigo.substring(7))
             .append("0")
             .append("102");
-        parte3.append(modulo10(parte3.toString()));
+        parte3.append(NumberToys.modulo10(parte3.toString()));
 
         int dias = DateToys.deltaDays(vencimento, dataBase, true);
         StringBuilder parte4 = new StringBuilder()
             .append(String.format("%04d", dias))
-            .append(String.format("%011.2f", valor).replaceAll("[,\\.]", ""));
+            .append(String.format("%011.2f", valor).replaceAll("[,.]", ""));
 
         StringBuilder l = new StringBuilder()
             .append(parte1)
@@ -126,7 +109,7 @@ public class ProcessadorBoletoSantander extends ProcessadorBoleto {
             fmt.setText(l.toString());
             linhaDigitavel = fmt.getText();
         } catch (ParseException e) {
-            throw new RuntimeException("Erro gerando linha digitável.", e);
+            throw new ToysRuntimeException("Erro gerando linha digitável.", e);
         }
 
     }

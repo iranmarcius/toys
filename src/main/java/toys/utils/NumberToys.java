@@ -201,23 +201,22 @@ public class NumberToys {
     }
 
     /**
-     * Aplica o algorítmo modulo10 a um número.
-     * @param numero Número a ser analisado
+     * Aplica o algorítmo modulo10 a um número representado pela string informada.
+     * @param numero Número a ser analisado.
      * @return <code>int</code>
      */
-    public static int modulo10(long numero) {
-        String sn = Long.toString(numero);
+    public static String modulo10(String numero) {
         int m = 2;
         int soma = 0;
-        for (int i = sn.length() - 1; i >= 0; i --) {
-            int n = Integer.parseInt(sn.substring(i, i + 1));
+        for (int i = numero.length() - 1; i >= 0; i --) {
+            int n = Integer.parseInt(numero.substring(i, i + 1));
             String ns = Integer.toString(n * m);
             for (int j = 0; j < ns.length(); j++)
                 soma += Integer.valueOf(ns.substring(j, j + 1));
             m = m == 1 ? 2 : 1;
         }
         int resto = soma % 10;
-        return resto != 0 ? 10 - resto : 0;
+        return String.valueOf(resto != 0 ? 10 - resto : 0);
     }
 
     /**
