@@ -16,7 +16,8 @@ import java.util.Date;
  * Gera códigos específicos utilizados pelo Banco Santander.
  */
 public class ProcessadorBoletoSantander extends ProcessadorBoleto {
-    public static final String BANCO = "033";
+    private static final String BANCO = "033";
+    private static final String CARTEIRA = "101";
     private String convenio;
 
     /**
@@ -47,7 +48,7 @@ public class ProcessadorBoletoSantander extends ProcessadorBoleto {
             .append(convenio)
             .append(codigo)
             .append("0")
-            .append("102");
+            .append(CARTEIRA);
 
         int multiplicador = 2;
         int soma = 0;
@@ -88,7 +89,7 @@ public class ProcessadorBoletoSantander extends ProcessadorBoleto {
         StringBuilder parte3 = new StringBuilder()
             .append(codigo.substring(7))
             .append("0")
-            .append("102");
+            .append(CARTEIRA);
         parte3.append(NumberToys.modulo10(parte3.toString()));
 
         int dias = DateToys.deltaDays(vencimento, dataBase, true);
