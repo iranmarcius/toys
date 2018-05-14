@@ -1,25 +1,16 @@
-/**
- *
- */
 package toys.web.servlet.filters;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Date;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
 
 /**
  * <p>Intercepta as requisições da aplicação verificando se a data de hoje está dentro de uma faixa especificada
@@ -45,7 +36,7 @@ public class TimeRangeFilter implements Filter {
     private String redirect;
 
     @Override
-    public void init(FilterConfig fc) throws ServletException {
+    public void init(FilterConfig fc) {
         logger.debug("Inicializando filtro de faixa de tempo.");
         String param = null;
         if (StringUtils.isNotBlank(param = fc.getInitParameter("inicio"))) {
@@ -79,7 +70,7 @@ public class TimeRangeFilter implements Filter {
             HttpServletResponse response = (HttpServletResponse)resp;
             logger.debug("Bloqueando requisicao: %s", request.getRequestURI());
             if (StringUtils.isNotBlank(redirect)) {
-                response.sendRedirect(redirect.replaceAll("\\$\\{cp\\}", request.getContextPath()));
+                response.sendRedirect(redirect.replaceAll("\\$\\{cp}", request.getContextPath()));
             } else {
                 String msg = null;
                 if (inicio != null && termino != null)

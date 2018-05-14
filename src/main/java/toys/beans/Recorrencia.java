@@ -1,15 +1,14 @@
 package toys.beans;
 
+import org.apache.commons.lang3.time.DateUtils;
+import toys.utils.DateToys;
+import toys.utils.NumberToys;
+
 import java.text.DateFormatSymbols;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
-
-import org.apache.commons.lang3.time.DateUtils;
-
-import toys.utils.DateToys;
-import toys.utils.NumberToys;
 
 /**
  * Esta classe pode ser utilizada em implementações que envolvem recorrência temporal.
@@ -44,7 +43,7 @@ public class Recorrencia {
 		 * Recorrência anual
 		 */
 		ANUAL
-	};
+	}
 
 	/**
 	 * Tipo da recorrência.

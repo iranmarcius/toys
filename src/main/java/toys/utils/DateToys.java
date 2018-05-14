@@ -5,16 +5,12 @@
 
 package toys.utils;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormatSymbols;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import org.apache.commons.lang3.time.DateUtils;
+import java.util.*;
 
 /**
  * Provê diversos métodos para manipulação e conversão datas e horas.
@@ -678,11 +674,11 @@ public final class DateToys {
         if (plain == null || !plain.matches("^\\d{4}\\d{0,5}$"))
             return "";
         StringBuilder sb = new StringBuilder();
-        sb.append(plain.substring(0, 2)).append(":").append(plain.substring(2, 4));
+        sb.append(plain, 0, 2).append(":").append(plain, 2, 4);
         if (pattern >= 1 && plain.length() >= 6) {
-            sb.append(":").append(plain.substring(4, 6));
+            sb.append(":").append(plain, 4, 6);
             if (pattern == 2 && plain.length() == 9)
-                sb.append(".").append(plain.substring(6, 9));
+                sb.append(".").append(plain, 6, 9);
         }
         return sb.toString();
 

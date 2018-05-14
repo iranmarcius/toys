@@ -4,6 +4,10 @@
 
 package toys.utils;
 
+import toys.ToysConsts;
+
+import javax.swing.*;
+import javax.swing.text.MaskFormatter;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.text.ParseException;
@@ -11,11 +15,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.JFormattedTextField;
-import javax.swing.text.MaskFormatter;
-
-import toys.ToysConsts;
 
 /**
  * Possui métodos utilitários para manipulação de strings.
@@ -67,11 +66,11 @@ public class StringToys {
      * @param n Número que será formatado
      * @param maxLength Tamanho máximo
      * @param decimals Casas decimais
-     * @return
+     * @return <code>String</code>
      */
     public static String zerosLeft(double n, int maxLength, int decimals) {
         String fmtStr = "%0" + (maxLength + 1) + "." + decimals + "f";
-        return String.format(fmtStr, n).replaceAll("[\\.,]", "").substring(0, maxLength);
+        return String.format(fmtStr, n).replaceAll("[.,]", "").substring(0, maxLength);
     }
 
     /**
@@ -79,7 +78,7 @@ public class StringToys {
      * informado.
      * @param n Número que será formatado
      * @param maxLength Tamanho máximo
-     * @return
+     * @return <code>String</code>
      */
     public static String zerosLeft(int n, int maxLength) {
         String fmtStr = "%0" + maxLength + "d";
@@ -243,7 +242,7 @@ public class StringToys {
         String[] kvs = s.split("\\|");
         Map<String, String> m = new HashMap<>();
         for (String kv: kvs) {
-            String[] ss = kv.split("\\=");
+            String[] ss = kv.split("=");
             m.put(ss[0], ss[1]);
         }
         return m;
@@ -251,7 +250,6 @@ public class StringToys {
 
     /**
      * Retorna uma string representando úm número de RE_CPF formatada de acordo com a máscara do RE_CPF.
-     * @throws ParseException
      */
     public static String formatCPF(String cpf) throws ParseException {
         JFormattedTextField fmt = new JFormattedTextField(new MaskFormatter(ToysConsts.CPF));

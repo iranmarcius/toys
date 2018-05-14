@@ -38,7 +38,7 @@ public class ValidationToys {
         int d;
         StringBuilder sb = new StringBuilder()
             .append("^")
-            .append(cpfLimpo.substring(0, 1))
+            .append(cpfLimpo, 0, 1)
             .append("{11,11}$");
         if (cpfLimpo.matches(sb.toString()))
             return false;
@@ -87,7 +87,7 @@ public class ValidationToys {
         // verifica se o cnpj é uma repetição do mesmo número
         StringBuilder sb = new StringBuilder()
             .append("^")
-            .append(cnpjLimpo.substring(0, 1))
+            .append(cnpjLimpo, 0, 1)
             .append("{14}$");
         if (cnpjLimpo.matches(sb.toString()))
             return false;

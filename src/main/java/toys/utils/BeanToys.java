@@ -1,12 +1,12 @@
 package toys.utils;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
 
 /**
  * Implementa métodos utilitários para operações com objetos.
@@ -73,7 +73,7 @@ public final class BeanToys {
      * da propriedade através de um getter. Caso não exista ou não esteja acessível, o método
      * tentará obter o valor diretamente do campo declarado.
      * @param obj Objeto de onde será lido o valor da propriedade
-     * @param propriedade Nome da propriedade desejada. Ex.:
+     * @param prop Nome da propriedade desejada. Ex.:
      * <ul>
      * 	<li><code>nome = obj.getNome()</code></li>
      * 	<li><code>situacao.descricao = obj.getSituacao().getDescricao()</code></li>

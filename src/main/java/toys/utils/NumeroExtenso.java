@@ -1,8 +1,5 @@
 package toys.utils;
 
-/**
- * Converte números em seu formato por extenso.
- */
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
