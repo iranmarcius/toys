@@ -14,7 +14,7 @@ public class ArrayToys {
      * Retorna uma array convertido em string utilizando os separadores informados e envolvendo cada item com o quote informado.
      * @param a Array com os itens.
      * @param sep Separator de itens.
-     * @param quote
+     * @param quote Separador de expressão, ou seja será utilizado antes e após a cada item do array.
      * @return <code>String</code>
      */
     public static String toString(Object[] a, String sep, String quote) {
