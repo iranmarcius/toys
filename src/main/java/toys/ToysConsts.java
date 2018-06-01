@@ -38,6 +38,7 @@ public class ToysConsts {
     public static final String ATTR_CONTENT_FILENAME = "toys.web.servlet.contentFilename";
     public static final String ATTR_LDAP_INVALID_CREDENTIALS_DETAIL = "ldap.invalidCredentials.errorCode";
     public static final String ATTR_LOGIN_MODULE_MESSAGE = "loginModule.message";
+    public static final String ATTR_MOBILE = "session.dispositivoModel";
 
     // Formatação
 
