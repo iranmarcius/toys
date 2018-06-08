@@ -11,10 +11,7 @@ import javax.swing.text.MaskFormatter;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Possui métodos utilitários para manipulação de strings.
@@ -96,13 +93,13 @@ public class StringToys {
 
     /**
      * Retorna o array de bytes como uma string de valores hexadecimais.
-     * @param b Array de bytes
+     * @param bytes Array de bytes
      * @return <code>String</code>
      */
-    public static String str2hex(byte[] b) {
+    public static String str2hex(byte[] bytes) {
         StringBuilder s = new StringBuilder();
-        for (int i = 0; i < b.length; i++)
-            s.append(String.format("%02x", b[i]));
+        for (byte b : bytes)
+            s.append(String.format("%02x", b));
         return s.toString();
     }
 
@@ -144,8 +141,7 @@ public class StringToys {
         String[] sa = str.split("\r\n");
         for (String s: sa) {
             String[] ss = s.split(" *, *");
-            for (String sss: ss)
-                l.add(sss);
+            l.addAll(Arrays.asList(ss));
         }
         return l;
     }
@@ -189,7 +185,7 @@ public class StringToys {
      * @return <code>String</code>
      */
     public static String forceLength(String s, int length) {
-        String format = new StringBuffer().append("%-").append(length).append("s").toString();
+        String format = "%-" + length + "s";
         return String.format(format, s).substring(0, length);
     }
 
