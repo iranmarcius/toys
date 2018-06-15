@@ -126,4 +126,12 @@ public class DateToysTest {
         assertEquals("1972-07-07 23:59:59", String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", DateToys.finalDia(d, LocaleToys.BRAZIL)));
     }
 
+    @Test
+    public void testExpirado() {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DAY_OF_MONTH, -2);
+        assertTrue(DateToys.expirado(c.getTime(), DateUtils.MILLIS_PER_DAY)); // um dia
+        assertFalse(DateToys.expirado(c.getTime(), DateUtils.MILLIS_PER_DAY * 3)); // três dias
+    }
+
 }

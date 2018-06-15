@@ -25,16 +25,6 @@ public final class DateToys {
     public static final byte FRIDAY 	= 0x20;
     public static final byte SATURDAY 	= 0x40;
 
-    /**
-     * Quantidade de minutos em um dia.
-     */
-    public static final int MINUTES_PER_DAY = 1440;
-
-    /**
-     * Quantidade de minutos numa semana.
-     */
-    public static final int MINUTES_PER_WEEK = 10080;
-
     private DateToys() {
         super();
     }
@@ -753,6 +743,16 @@ public final class DateToys {
         Calendar c = Calendar.getInstance(LocaleToys.BRAZIL);
         c.setTime(d);
         return c.get(Calendar.DAY_OF_WEEK);
+    }
+
+    /**
+     * Retorna se um prazo está expirado baseado na data base e na validade informados de acordo com o momento atual.
+     * @param d Data base para verificação.
+     * @param validade Validade.
+     * @return <code>boolean</code>
+     */
+    public static boolean expirado(Date d, long validade) {
+        return d.getTime() + validade < System.currentTimeMillis();
     }
 
 }
