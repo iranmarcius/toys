@@ -50,8 +50,9 @@ public class ToysConsts {
     public static final String TIMESTAMP = "%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS.%1$tL";
 
     // Máscaras
-    public static final String CPF = "###.###.###-##";
-    public static final String CNPJ = "##.###.###/####-##";
+    public static final String MASK_CPF = "###.###.###-##";
+    public static final String MASK_CNPJ = "##.###.###/####-##";
+    public static final String MASK_IPTE = "#####.##### #####.###### #####.###### # ##############";
 
     // Padrões para funções de conversão
     public static final String PATTERN_DATE_BR = "dd/MM/yyyy";

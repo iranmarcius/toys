@@ -245,12 +245,33 @@ public class StringToys {
     }
 
     /**
-     * Retorna uma string representando úm número de RE_CPF formatada de acordo com a máscara do RE_CPF.
+     * Formata uma string com a máscara informada.
+     * @param s Valor a ser formatado.
+     * @param mascara Máscara que será aplicada à string.
+     * @return <code>String</code>
+     */
+    public static String formatMask(String s, String mascara) throws ParseException {
+        JFormattedTextField fmt = new JFormattedTextField(new MaskFormatter(mascara));
+        fmt.setText(s);
+        return fmt.getText();
+    }
+
+    /**
+     * Método de conveniência para aplicar a máscara de CPF à string informada.
+     * @param cpf CPF a ser formatado.
+     * @see ToysConsts#MASK_CPF
      */
     public static String formatCPF(String cpf) throws ParseException {
-        JFormattedTextField fmt = new JFormattedTextField(new MaskFormatter(ToysConsts.CPF));
-        fmt.setText(cpf);
-        return fmt.getText();
+        return formatMask(cpf, ToysConsts.MASK_CPF);
+    }
+
+    /**
+     * Método de conveniência para aplicar a máscara de IPTE à string informada.
+     * @param ipte IPTE a ser formatado.
+     * @see ToysConsts#MASK_IPTE
+     */
+    public static String formatIPTE(String ipte) throws ParseException {
+        return formatMask(ipte, ToysConsts.MASK_IPTE);
     }
 
 }
