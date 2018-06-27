@@ -1,6 +1,6 @@
-package toys.persistence;
+package toys.exceptions;
 
-public class ToysPersistenceRuntimeException extends RuntimeException {
+public class ToysPersistenceRuntimeException extends ToysRuntimeException {
     private static final long serialVersionUID = 3226517714564973790L;
 
     public ToysPersistenceRuntimeException() {
@@ -11,12 +11,20 @@ public class ToysPersistenceRuntimeException extends RuntimeException {
         super(message);
     }
 
+    public ToysPersistenceRuntimeException(String message, Object... params) {
+        super(message, params);
+    }
+
     public ToysPersistenceRuntimeException(Throwable cause) {
         super(cause);
     }
 
     public ToysPersistenceRuntimeException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public ToysPersistenceRuntimeException(String message, Throwable cause, Object... params) {
+        super(message, cause, params);
     }
 
 }
