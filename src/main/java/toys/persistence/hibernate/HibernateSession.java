@@ -17,9 +17,7 @@ import java.util.Properties;
 /**
  * Classe utilitária para obtenção de sessões do Hibernate.
  * @author Iran Marcius
- * @deprecated Aplicações devem começar a utilizar a classe {@link toys.persistence.EMF} para obter {@link javax.persistence.EntityManagerFactory} e {@link javax.persistence.EntityManager}.
  */
-@Deprecated
 public class HibernateSession {
     private static final Logger logger = LogManager.getFormatterLogger();
     private static Map<SessionFactoryParams, SessionFactory> sfm = new HashMap<>();
