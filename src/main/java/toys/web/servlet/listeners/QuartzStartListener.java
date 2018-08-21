@@ -1,34 +1,19 @@
 package toys.web.servlet.listeners;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import javax.naming.Context;
-import javax.naming.NameClassPair;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.quartz.CronScheduleBuilder;
-import org.quartz.CronTrigger;
-import org.quartz.Job;
-import org.quartz.JobBuilder;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
+import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
-
 import toys.utils.JNDIToys;
 import toys.utils.LocaleToys;
+
+import javax.naming.*;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Listener para inicialização de tarefas do Quarts.
@@ -93,7 +78,6 @@ public class QuartzStartListener implements ServletContextListener {
      * @param scheduler Referência para o agendador.
      * @param jobName Nome da tarefa de onde serão lidas as configurações.
      * @param sc Referência para o contexto da servlet que pode ser utilizado na obtenção de algumas informações.
-     * @throws NamingException
      */
     @SuppressWarnings("unchecked")
     private void agendarTarefa(Scheduler scheduler, String jobName, ServletContext sc) {
