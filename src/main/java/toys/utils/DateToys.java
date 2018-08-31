@@ -520,7 +520,7 @@ public final class DateToys {
      * @param d2 Data 2
      * @return <code>boolean</code>
      */
-    public static boolean sameDate(Date d1, Date d2) {
+    public static boolean mesmoDia(Date d1, Date d2) {
         Calendar c1 = Calendar.getInstance();
         c1.setTime(d1);
         Calendar c2 = Calendar.getInstance();
