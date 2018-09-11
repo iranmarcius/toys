@@ -1,15 +1,11 @@
 package toys.web.application;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
- * Esta classe é utilizada na criação de mensagens de log para aplicações de
- * ambiente de web pois registra, juntamente com a mensagem informada, as informações
- * sobre o usuário e o IP de origem da requisição. Alguns métodos a classe
- * {@link toys.application.Messages Messages} para criação de mensagens padrão de
- * aplicação.
+ * Esta classe é utilizada na criação de mensagens de log para aplicações de ambiente de web pois registra,
+ * juntamente com a mensagem informada, as informações sobre o usuário e o IP de origem da requisição.
  * @author Iran Marcius
  */
 public class WebAppUtils {

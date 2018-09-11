@@ -4,7 +4,6 @@ import javax.mail.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.rmi.PortableRemoteObject;
 
 /**
  * Métodos utilitários para operaçoes JNDI.
@@ -48,7 +47,7 @@ public final class JNDIToys {
      */
     public static synchronized Session getMailSession(String jndiPath) throws NamingException {
         Object o = getInitialContext().lookup(jndiPath != null ? jndiPath : DEFAULT_MAIL_SESSION_PATH);
-        return (Session)PortableRemoteObject.narrow(o, Session.class);
+        return (Session)o;
     }
 
     /**
