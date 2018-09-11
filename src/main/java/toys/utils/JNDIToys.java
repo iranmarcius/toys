@@ -33,9 +33,8 @@ public final class JNDIToys {
 
     /**
      * Retorna uma sessão de email com o nome default de sessão de e-mail.
-     * @return Session
+     * @return Retorna uma sessão de e-mail.
      * @see #DEFAULT_MAIL_SESSION_PATH
-     * @throws NamingException
      */
     public static synchronized Session getMailSession() throws NamingException {
         return getMailSession(DEFAULT_MAIL_SESSION_PATH);
@@ -43,9 +42,8 @@ public final class JNDIToys {
 
     /**
      * Retorna a sessão de e-mail correspondente ao caminho fornecido. Caso nenhum nome tenha sido especificado, utiliza o nome detault.
-     * @param jndiPath
-     * @return Session
-     * @throws NamingException
+     * @param jndiPath Caminho do objeto de sessão dentro do diretório.
+     * @return Session Retorna uma sessão de e-mail.
      * @see #DEFAULT_MAIL_SESSION_PATH
      */
     public static synchronized Session getMailSession(String jndiPath) throws NamingException {
@@ -55,7 +53,6 @@ public final class JNDIToys {
 
     /**
      * Retorna o valor da propriedade <b>ambienteDesenvolvimento</b> armazenada no contexto JNDI.
-     * @throws NamingException
      */
     public static synchronized boolean isAmbienteDesenvolvimento() throws NamingException {
         return (Boolean)getInitialContext().lookup("java:comp/env/ambienteDesenvolvimento");
