@@ -2,6 +2,7 @@ package toys.utils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -100,16 +101,16 @@ public class NumeroExtenso {
 	 */
 	public void setNumber(BigDecimal dec) {
 		// Converte para inteiro arredondando os centavos
-		num = dec.setScale(2, BigDecimal.ROUND_HALF_UP).multiply(
+		num = dec.setScale(2, RoundingMode.HALF_UP).multiply(
 				BigDecimal.valueOf(100)).toBigInteger();
 
 		// Adiciona valores
 		nro.clear();
 		if (num.equals(BigInteger.ZERO)) {
 			// Centavos
-			nro.add(Integer.valueOf(0));
+			nro.add(0);
 			// Valor
-			nro.add(Integer.valueOf(0));
+			nro.add(0);
 		} else {
 			// Adiciona centavos
 			addRemainder(100);
@@ -130,9 +131,8 @@ public class NumeroExtenso {
 	 */
 	public void show() {
 		Iterator<Integer> valores = nro.iterator();
-		while (valores.hasNext()) {
+		while (valores.hasNext())
 			System.out.println(valores.next().intValue());
-		}
 		System.out.println(toString());
 	}
 
@@ -152,7 +152,7 @@ public class NumeroExtenso {
 			// Se ja existe texto e o atual não é zero
 			if (buf.length() > 0 && !ehGrupoZero(ct))
 				buf.append(", ");
-			buf.append(numToString(nro.get(ct).intValue(), ct));
+			buf.append(numToString(nro.get(ct), ct));
 		}
 		if (buf.length() > 0) {
 			if (ehUnicoGrupo()) {
@@ -161,26 +161,19 @@ public class NumeroExtenso {
 			while (buf.toString().endsWith(" ")) {
 				buf.setLength(buf.length() - 1);
 			}
-			if (ehPrimeiroGrupoUm()) {
-				buf.insert(0, "h");
-			}
-			if ((nro.size() == 2) && (nro.get(1).intValue() == 1)) {
+			if ((nro.size() == 2) && (nro.get(1) == 1)) {
 				buf.append(" real");
 			} else {
 				buf.append(" reais");
 			}
-			if (nro.get(0).intValue() != 0) {
+			if (nro.get(0) != 0) {
 				buf.append(" e ");
 			}
 		}
-		if (nro.get(0).intValue() != 0) {
-			buf.append(numToString(nro.get(0).intValue(), 0));
+		if (nro.get(0) != 0) {
+			buf.append(numToString(nro.get(0), 0));
 		}
 		return buf.toString();
-	}
-
-	private boolean ehPrimeiroGrupoUm() {
-		return nro.get(nro.size() - 1).intValue() == 1;
 	}
 
 	/**
@@ -194,7 +187,7 @@ public class NumeroExtenso {
 				.valueOf(divisor));
 
 		// Adiciona modulo
-		nro.add(Integer.valueOf(newNum[1].intValue()));
+		nro.add(newNum[1].intValue());
 
 		// Altera numero
 		num = newNum[0];
@@ -213,7 +206,7 @@ public class NumeroExtenso {
 		}
 		boolean hasOne = false;
 		for (int i = 3; i < nro.size(); i++) {
-			if (nro.get(i).intValue() != 0) {
+			if (nro.get(i) != 0) {
 				if (hasOne) {
 					return false;
 				}
