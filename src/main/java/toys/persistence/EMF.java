@@ -88,6 +88,16 @@ public class EMF {
     }
 
     /**
+     * Método utilitário para realizar rollback em transações realizando verificações. O rollback só será
+     * invocado se o {@link EntityManager} informado não for nulo e se houver uma transação ativa.
+     * @param em Objeto do tipo {@link EntityManager}.
+     */
+    public static synchronized void rollbackTransaction(EntityManager em) {
+        if (em != null && em.getTransaction().isActive())
+            em.getTransaction().rollback();
+    }
+
+    /**
      * Fecha e remove todas as instâncias do mapa de {@link EntityManagerFactory}.
      */
     public static synchronized void destroy() {
