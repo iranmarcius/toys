@@ -125,7 +125,7 @@ public final class BeanToys {
      * @param prop Nome da propriedade que será modificada.
      * @param valor Valor que será atribuído
      */
-    public static void setValor(Object obj, String prop, Object valor) throws  IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static void setValor(Object obj, String prop, Object valor) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
 
         String restante = null;
         int i = prop.indexOf('.');
@@ -143,7 +143,7 @@ public final class BeanToys {
             } else {
                 Class<?> clazz = getTipoPropriedade(obj, prop);
                 if (clazz != null) {
-                    Object o = clazz.newInstance();
+                    Object o = clazz.getConstructor().newInstance();
                     setValor(o, restante, valor);
                     m.invoke(obj, o);
                 }
@@ -160,7 +160,7 @@ public final class BeanToys {
             } else {
                 Class<?> clazz = getTipoPropriedade(obj, prop);
                 if (clazz != null) {
-                    Object o = clazz.newInstance();
+                    Object o = clazz.getConstructor().newInstance();
                     setValor(o, restante, valor);
                     f.set(obj, o);
                 }
@@ -176,7 +176,7 @@ public final class BeanToys {
      * @param values Array com os valores que serão atribuídos às propriedades do bean
      * @param startIndex Índice a partir do qual os valores do array serão lidos
      */
-    public static void populate(Object bean, String[] properties, Object[] values, int startIndex) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static void populate(Object bean, String[] properties, Object[] values, int startIndex) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         for (int i = 0; i < properties.length; i++)
             setValor(bean, properties[i], values[startIndex + i]);
     }
