@@ -23,15 +23,17 @@ public final class EmailUtils {
 
     /**
      * Método utilitário par aenvio de emails de uma forma padronizada.
+     * @param hostname Host SMTP para envio do ee-mail.
      * @param from Remetente.
      * @param to Email do destinatário.
      * @param toName Nome do destinatário. Não é obrigatório.
      * @param subject Assunto da mensagem.
      * @param content Conteúdo textual da mensagem.
      */
-    public static synchronized boolean enviarEmailHtml(String from, String to, String toName, String subject, String content) {
+    public static synchronized boolean enviarEmailHtml(String hostname, String from, String to, String toName, String subject, String content) {
         try {
             HtmlEmail email = new HtmlEmail();
+            email.setHostName(hostname);
             if (StringUtils.isNotBlank(toName))
                 email.addTo(to, toName, "utf-8");
             else
@@ -40,7 +42,6 @@ public final class EmailUtils {
             email.setCharset("utf-8");
             email.setSubject(subject);
             email.setHtmlMsg(content);
-            email.setMailSessionFromJNDI(JNDIToys.DEFAULT_MAIL_SESSION_PATH);
             email.send();
             LogManager.getFormatterLogger().debug("Email enviado para %s (%s).", to, toName);
             return true;
