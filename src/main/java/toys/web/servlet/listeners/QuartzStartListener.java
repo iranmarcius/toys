@@ -41,7 +41,7 @@ public class QuartzStartListener implements ServletContextListener {
      */
     private static final String CFG_DELAY = "delay";
 
-    protected final Logger logger = LogManager.getFormatterLogger();
+    protected final Logger logger = LogManager.getFormatterLogger(getClass());
     protected Scheduler scheduler;
 
     @Override

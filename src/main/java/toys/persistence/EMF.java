@@ -18,7 +18,7 @@ import java.util.Properties;
  * @author Iran
  */
 public class EMF {
-    private static final Logger logger = LogManager.getFormatterLogger();
+    private static final Logger logger = LogManager.getFormatterLogger(EMF.class);
     private static Map<String, EntityManagerFactory> emfMap = new HashMap<>();
 
     private EMF() {
