@@ -201,8 +201,8 @@ public final class BeanToys {
      * @param clazz Classe que será instanciada caso o objeto seja nulo
      * @return <code>Object</code>
      */
-    public static Object instanceIfNull(Object o, Class<?> clazz) throws InstantiationException, IllegalAccessException {
-        return o == null ? clazz.newInstance() : o;
+    public static Object instanceIfNull(Object o, Class<?> clazz) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        return o == null ? clazz.getConstructor().newInstance() : o;
     }
 
     /**
