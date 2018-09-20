@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
  * Acesso a mensagens.
  */
 public final class ToysMessages {
-    private static final ResourceBundle res = ResourceBundle.getBundle("messages");
+    private static final ResourceBundle res = ResourceBundle.getBundle(ToysMessages.class.getSimpleName());
 
     private ToysMessages() {
         super();
