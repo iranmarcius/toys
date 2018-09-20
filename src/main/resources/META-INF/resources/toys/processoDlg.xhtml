@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+	<body>
+		<cc:interface name="processoDlg" displayName="Dialog de espera de processos">
+			<cc:attribute name="widget" default="#{cc.clientId}_widget" shortDescription="Nome opcional para o widget da dialog."/>
+		</cc:interface>
+		<cc:implementation>
+			<p:dialog id="#{cc.clientId}"
+				widgetVar="#{cc.attrs.widget}"
+				modal="true"
+				resizable="false"
+				closable="false"
+				closeOnEscape="false">
+				<h:panelGrid columns="2" cellpadding="10">
+					<h:graphicImage library="images" name="load.gif"/>
+					<h:outputText id="msg" style="font-weight: bold;"/>
+				</h:panelGrid>
+			</p:dialog>
+	
+			<script type="text/javascript">
+	
+			function processoDlg(exibir, titulo, mensagem) {
+				if (exibir) {
+					if (titulo == null)
+						titulo = "Execução";
+					if (mensagem == null)
+						mensagem = "Aguarde a execução do processo...";
+					PF('#{cc.attrs.widget}').jq.find('.ui-dialog-title').text(titulo);
+					document.getElementById('#{cc.clientId}:msg').innerText = mensagem;
+					PF('#{cc.attrs.widget}').show();
+				} else {
+					PF('#{cc.attrs.widget}').hide();
+				}
+			}
+
+			function startDownload() {
+			    processoDlg(true, null, "Aguarde. Fazendo download do arquivo...");
+			}
+
+			function stopDownload() {
+			    processoDlg(false);
+			}
+			
+			</script>
+		</cc:implementation>
+	</body>
+		
+</html>

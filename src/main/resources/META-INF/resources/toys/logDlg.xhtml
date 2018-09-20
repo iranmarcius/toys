@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:cc="http://xmlns.jcp.org/jsf/composite">
+<body>
+<cc:interface name="logDlg" displayName="Dialog de para exibição de logs de operação.">
+    <cc:attribute name="widget" default="#{cc.clientId}_widget" shortDescription="Nome opcional para o widget da dialog."/>
+    <cc:attribute name="header" default="Registro da operação" shortDescription="Título da dialog."/>
+    <cc:attribute name="texto" required="true" shortDescription="Texto do log para exibição."/>
+</cc:interface>
+<cc:implementation>
+    <p:dialog
+            id="#{cc.clientId}"
+            widgetVar="#{cc.attrs.widget}"
+            header="#{cc.attrs.header}"
+            modal="true"
+            resizable="false"
+            closable="true"
+            closeOnEscape="false">
+        <p:scrollPanel style="width: 800px; height: 550px;" mode="native">
+            <h:outputText value="#{cc.attrs.texto}" escape="false"/>
+        </p:scrollPanel>
+    </p:dialog>
+</cc:implementation>
+</body>
+
+</html>
