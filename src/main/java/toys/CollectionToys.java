@@ -21,7 +21,7 @@ public class CollectionToys {
     /**
      * Fragmenta uma lista original em várias sublistas obedecendo o tamanho máximo especificado.
      *
-     * @param l       Liwsta original.
+     * @param l       Lista original.
      * @param tamanho Tamanho máximo das sublistas.
      * @return <code>List&lt;List&lt;?&gt;&gt;</code>
      */
@@ -37,33 +37,6 @@ public class CollectionToys {
             i += tamanho;
         }
         return listas;
-    }
-
-    /**
-     * Cria um mapa de chave/valor a partir da lista informada. A conversão será executada
-     * apenas em objetos do tipo {@link KeyValue}, {@link StringPair} e <code>Object[]</code>,
-     * neste último considerando apenas os dois primeiros elementos do array.
-     *
-     * @param l Lista a ser convertida
-     * @return <code>Map</code>
-     */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static Map asMap(List l) {
-        Map m = new HashMap();
-        for (Object o : l) {
-            if (o instanceof KeyValue) {
-                KeyValue p = (KeyValue) o;
-                m.put(p.getKey(), p.getValue());
-            } else if (o instanceof StringPair) {
-                StringPair p = (StringPair) o;
-                m.put(p.getKey(), p.getValue());
-            } else if (o instanceof Object[]) {
-                Object[] a = (Object[]) o;
-                if (a.length >= 2)
-                    m.put(a[0], a[1]);
-            }
-        }
-        return m;
     }
 
     /**
@@ -116,6 +89,7 @@ public class CollectionToys {
 
     /**
      * Converte uma lista com elementos duplicados para uma lista com elementos distintos.
+     *
      * @param l Lista com elementos dupicados.
      * @return Lista com elementos distintos.
      */
@@ -127,6 +101,53 @@ public class CollectionToys {
                 result.add(entity);
         }
         return result;
+    }
+
+    /**
+     * Insere um item em uma lista somente se ele não existir. Os itens serão inseridos ordenadamente de acordo com
+     * o valor retornado por {@link Collections#binarySearch(List, Object)}.
+     *
+     * @param l Lista onde o item será inserido.
+     * @param o Objeto que será inserido na lista.
+     * @return O valor retornado segue a definição do método {@link Collections#binarySearch(List, Object)}, o que significa que
+     * um valor negativo indica que o elemento não voi encontrado na lista e portando foi adicionado.
+     */
+    @SuppressWarnings("unchecked")
+    public static int uniqueAdd(List l, Comparable o) {
+        int i = Collections.binarySearch(l, o);
+        if (i < 0)
+            l.add((i * -1) - 1, o);
+        return i;
+    }
+
+
+    /**
+     * Método de conveniência que utiliza o {@link Collections#binarySearch(List, Object, Comparator)} para localizar
+     * e retornar o elemento correspondente à chave informada dentro de uma lista. A lista deve estar previamente ordenada
+     * utilizando o mesmo comparator informado.
+     *
+     * @param l    Lista a ser pesquisada. Deve estar classificada pelo mesmo comparator informado no parâmetro.
+     * @param key  Chave do objeto pesquisado.
+     * @param comp comparator a ser utilizado na pesquisa.
+     * @return Retorna o objeto correspondente à chave ou null caso ele não seja encontrado.
+     */
+    public static <T> T find(List<T> l, T key, Comparator<T> comp) {
+        int i = Collections.binarySearch(l, key, comp);
+        return i >= 0 ? l.get(i) : null;
+    }
+
+    /**
+     * Método de conveniência que utiliza o {@link Collections#binarySearch(List, Object)} para localizar e retornar o elemento
+     * correspondente à chave informada dentro de uma lista. A lista deve estar previamente ordenada.
+     *
+     * @param l   Lista a ser pesquisada. Deve estar classificada pelo mesmo comparator informado no parâmetro.
+     * @param key Chave do objeto pesquisado.
+     * @return Retorna o objeto correspondente à chave ou null caso ele não seja encontrado.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T find(List<T> l, T key) {
+        int i = Collections.binarySearch((List<Comparable<T>>)l, key);
+        return i >= 0 ? l.get(i) : null;
     }
 
 }
