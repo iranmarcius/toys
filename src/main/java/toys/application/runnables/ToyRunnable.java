@@ -8,26 +8,26 @@ import org.apache.logging.log4j.Logger;
  * @author Iran Marcius
  */
 public abstract class ToyRunnable implements Runnable {
-    private final Logger logger = LogManager.getLogger();
+    private final Logger logger = LogManager.getLogger(getClass());
 
     /**
      * Flag indicando se a execução da thread deve ser finalizada. Enquanto
      * o valor desta flag for <code>TRUE</code> a thread estará em execução.
      */
-    protected boolean finished;
+    protected boolean executando;
 
     /**
      * Intervalo de execução da ação.
      */
-    protected long interval;
+    protected long intervalo;
 
     /**
      * Construtor default.
      */
     public ToyRunnable() {
         super();
-        interval = 250;
-        finished = false;
+        intervalo = 250;
+        executando = false;
     }
 
     /**
@@ -35,9 +35,9 @@ public abstract class ToyRunnable implements Runnable {
      */
     public void run() {
         try {
-            while (!isFinished()) {
+            while (executando) {
                 execute();
-                Thread.sleep(interval);
+                Thread.sleep(intervalo);
             }
         } catch (InterruptedException e) {
             logger.error(e);
@@ -45,25 +45,24 @@ public abstract class ToyRunnable implements Runnable {
     }
 
     /**
-     * Método a ser executado. As classes que estenderem esta, deverão implementar este
-     * método.
+     * Execução da opreração.
      */
     protected abstract void execute();
 
-    public void setInterval(long interval) {
-        this.interval = interval;
+    public void setIntervalo(long intervalo) {
+        this.intervalo = intervalo;
     }
 
-    public long getInterval() {
-        return interval;
+    public long getIntervalo() {
+        return intervalo;
     }
 
-    public boolean isFinished() {
-        return finished;
+    public boolean isExecutando() {
+        return executando;
     }
 
-    public void setFinished(boolean cancelled) {
-        this.finished = cancelled;
+    public void setExecutando(boolean executando) {
+        this.executando = executando;
     }
 
 }

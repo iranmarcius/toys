@@ -45,7 +45,7 @@ public final class FileCleaner extends ToyRunnable {
 	 */
 	public FileCleaner(String baseDir, String fileSpec, int interval) {
 		this(baseDir, fileSpec);
-		this.interval = interval;
+		this.intervalo = interval;
 	}
 
 	/**
