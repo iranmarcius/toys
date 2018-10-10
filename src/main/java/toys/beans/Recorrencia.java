@@ -54,13 +54,13 @@ public class Recorrencia {
 	 * Este campo representa o intervalo entre as ocorrências de um evento.
 	 * Dependendo do tipo da recorrência ele pode representar dias, semanas, meses ou anos.
 	 */
-	public int intervalo;
+	private int intervalo;
 
 	/**
 	 * O valor deste campo é relevante apenas para recorrências do tipo
 	 * {@link Tipo#ANUAL} e indica o mês da recorrência.
 	 */
-	public int mes;
+	private int mes;
 
 	/**
 	 * O valor deste campo é relevante apenas para recorrências do tipo
@@ -68,7 +68,7 @@ public class Recorrencia {
 	 * Ele representa uma semana do mês (primeira, segunda, terceira ou quarta)
 	 * e seu valor deve estar entre 1 e 4.
 	 */
-	public int semana;
+	private int semana;
 
 	/**
 	 * O valor deste campo é relevante apenas para recorrências do tipo
@@ -77,7 +77,7 @@ public class Recorrencia {
 	 * do array é um valor do tipo <code>boolean</code> indicando se o dia
 	 * está incluído na recorrência.
 	 */
-	public boolean[] diaSemana;
+	private boolean[] diaSemana;
 
 	/**
 	 * O valor deste campo é relevante apenas para as recorrências do tipo
@@ -90,16 +90,16 @@ public class Recorrencia {
 	 * 		de mês.</li>
 	 * </ul>
 	 */
-	public int dia;
+	private int dia;
 
 	/**
 	 * Esta flag indica que no cálculo da próxima ocorrência não serão considerados os dias
 	 * do mês ou dias da semana. Por exemplo, com a flag desligada, uma recorrência configurada
-	 * para ocorrer todo mês na primeira segunda-feira, ocorrerá exatamente dessa forma. Com a flag
+	 * para ocorrer cada mês na primeira segunda-feira, ocorrerá exatamente dessa forma. Com a flag
 	 * ligada, a ocorrência ocorrerá exatamente um mês após a última, não considerando o dia da semana
 	 * ou do mês.
 	 */
-	public boolean usarIntervaloExato;
+	private boolean usarIntervaloExato;
 
 	/**
 	 * Construtor default.
@@ -121,7 +121,7 @@ public class Recorrencia {
 		if (tipo == null)
 			return res.getString("semRecorrencia");
 
-		StringBuffer sb = new StringBuffer()
+        var sb = new StringBuilder()
 			.append(res.getString("aCada")).append(" ")
 			.append(intervalo).append(" ");
 		DateFormatSymbols dfs = new DateFormatSymbols();
@@ -305,7 +305,7 @@ public class Recorrencia {
 
 	/**
 	 * Seta os dias da semana como uma combinação de bits.
-	 * @param diasSemana
+	 * @param diasSemana Inteiro contendo os bits representando os dias da semana que serão ligados.
 	 */
 	public void setDiasSemana(int diasSemana) {
 		diaSemana[0] = (diasSemana & DateToys.SUNDAY) > 0;
@@ -350,7 +350,7 @@ public class Recorrencia {
 	 * @throws IllegalArgumentException Cria uma exceção caso o tipo de recorrência
 	 * não seja {@link Tipo#ANUAL} ou caso um dos valores fornecidos não seja válido
 	 */
-	public void setMesSemanaDia(int mes, int semana, int dia) throws IllegalArgumentException {
+	public void setMesSemanaDia(int mes, int semana, int dia) {
 		this.mes = mes;
 		setSemanaDia(semana, dia);
 	}
@@ -365,7 +365,7 @@ public class Recorrencia {
 	 * não seja {@link Tipo#MENSAL} ou {@link Tipo#ANUAL} ou se um dos valores
 	 * fornecidos não sejam válidos.
 	 */
-	public void setMesDia(int mes, int dia) throws IllegalArgumentException {
+	public void setMesDia(int mes, int dia) {
 		this.mes = mes;
 		this.semana = -1;
 		this.dia = dia;
@@ -377,10 +377,10 @@ public class Recorrencia {
 	 * @param dia Um valor entre 0 e 6 representando um dia da semana
 	 * @throws IllegalArgumentException Cria esta exceção no caso do tipo de
 	 * recorrência não seja {@link Tipo#MENSAL} ou {@link Tipo#ANUAL}, ou se
-	 * um dos valores informados para {@link #semana} e {@link #day} não
+	 * um dos valores informados para {@link #semana} e {@link #dia} não
 	 * forem válidos.
 	 */
-	public void setSemanaDia(int semana, int dia) throws IllegalArgumentException {
+	public void setSemanaDia(int semana, int dia) {
 		this.semana = semana;
 		if (isMensal())
 			this.mes = -1;
@@ -394,7 +394,7 @@ public class Recorrencia {
 	 * não seja do tipo {@link Tipo#MENSAL} ou {@link Tipo#ANUAL} ou o valor do
 	 * dia não seja válido.
 	 */
-	public void setDiaDoMes(int dia) throws IllegalArgumentException {
+	public void setDiaDoMes(int dia) {
 		this.semana = -1;
 		this.mes = -1;
 		this.dia = dia;
@@ -434,7 +434,7 @@ public class Recorrencia {
 	/**
 	 * Retorna a data da próxima ocorrência semanal.
 	 * O valor de {@link #intervalo} refere-se ao intervalo
-	 * entre as semanas, e o valor de {@link #day} é uma combinação
+	 * entre as semanas, e o valor de {@link #dia} é uma combinação
 	 * dos dias da semana nos quais o evento poderá ocorrer.
 	 */
 	private void setProximaOcorrenciaSemanal(Calendar c) {
@@ -463,9 +463,9 @@ public class Recorrencia {
 	 * ocorrência.</p>
 	 * <p>Caso o valor de {@link #semana} seja <b>maior que zero</b>, significa que a
 	 * ocorrência se dará na semana especificada por este parâmetro (primeira, segunda, etc),
-	 * e o valor de {@link #day} será considerado como sendo o dia da semana, começando
+	 * e o valor de {@link #dia} será considerado como sendo o dia da semana, começando
 	 * por zero (domingo).</p>
-	 * <p>No caso do valor de {@link #semana} ser <b>igual zero</b>, o valor de {@link #day}
+	 * <p>No caso do valor de {@link #semana} ser <b>igual zero</b>, o valor de {@link #dia}
 	 * será considerado como o dia do mês.</p>
 	 */
 	private void setProximaOcorrenciaMensal(Calendar c) {
