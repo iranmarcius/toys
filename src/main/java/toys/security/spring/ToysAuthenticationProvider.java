@@ -4,26 +4,24 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import toys.SecurityToys;
-import toys.exceptions.ToysRuntimeException;
 import toys.utils.Crypt;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Properties;
 
 /**
  * <p>Classe abstrata com métodos e propriedades comuns de provedores de autneticação e autorização customizados.
@@ -39,33 +37,29 @@ import java.util.Properties;
  */
 public abstract class ToysAuthenticationProvider implements AuthenticationProvider {
     protected final Logger logger = LogManager.getFormatterLogger(getClass());
-    private static final String SECURITY_PROPERTIES = "security.properties";
     private String masterKey;
-    protected static Properties props;
 
     /**
      * Construtor padrão responsável por carregar as propriedades do aruqivo security.properties.
      */
     public ToysAuthenticationProvider() {
         super();
-
-        if (props != null)
-            return;
-
         logger.info("Inicializando provedor de autenticacao.");
+        masterKey = ToysSecurityConfig.getInstance().getProperty("masterKey");
+    }
 
-        // Verifica a existência do arquivo de configuração.
-        URL propsURL = getClass().getClassLoader().getResource(SECURITY_PROPERTIES);
-        if (propsURL == null)
-            throw new ToysRuntimeException("Arquivo de configuracao %s nao encontrado.", SECURITY_PROPERTIES);
-
-        props = new Properties();
-        try {
-            props.load(getClass().getClassLoader().getResourceAsStream(SECURITY_PROPERTIES));
-            masterKey = props.getProperty("masterKey");
-        } catch (IOException e) {
-            throw new ToysRuntimeException("Erro lendo arquivo de configuracoes de seguranca %s.", SECURITY_PROPERTIES);
-        }
+    /**
+     * verifica que as credenciais tenham sido informadas gerando um erro em caso negativo.
+     * @param authentication Objeto contendo as informações de autenticação.
+     * @return Retorna um array de strings onde o primeiro e o segundo elemento serão respectivamente o username
+     * e a senha informados.
+     */
+    protected String[] ensureCredentials(Authentication authentication) {
+        String username = authentication.getName();
+        String password = (String) authentication.getCredentials();
+        if (StringUtils.isBlank(username) || StringUtils.isBlank(password))
+            throw new BadCredentialsException("Nome de usuario ou senha nao informados.");
+        return new String[] {username, password};
     }
 
     /**
