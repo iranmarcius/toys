@@ -37,11 +37,11 @@ import static toys.ToysConsts.*;
  * @since 09/10/2018
  */
 @Component
-public class LDAPAutienticationProvider extends ToysAuthenticationProvider {
+public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
     private LDAPUtils ldapUtils;
     private boolean errorOnPasswordExpired;
 
-    public LDAPAutienticationProvider() {
+    public LDAPAuthenticationProvider() {
         super();
         try {
             logger.info("Configurando provedor de autenticacao.");
