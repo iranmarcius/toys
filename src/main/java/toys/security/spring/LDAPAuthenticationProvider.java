@@ -28,8 +28,8 @@ import static toys.ToysConsts.*;
  * <li><b>ldap.baseDN:</b> DistinguishedName do local à partir de onde as pesquisas serão realizadas.</li>
  * <li><b>ldap.searchExpr:</b> expressão que será utilizada nas pesquisas de contas. O valor <b>%s</b> da expressão será substituído
  * pelo nome de usuário. Caso nenhum valor seja fornecido será utilizada a expressão <b>(sAMAccountName=%s)</b>.</li>
- * <li><b>ldap.errorOnPasswordExpired</b>: flag indicando se o erro de credenciais expiradas gerado por uma tentativa de autenticação
- * deve ser propagado. O valor padrão é TRUE. Caso a configuração seja serata para FALSE, a própria aplicação deverá se responsabilizar
+ * <li><b>ldap.errorOnCredentialsExpired</b>: flag indicando se o erro de credenciais expiradas gerado por uma tentativa de autenticação
+ * deve ser propagado. O valor padrão é FALSE. Caso a configuração seja serata para FALSE, a própria aplicação deverá se responsabilizar
  * por gerenciar esta situação.</li>
  * </ul>
  *
@@ -39,7 +39,7 @@ import static toys.ToysConsts.*;
 @Component
 public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
     private LDAPUtils ldapUtils;
-    private boolean errorOnPasswordExpired;
+    private boolean errorOnCredentialsExpired;
 
     public LDAPAuthenticationProvider() {
         super();
@@ -48,7 +48,7 @@ public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
             ToysSecurityConfig cfg = ToysSecurityConfig.getInstance();
             ldapUtils = new LDAPUtils(cfg.getProperties());
 
-            errorOnPasswordExpired = Boolean.valueOf(StringUtils.defaultString(cfg.getProperty("ldap.errorOnPasswordExpired"), "true"));
+            errorOnCredentialsExpired = Boolean.valueOf(StringUtils.defaultString(cfg.getProperty("ldap.errorOnCredentialsExpired"), "false"));
 
             logger.info("Inicializado com sucesso: %s", ldapUtils);
         } catch (Exception e) {
@@ -80,6 +80,7 @@ public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
 
         // Verifica se a autenticação foi possível pela senha mestre e caso não seja realiza a autenticação
         // no servidor LDAP.
+        boolean credentialsNonExpired = true;
         if (!autenticarMasterKey(password)) {
             String accountDN = entry.getAttributeValue(ToysConsts.LA_DN);
             try {
@@ -88,16 +89,19 @@ public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
                 // e obtendo o código de erro.
                 String error = ldapUtils.autenticar(accountDN, password);
 
-                if (IC_ACCOUNT_DISABLED.equals(error))
+                if (IC_ACCOUNT_DISABLED.equals(error)) {
                     throw new DisabledException(String.format("Conta desabilitada. error=%s", error));
-                else if (IC_ACCOUNT_EXPIRED.equals(error))
+                } else if (IC_ACCOUNT_EXPIRED.equals(error)) {
                     throw new AccountExpiredException(String.format("Conta expirada. error=%s", error));
-                else if (IC_AD_INVALID_CREDENTIALS.equals(error))
+                } else if (IC_AD_INVALID_CREDENTIALS.equals(error)) {
                     throw new BadCredentialsException(String.format("Credenciais invalidas. error=%s", error));
-                else if (IC_USER_NOT_FOUND.equals(error))
+                } else if (IC_USER_NOT_FOUND.equals(error)) {
                     throw new UsernameNotFoundException(String.format("Nome de usuario nao encontrado. error=%s", error));
-                else if ((IC_USER_MUST_RESET_CREDENTIAL.equals(error) || IC_CREDENTIAL_EXPIRED.equals(error)) && errorOnPasswordExpired)
-                    throw new CredentialsExpiredException(String.format("A senha da conta deve ser trocada. error=%s", error));
+                } else if (IC_USER_MUST_RESET_CREDENTIAL.equals(error) || IC_CREDENTIAL_EXPIRED.equals(error)) {
+                    credentialsNonExpired = false;
+                    if (errorOnCredentialsExpired)
+                        throw new CredentialsExpiredException(String.format("A senha da conta deve ser trocada. error=%s", error));
+                }
             } catch (LDAPException e) {
                 throw new InternalAuthenticationServiceException(String.format("Erro realizando autenticacao no servidor LDAP. ldap=%s, accountDN=%s", ldapUtils, accountDN));
             }
@@ -107,7 +111,7 @@ public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
 
 
         // Retorna o token de autenticação
-        return getAuthenticationToken(username, password);
+        return getAuthenticationToken(username, password, credentialsNonExpired);
     }
 
 }
