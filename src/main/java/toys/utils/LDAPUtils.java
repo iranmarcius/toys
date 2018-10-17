@@ -19,6 +19,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+import static toys.ToysConsts.LDAP_PORT;
+
 /**
  * Classe utilitários para operações com o servidor LDAP.
  *
@@ -80,9 +82,13 @@ public class LDAPUtils {
         super();
         this.host = host;
         this.bindDN = bindDN;
-        this.password = password;
         this.baseDN = baseDN;
         this.searchExpr = StringUtils.defaultString(searchExpr, "(" + ToysConsts.LA_ACC_NAME + "=%s)");
+        try {
+            this.password = Crypt.decode(password, SecurityToys.secretKey());
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException e) {
+            throw new ToysRuntimeException("Erro decodificando senha para acesso ao servidor LDAP.", e);
+        }
     }
 
     /**
@@ -112,11 +118,10 @@ public class LDAPUtils {
      * @param accountName Nome da conta.
      * @return Retorna a entrada encontrada ou null caso nenhuma seja correspondente.
      */
-    public synchronized Entry pesquisar(String accountName) throws LDAPException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, UnsupportedEncodingException, InvalidKeyException {
+    public synchronized Entry pesquisar(String accountName) throws LDAPException {
         LDAPConnection conn = null;
         try {
-            String pwd = Crypt.decode(password, SecurityToys.secretKey());
-            conn = new LDAPConnection(host, ToysConsts.LDAP_PORT, bindDN, pwd);
+            conn = new LDAPConnection(host, LDAP_PORT, bindDN, password);
             return pesquisar(conn, accountName);
         } finally {
             if (conn != null)
@@ -150,7 +155,7 @@ public class LDAPUtils {
     public synchronized String autenticar(String bindDN, String password) throws LDAPException {
         LDAPConnection conn = null;
         try {
-            conn = new LDAPConnection(host, ToysConsts.LDAP_PORT, bindDN, password);
+            conn = new LDAPConnection(host, LDAP_PORT, bindDN, password);
             return null;
         } catch (LDAPException e) {
             if (e.getResultCode().equals(ResultCode.INVALID_CREDENTIALS) && e.getDiagnosticMessage() != null) {
