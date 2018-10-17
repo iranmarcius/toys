@@ -33,6 +33,7 @@ public class ToysConsts {
     public static final String ATTR_SESSION_MESSAGE = "toys.web.sessionMessage";
     public static final String ATTR_XSTREAM = "application.xstream";
     public static final String ATTR_PAGINA_TROCA_SENHA = "webapp.pagina.alteracaoSenha";
+    public static final String ATTR_SENHA_TROCADA = "toys.security.senhaTrocada";
     public static final String ATTR_CONTENT = "toys.web.servlet.content";
     public static final String ATTR_CONTENT_TYPE = "toys.web.servlet.contentType";
     public static final String ATTR_CONTENT_FILENAME = "toys.web.servlet.contentFilename";
