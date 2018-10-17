@@ -104,7 +104,7 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
      *
      * @return {@link UsernamePasswordAuthenticationToken}
      */
-    protected UsernamePasswordAuthenticationToken getAuthenticationToken(String username, String password) {
+    protected UsernamePasswordAuthenticationToken getAuthenticationToken(String username, String password, boolean credentialsNonExpired) {
 
         // Caso o usuário tenha sido autenticado com sucesso, adiciona as roles e finaliza o processo de autenticação.
         var roles = new ArrayList<GrantedAuthority>();
@@ -115,7 +115,7 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
         }
 
         logger.debug("Criando principal: ");
-        UserDetails principal = new User(username, password, roles);
+        UserDetails principal = new User(username, password, true, true, credentialsNonExpired, true, roles);
 
         return new UsernamePasswordAuthenticationToken(principal, password, roles);
     }
