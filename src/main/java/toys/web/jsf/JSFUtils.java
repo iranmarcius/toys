@@ -5,7 +5,6 @@ import toys.web.application.WebAppUtils;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 
 import static javax.faces.application.FacesMessage.*;
 
@@ -48,15 +47,6 @@ public class JSFUtils {
             url += ":" + request.getServerPort();
         url += request.getContextPath();
         return url;
-    }
-
-    /**
-     * Retorna o nome de usuário da sessão ou nulo se não existir um.
-     * @return <code>String</code>
-     */
-    public static String getUsername() {
-        Principal principal = FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal();
-        return principal != null ? principal.getName() : null;
     }
 
     /**
