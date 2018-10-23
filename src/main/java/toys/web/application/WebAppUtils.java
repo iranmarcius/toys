@@ -1,7 +1,8 @@
 package toys.web.application;
 
+import toys.security.spring.SpringSecurityToys;
+
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 
 /**
  * Esta classe é utilizada na criação de mensagens de log para aplicações de ambiente de web pois registra,
@@ -25,9 +26,9 @@ public class WebAppUtils {
      */
     public static synchronized String logMsg(HttpServletRequest request, boolean detalhes, String msg, Object... params) {
         String s = params == null || params.length == 0 ? msg : String.format(msg, params);
-        Principal p = request.getUserPrincipal();
-        if (p != null)
-            s += ", username=" + p.getName();
+        String username = SpringSecurityToys.getPrincipalName();
+        if (username != null)
+            s += ", username=" + username;
         s += ", ip=" + request.getRemoteAddr();
         if (detalhes)
             s += ", uri=" + request.getRequestURI() +", referer=" + request.getHeader("Referer");
