@@ -15,7 +15,7 @@ public final class JNDIToys {
     /**
      * Nome default da sessão de e-mail.
      */
-    public static final String DEFAULT_MAIL_SESSION_PATH = "java:comp/env/mail/Session";
+    public static final String DEFAULT_MAIL_SESSION_PATH = "java:/comp/env/mail/Session";
 
     protected JNDIToys() {
         super();
