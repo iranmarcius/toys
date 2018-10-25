@@ -21,7 +21,7 @@ import java.util.Properties;
  */
 @Deprecated
 public class HibernateSession {
-    private static final Logger logger = LogManager.getFormatterLogger();
+    private static final Logger logger = LogManager.getFormatterLogger(HibernateSession.class);
     private static Map<SessionFactoryParams, SessionFactory> sfm = new HashMap<>();
 
     private HibernateSession() {

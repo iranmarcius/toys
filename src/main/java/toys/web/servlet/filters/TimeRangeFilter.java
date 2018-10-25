@@ -29,8 +29,7 @@ import java.util.Date;
  * @author Iran
  */
 public class TimeRangeFilter implements Filter {
-    private static final Logger logger = LogManager.getFormatterLogger();
-
+    private final Logger logger = LogManager.getFormatterLogger(getClass());
     private Date inicio;
     private Date termino;
     private String redirect;

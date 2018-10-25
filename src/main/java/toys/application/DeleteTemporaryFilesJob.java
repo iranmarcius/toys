@@ -1,14 +1,13 @@
 package toys.application;
 
-import java.io.File;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
+
+import java.io.File;
 
 /**
  * Este processo apaga arquivos no diretório temporário do sistema cujo nome corresponda à expressão regular informada e
@@ -23,10 +22,10 @@ import org.quartz.JobExecutionException;
  * @author Iran
  */
 public class DeleteTemporaryFilesJob implements Job {
-    private final Logger logger = LogManager.getLogger();
+    private final Logger logger = LogManager.getLogger(getClass());
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
+    public void execute(JobExecutionContext context) {
         JobDataMap data = context.getJobDetail().getJobDataMap();
         String regex = data.getString("regex");
         Long maxAge = data.getLong("maxAge");

@@ -43,10 +43,10 @@ public final class EmailUtils {
             email.setSubject(subject);
             email.setHtmlMsg(content);
             email.send();
-            LogManager.getFormatterLogger().debug("Email enviado para %s (%s).", to, toName);
+            LogManager.getFormatterLogger(EmailUtils.class).debug("Email enviado para %s (%s).", to, toName);
             return true;
         } catch (Exception e) {
-            LogManager.getFormatterLogger().fatal("Erro enviando email para %s, (%s).", to, toName, e);
+            LogManager.getFormatterLogger(EmailUtils.class).fatal("Erro enviando email para %s, (%s).", to, toName, e);
             return false;
         }
     }

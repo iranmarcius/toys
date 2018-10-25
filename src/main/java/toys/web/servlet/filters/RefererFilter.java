@@ -4,21 +4,14 @@
 
 package toys.web.servlet.filters;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * <p>Este filtro permite ou bloqueia requisições através da verificação do cabeçalho <b>REFERER</b> do
@@ -50,7 +43,7 @@ import org.apache.logging.log4j.Logger;
  * @author Iran Marcius
  */
 public class RefererFilter implements Filter {
-    private final Logger logger = LogManager.getFormatterLogger();
+    private final Logger logger = LogManager.getFormatterLogger(getClass());
 
     private String[] allowedReferers;
     private String[] ignoredURLs;
@@ -59,7 +52,7 @@ public class RefererFilter implements Filter {
      * Inicialização do filtro.
      * @param config Configuração do filtro
      */
-    public void init(FilterConfig config) throws ServletException {
+    public void init(FilterConfig config) {
         ServletContext sc = config.getServletContext();
         sc.log("Iniciando filtro verificador de referers");
         logger.info("Inicializando filtro para verificaco de referers.");

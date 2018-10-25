@@ -16,7 +16,7 @@ import static toys.ToysConsts.ATTR_MOBILE;
  * um dispositivo móvel e armazenar a informação na sessão corrente.
  */
 public class MobileFilter implements Filter {
-    private final Logger logger = LogManager.getFormatterLogger();
+    private final Logger logger = LogManager.getFormatterLogger(getClass());
 
     @Override
     public void init(FilterConfig filterConfig) {

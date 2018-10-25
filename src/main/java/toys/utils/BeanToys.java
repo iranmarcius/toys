@@ -233,7 +233,7 @@ public final class BeanToys {
                 String s = (String)o.getClass().getMethod(getterName).invoke(o);
                 o.getClass().getMethod(setterName, String.class).invoke(o, s.toUpperCase());
             } catch (Exception e) {
-                LogManager.getFormatterLogger().warn("Erro setando valor para a propriedade %s do objeto.", prop, e);
+                LogManager.getFormatterLogger(BeanToys.class).warn("Erro setando valor para a propriedade %s do objeto.", prop, e);
             }
 
         }

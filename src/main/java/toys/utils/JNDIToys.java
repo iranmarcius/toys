@@ -54,7 +54,7 @@ public final class JNDIToys {
      * Retorna o valor da propriedade <b>ambienteDesenvolvimento</b> armazenada no contexto JNDI.
      */
     public static synchronized boolean isAmbienteDesenvolvimento() throws NamingException {
-        return (Boolean)getInitialContext().lookup("java:comp/env/ambienteDesenvolvimento");
+        return (Boolean)getInitialContext().lookup("java:/comp/env/ambienteDesenvolvimento");
     }
 
 }

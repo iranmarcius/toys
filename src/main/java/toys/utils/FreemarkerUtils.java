@@ -21,7 +21,7 @@ import java.util.Map;
  * @author Iran
  */
 public final class FreemarkerUtils {
-    private static final Logger logger = LogManager.getFormatterLogger();
+    private static final Logger logger = LogManager.getFormatterLogger(FreemarkerUtils.class);
     private static Configuration cfg;
 
     private FreemarkerUtils() {
