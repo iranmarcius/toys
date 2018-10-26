@@ -3,6 +3,7 @@ package toys.security.spring;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 /**
  * Métodos utilitários para trabalhar com o Spring Security.
@@ -13,6 +14,19 @@ public class SpringSecurityToys {
 
     private SpringSecurityToys() {
         super();
+    }
+
+    /**
+     * Retorna o usuário autenticado.
+     * @return {@link User}
+     */
+    public static User getPrincipal() {
+        SecurityContext sc = SecurityContextHolder.getContext();
+        if (sc != null) {
+            Object principal = sc.getAuthentication().getPrincipal();
+            return principal instanceof User ? (User)principal : null;
+        }
+        return null;
     }
 
     /**
