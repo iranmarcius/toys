@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 
@@ -14,8 +13,9 @@ public class UtilService implements Serializable {
     private static final long serialVersionUID = -3650138754375217026L;
     private Boolean dispositivoMovel;
 
-    @Inject
-    private FacesContext fc;
+    public UtilService() {
+        super();
+    }
 
     /**
      * Retorna se a requisição foi feita a partir de um dispositivo móvel.
@@ -23,7 +23,7 @@ public class UtilService implements Serializable {
      */
     public boolean isDispositivoMovel() {
         if (dispositivoMovel == null) {
-            String userAgent = fc.getExternalContext().getRequestHeaderMap().get("User-Agent");
+            String userAgent = FacesContext.getCurrentInstance().getExternalContext().getRequestHeaderMap().get("User-Agent");
             dispositivoMovel = StringUtils.containsIgnoreCase(userAgent, "Mobile");
         }
         return dispositivoMovel;
