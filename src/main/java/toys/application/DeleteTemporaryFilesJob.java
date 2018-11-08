@@ -8,6 +8,8 @@ import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Este processo apaga arquivos no diretório temporário do sistema cujo nome corresponda à expressão regular informada e
@@ -22,7 +24,7 @@ import java.io.File;
  * @author Iran
  */
 public class DeleteTemporaryFilesJob implements Job {
-    private final Logger logger = LogManager.getLogger(getClass());
+    private final Logger logger = LogManager.getFormatterLogger(getClass());
 
     @Override
     public void execute(JobExecutionContext context) {
@@ -31,23 +33,29 @@ public class DeleteTemporaryFilesJob implements Job {
         Long maxAge = data.getLong("maxAge");
         Boolean debug = data.getBoolean("debug");
 
-        logger.info(String.format("Iniciando exclusao de arquivos temporarios. regex=%s, idade maxima=%dms", regex, maxAge));
+        logger.info("Iniciando exclusao de arquivos temporarios. regex=%s, idade maxima=%dms", regex, maxAge);
 
         // Filtra os arquivos que se enquadrem no critério de deleção
         File[] tempFiles = FileUtils.getTempDirectory().listFiles(f ->
             f.isFile() && f.canWrite() && (System.currentTimeMillis() - f.lastModified() > maxAge) && f.getName().matches(regex)
         );
 
-        logger.info(String.format("%d arquivos temporarios encontrados.", tempFiles.length));
-        for (File f: tempFiles)
-            if (debug == null || !debug)
-                if (f.delete())
-                    logger.info(String.format("%s deletado com sucesso.", f.getAbsolutePath()));
-                else
-                    logger.warn(String.format("Problemas deletando arquivo %s.", f.getAbsolutePath()));
-            else
-                logger.info(String.format("Arquivo temporario encontrado: %s", f.getAbsolutePath()));
-
+        if (tempFiles != null) {
+            logger.info("%d arquivos temporarios encontrados.", tempFiles.length);
+            for (File f: tempFiles)
+                if (debug == null || !debug) {
+                    try {
+                        Files.delete(f.toPath());
+                        logger.info("%s deletado com sucesso.", f.getAbsolutePath());
+                    } catch (IOException e) {
+                        logger.warn("Problemas deletando arquivo %s.", f.getAbsolutePath(), e);
+                    }
+                } else {
+                    logger.info("Arquivo temporario encontrado: %s", f.getAbsolutePath());
+                }
+        } else {
+            logger.info("Nenhum arquivo temporario encontrado.");
+        }
         logger.info("Exclusao de arquivos temporarios finalizada.");
     }
 
