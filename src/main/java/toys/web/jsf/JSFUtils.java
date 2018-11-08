@@ -1,5 +1,7 @@
 package toys.web.jsf;
 
+import toys.ToysMessages;
+import toys.utils.LDAPUtils;
 import toys.web.application.WebAppUtils;
 
 import javax.faces.application.FacesMessage;
@@ -144,6 +146,20 @@ public class JSFUtils {
      */
     public static void addFatalMsg(String message, String details) {
         addFatalMsg(null, message, details);
+    }
+
+    /**
+     * Retorna a instância do {@link LDAPUtils} armazenada no contexto da aplicação.
+     */
+    public static synchronized LDAPUtils getLDAPUtils() {
+        return (LDAPUtils)FacesContext.getCurrentInstance().getExternalContext().getApplicationMap().get(LDAPUtils.class.getName());
+    }
+
+    /**
+     * Cria uma mensagem padrão de erro.
+     */
+    public static void erroInterno() {
+        addErrorMsg(ToysMessages.erroInterno(), "Ocorreu um erro interno.");
     }
 
 }
