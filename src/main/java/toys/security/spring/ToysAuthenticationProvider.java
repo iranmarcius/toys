@@ -95,7 +95,7 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
      * @return <code>String[]</code>
      */
     protected String[] getRoles(String username) {
-        return new String[] {"AUTHENTICADED_USER"};
+        return new String[] {"ROLE_AUTHENTICADED_USER"};
     }
 
     /**
@@ -114,8 +114,8 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
             roles.add(new SimpleGrantedAuthority("ROLE_" + rolename));
         }
 
-        logger.debug("Criando principal: ");
         UserDetails principal = new User(username, password, true, true, credentialsNonExpired, true, roles);
+        logger.debug("Criando principal: %s", principal);
 
         return new UsernamePasswordAuthenticationToken(principal, password, roles);
     }
