@@ -2,7 +2,7 @@ package toys.web.servlet.listeners;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import toys.security.spring.ToysSecurityConfig;
+import toys.ToysConfig;
 import toys.utils.LDAPUtils;
 
 import javax.servlet.ServletContextEvent;
@@ -20,13 +20,12 @@ public class LDAPUtilsInitListener implements ServletContextListener {
         Logger logger = LogManager.getFormatterLogger(getClass());
         logger.info("Inicializando utilitario LDAP.");
         try {
-            LDAPUtils ldapUtils = new LDAPUtils(ToysSecurityConfig.getInstance().getProperties());
+            LDAPUtils ldapUtils = new LDAPUtils(ToysConfig.getInstance().getProperties("toys.seguranca.ldap"));
             sce.getServletContext().setAttribute(LDAPUtils.class.getName(), ldapUtils);
             logger.debug("Utilitario LDAP iniciado: %s", ldapUtils);
         } catch (Exception e) {
             LogManager.getLogger(getClass()).fatal("Erro incializando utilitario LDAP.", e);
         }
-
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import toys.SecurityToys;
+import toys.ToysConfig;
 import toys.ToysConsts;
 import toys.exceptions.ToysRuntimeException;
 import toys.utils.LDAPUtils;
@@ -20,15 +21,15 @@ import static toys.ToysConsts.*;
  * Provedor de autenticação customizado para servidores LDAP baseado no provedor {@link ToysAuthenticationProvider}.
  * Além das configurações consideradas pelo {@link ToysAuthenticationProvider}, também serão considerados as seguintes:
  * <ul>
- * <li><b>ldap.host:</b> endereço do servidor LDAP que será utilizado no processo de autenticação.</li>
- * <li><b>ldap.bindDN:</b> DistinguishedName de um usuário com permissões para realizar pesquisas e trocas de senha.</li>
- * <li><b>ldap.password</b>: Senha do usuário especificado no parâmetro <b>bindDN</b>. Este valor deve ter sido codificado com o
+ * <li><b>toys.seguranca.ldap.host:</b> endereço do servidor LDAP que será utilizado no processo de autenticação.</li>
+ * <li><b>toys.seguranca.ldap.bindDN:</b> DistinguishedName de um usuário com permissões para realizar pesquisas e trocas de senha.</li>
+ * <li><b>toys.seguranca.ldap.password</b>: Senha do usuário especificado no parâmetro <b>bindDN</b>. Este valor deve ter sido codificado com o
  * método {@link toys.utils.Crypt#encode(String, SecretKey)} utilizando a chave fornecida por {@link SecurityToys#secretKey()}, do contrário
  * a autenticação não será possível.</li>
- * <li><b>ldap.baseDN:</b> DistinguishedName do local à partir de onde as pesquisas serão realizadas.</li>
- * <li><b>ldap.searchExpr:</b> expressão que será utilizada nas pesquisas de contas. O valor <b>%s</b> da expressão será substituído
+ * <li><b>toys.seguranca.ldap.baseDN:</b> DistinguishedName do local à partir de onde as pesquisas serão realizadas.</li>
+ * <li><b>toys.seguranca.ldap.searchExpr:</b> expressão que será utilizada nas pesquisas de contas. O valor <b>%s</b> da expressão será substituído
  * pelo nome de usuário. Caso nenhum valor seja fornecido será utilizada a expressão <b>(sAMAccountName=%s)</b>.</li>
- * <li><b>ldap.errorOnCredentialsExpired</b>: flag indicando se o erro de credenciais expiradas gerado por uma tentativa de autenticação
+ * <li><b>toys.seguranca.ldap.errorOnCredentialsExpired</b>: flag indicando se o erro de credenciais expiradas gerado por uma tentativa de autenticação
  * deve ser propagado. O valor padrão é FALSE. Caso a configuração seja serata para FALSE, a própria aplicação deverá se responsabilizar
  * por gerenciar esta situação.</li>
  * </ul>
@@ -45,10 +46,10 @@ public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
         super();
         try {
             logger.info("Configurando provedor de autenticacao.");
-            ToysSecurityConfig cfg = ToysSecurityConfig.getInstance();
-            ldapUtils = new LDAPUtils(cfg.getProperties());
+            ToysConfig cfg = ToysConfig.getInstance();
+            ldapUtils = new LDAPUtils(cfg.getProperties("toys.seguranca.ldap"));
 
-            errorOnCredentialsExpired = Boolean.valueOf(StringUtils.defaultString(cfg.getProperty("ldap.errorOnCredentialsExpired"), "false"));
+            errorOnCredentialsExpired = Boolean.valueOf(StringUtils.defaultString(cfg.getProperty("toys.seguranca.ldap.errorOnCredentialsExpired"), "false"));
 
             logger.info("Inicializado com sucesso: %s", ldapUtils);
         } catch (Exception e) {

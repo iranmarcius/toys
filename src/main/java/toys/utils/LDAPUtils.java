@@ -27,11 +27,11 @@ import static toys.ToysConsts.LDAP_PORT;
  * @author Iran
  */
 public class LDAPUtils {
-    public static final String CFG_HOST = "ldap.host";
-    public static final String CFG_BINDDN = "ldap.bindDN";
-    public static final String CFG_CREDENTIALS = "ldap.password";
-    public static final String CFG_BASEDN = "ldap.baseDN";
-    public static final String CFG_SEARCH_EXPR = "ldap.searchExpr";
+    public static final String CFG_HOST = "toys.seguranca.ldap.host";
+    public static final String CFG_BINDDN = "toys.seguranca.ldap.bindDN";
+    public static final String CFG_CREDENTIALS = "toys.seguranca.ldap.password";
+    public static final String CFG_BASEDN = "toys.seguranca.ldap.baseDN";
+    public static final String CFG_SEARCH_EXPR = "toys.seguranca.ldap.searchExpr";
     private String host;
     private String bindDN;
     private String baseDN;

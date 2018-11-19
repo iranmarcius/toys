@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import toys.SecurityToys;
+import toys.ToysConfig;
 import toys.utils.Crypt;
 
 import javax.crypto.BadPaddingException;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
  * no arquivo <code>security.properties</code>.</p>
  * <p>As configurações consideradas por este provedor são as seguintes:</p>
  * <ul>
- * <li><b>masterKey:</b> senha mestre para permitir a autenticação de qualquer usuário.</li>
+ * <li><b>toys.seguranca.masterKey:</b> senha mestre para permitir a autenticação de qualquer usuário.</li>
  * </ul>
  *
  * @author Iran
@@ -45,7 +46,7 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
     public ToysAuthenticationProvider() {
         super();
         logger.info("Inicializando provedor de autenticacao.");
-        masterKey = ToysSecurityConfig.getInstance().getProperty("masterKey");
+        masterKey = ToysConfig.getInstance().getProperty("toys.seguranca.masterKey");
     }
 
     /**
