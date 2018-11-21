@@ -30,9 +30,10 @@ import java.util.ArrayList;
  * <p>Classe abstrata com métodos e propriedades comuns de provedores de autneticação e autorização customizados.
  * Todas as configurações dos provedores de autenticação que herdem esta classe devem armazenar suas propriedades
  * no arquivo <code>security.properties</code>.</p>
- * <p>As configurações consideradas por este provedor são as seguintes:</p>
+ * <p>Uma vez que o provedor de autenticação é utilizado somente em ambiente web, as confgurações são lidas
+ * do container JNDI onde a aplicação estiver sendo executada. As configurações consideradas são as seguintes:</p>
  * <ul>
- * <li><b>toys.seguranca.masterKey:</b> senha mestre para permitir a autenticação de qualquer usuário.</li>
+ * <li><b>toys/seguranca/masterKey:</b> senha mestre para permitir a autenticação de qualquer usuário.</li>
  * </ul>
  *
  * @author Iran
