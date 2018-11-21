@@ -2,18 +2,18 @@ package toys.security.spring;
 
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import toys.SecurityToys;
-import toys.ToysConfig;
 import toys.ToysConsts;
 import toys.exceptions.ToysRuntimeException;
+import toys.utils.JNDIToys;
 import toys.utils.LDAPUtils;
 
 import javax.crypto.SecretKey;
+import java.util.Properties;
 
 import static toys.ToysConsts.*;
 
@@ -46,10 +46,10 @@ public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
         super();
         try {
             logger.info("Configurando provedor de autenticacao.");
-            ToysConfig cfg = ToysConfig.getInstance();
-            ldapUtils = new LDAPUtils(cfg.getProperties("toys.seguranca.ldap"));
+            Properties props = JNDIToys.getLDAPConfig();
+            ldapUtils = new LDAPUtils(props);
 
-            errorOnCredentialsExpired = Boolean.valueOf(StringUtils.defaultString(cfg.getProperty("toys.seguranca.ldap.errorOnCredentialsExpired"), "false"));
+            errorOnCredentialsExpired = Boolean.valueOf(props.getProperty("toys.seguranca.ldap.errorOnCredentialsExpired", "false"));
 
             logger.info("Inicializado com sucesso: %s", ldapUtils);
         } catch (Exception e) {

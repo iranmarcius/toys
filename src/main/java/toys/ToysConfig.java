@@ -57,23 +57,19 @@ public class ToysConfig {
     /**
      * Retorna um novo objeto de propriedades construído à partir das propriedades cujo nome inicie o prefixo informado.
      * @param prefixo Prefixo que será utilizado na filtragem.
+     * @param manterPrefixo Flag indicando se o prefixo informado deve ser mantido no nome da propriedade do novo mapa.
      * @return Properties
      */
-    public Properties getProperties(String prefixo) {
+    public Properties getProperties(String prefixo, boolean manterPrefixo) {
         Properties propsFiltradas = new Properties();
         for (Map.Entry<Object, Object> entry: props.entrySet())
-            if (entry.getKey().toString().startsWith(prefixo))
-                propsFiltradas.put(entry.getKey(), entry.getValue());
+            if (entry.getKey().toString().startsWith(prefixo)) {
+                String nome = entry.getKey().toString();
+                if (!manterPrefixo)
+                    nome = nome.substring(prefixo.length() + 1);
+                propsFiltradas.put(nome, entry.getValue());
+            }
         return propsFiltradas;
-    }
-
-    /**
-     * Retorna o valor da propriedade de ambiente de desenvolvimento. Caso a propriedade não exista será retornado <b>false</b>.
-     * @return <code>boolean</code>
-     */
-    public boolean isAmbienteDesenvolvimento() {
-        String v = props.getProperty("toys.ambienteDesenvolvimento", "false");
-        return Boolean.valueOf(v);
     }
 
 }

@@ -27,11 +27,11 @@ import static toys.ToysConsts.LDAP_PORT;
  * @author Iran
  */
 public class LDAPUtils {
-    public static final String CFG_HOST = "toys.seguranca.ldap.host";
-    public static final String CFG_BINDDN = "toys.seguranca.ldap.bindDN";
-    public static final String CFG_CREDENTIALS = "toys.seguranca.ldap.password";
-    public static final String CFG_BASEDN = "toys.seguranca.ldap.baseDN";
-    public static final String CFG_SEARCH_EXPR = "toys.seguranca.ldap.searchExpr";
+    public static final String CFG_HOST = "host";
+    public static final String CFG_BINDDN = "bindDN";
+    public static final String CFG_CREDENTIALS = "password";
+    public static final String CFG_BASEDN = "baseDN";
+    public static final String CFG_SEARCH_EXPR = "searchExpr";
     private String host;
     private String bindDN;
     private String baseDN;
@@ -41,7 +41,7 @@ public class LDAPUtils {
     /**
      * Cria uma instância da classe utilizando os parâmetros informados.
      *
-     * @param params Mapa de parâmetros. Deve conter valores das propriedades <code>ldap.host, ldap.bindDN, ldap.password, ldap.baseDN</code>.
+     * @param params Mapa de parâmetros. Deve conter valores das propriedades <b>host, bindDN, password, baseDN</b>.
      */
     public LDAPUtils(Map<?, ?> params) {
         this(
@@ -56,7 +56,7 @@ public class LDAPUtils {
     /**
      * Cria uma instância da classe utilizando os parâmetros informados.
      *
-     * @param props Objeto do tipo {@link Properties} contendo os valores <code>ldap.host, ldap.bindDN, ldap.password, ldap.baseDN</code>.
+     * @param props Objeto do tipo {@link Properties} contendo os valores <b>host, bindDN, password, baseDN</b>.
      */
     public LDAPUtils(Properties props) {
         this(

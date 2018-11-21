@@ -30,8 +30,8 @@ public class DeleteTemporaryFilesJob implements Job {
     public void execute(JobExecutionContext context) {
         JobDataMap data = context.getJobDetail().getJobDataMap();
         String regex = data.getString("regex");
-        Long maxAge = data.getLong("maxAge");
-        Boolean debug = data.getBoolean("debug");
+        Long maxAge = data.getLongValueFromString("maxAge");
+        Boolean debug = data.getBooleanValueFromString("debug");
 
         logger.info("Iniciando exclusao de arquivos temporarios. regex=%s, idade maxima=%dms", regex, maxAge);
 

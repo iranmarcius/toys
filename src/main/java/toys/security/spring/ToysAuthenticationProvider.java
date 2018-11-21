@@ -13,12 +13,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import toys.SecurityToys;
-import toys.ToysConfig;
 import toys.utils.Crypt;
+import toys.utils.JNDIToys;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -46,7 +48,13 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
     public ToysAuthenticationProvider() {
         super();
         logger.info("Inicializando provedor de autenticacao.");
-        masterKey = ToysConfig.getInstance().getProperty("toys.seguranca.masterKey");
+        try {
+            masterKey = JNDIToys.getMasterKey();
+        } catch (NameNotFoundException e) {
+            masterKey = null;
+        } catch (NamingException e) {
+            logger.warn("Erro obtendo a senha mestre.", e);
+        }
     }
 
     /**

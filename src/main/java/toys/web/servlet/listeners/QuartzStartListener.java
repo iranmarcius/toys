@@ -5,26 +5,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
-import toys.utils.JNDIToys;
+import toys.ToysConfig;
 import toys.utils.LocaleToys;
 
-import javax.naming.*;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Listener para inicialização de tarefas do Quarts.
+ *
  * @author Iran
  */
 public class QuartzStartListener implements ServletContextListener {
-
-    /**
-     * Caminho base para os agendamentos no JNDI.
-     */
-    private static final String JNDI_QUARTZ_PATH = "java:comp/env/quartz";
 
     /**
      * Nome da classe da tarefa.
@@ -49,22 +44,36 @@ public class QuartzStartListener implements ServletContextListener {
         logger.info("Inicializando agendador de tarefas.");
 
         // Verifica se existem tarefas configuradas
-        NamingEnumeration<NameClassPair> names = null;
-        try {
-            names = JNDIToys.getInitialContext().list(JNDI_QUARTZ_PATH);
-        } catch (NameNotFoundException e) {
-            logger.info("Nenhuma tarefa agendada foi definida.");
-        } catch (NamingException e) {
-            logger.fatal("Erro consultando informacoes no JNDI. path=%s", JNDI_QUARTZ_PATH, e);
-        }
-        if (names == null || !names.hasMoreElements())
+        Properties quartzProps = ToysConfig.getInstance().getProperties("toys.quartz", false);
+        if (quartzProps.isEmpty()) {
+            logger.info("Nenhum agendamento de tarefa encontrado.");
             return;
+        }
 
-        // Instancia e configura os jobas com as informações do JNDI
+        // Cria um mapa agrupando os jobs e supas propriedades específicas
+        logger.debug("Processando configuracoes de tarefas.");
+        var jobsProps = new HashMap<String, Properties>();
+        for (Map.Entry<Object, Object> entry: quartzProps.entrySet()) {
+            String propName = (String) entry.getKey();
+            int i = propName.indexOf('.');
+            String jobName = propName.substring(0, i);
+            String cfgName = propName.substring(i + 1);
+            jobsProps.computeIfAbsent(jobName, k -> new Properties()).put(cfgName, entry.getValue());
+        }
+
+        // Registra as informações do log
+        logger.debug("Configuracoes das tarefas:");
+        for (Map.Entry<String, Properties> jobEntry: jobsProps.entrySet()) {
+            logger.debug("Job %s", jobEntry.getKey());
+            for (Map.Entry<Object, Object> entry: jobEntry.getValue().entrySet())
+                logger.debug("\t%s=%s", entry.getKey(), entry.getValue());
+        }
+
+        // Instancia e configura os jobs
         try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
-            while (names.hasMoreElements())
-                agendarTarefa(scheduler, names.nextElement().getName(), sce.getServletContext());
+            for (Map.Entry<String, Properties> entry: jobsProps.entrySet())
+                agendarTarefa(scheduler, entry.getKey(), entry.getValue(), sce.getServletContext());
             scheduler.start();
             logger.info("Agendador de tarefas iniciado com sucesso.");
         } catch (SchedulerException e) {
@@ -75,41 +84,45 @@ public class QuartzStartListener implements ServletContextListener {
 
     /**
      * Agenda uma tarefa no agendador.
+     *
      * @param scheduler Referência para o agendador.
-     * @param jobName Nome da tarefa de onde serão lidas as configurações.
-     * @param sc Referência para o contexto da servlet que pode ser utilizado na obtenção de algumas informações.
+     * @param jobName   Nome da tarefa de onde serão lidas as configurações.
+     * @param props     Configurações do job.
+     * @param sc        Referência para o contexto da servlet que pode ser utilizado na obtenção de algumas informações.
      */
     @SuppressWarnings("unchecked")
-    private void agendarTarefa(Scheduler scheduler, String jobName, ServletContext sc) {
+    private void agendarTarefa(Scheduler scheduler, String jobName, Properties props, ServletContext sc) {
         logger.info("Agendando tarefa %s.", jobName);
         try {
 
             // Obtém as configurações do job
-            String path = JNDI_QUARTZ_PATH + "/" + jobName;
-            Context context = (Context)JNDIToys.getInitialContext().lookup(path);
-            NamingEnumeration<NameClassPair> cfgs = JNDIToys.getInitialContext().list(path);
             String jobClass = null;
             String schedule = null;
             Integer delay = null;
             JobDataMap jobData = new JobDataMap();
-            while (cfgs.hasMoreElements()) {
-                String cfg = cfgs.nextElement().getName();
+            for (Map.Entry<Object, Object> entry: props.entrySet()) {
+                String cfg = entry.getKey().toString();
+                String valor = (String)entry.getValue();
                 if (cfg.equals(CFG_JOB_CLASS)) {
-                    jobClass = (String)context.lookup(CFG_JOB_CLASS);
+                    jobClass = valor;
                     logger.info("\tclass=%s", jobClass);
                 } else if (cfg.equals(CFG_DELAY)) {
-                    delay = (Integer)context.lookup(CFG_DELAY);
-                    logger.info("\tatraso na execucao=%ds", delay);
+                    if (StringUtils.isNotEmpty(valor)) {
+                        delay = StringUtils.isNotBlank(valor) ? Integer.valueOf(valor) : 0;
+                        if (delay > 0)
+                            logger.info("\tatraso na execucao=%ds", delay);
+                    }
                 } else if (cfg.equals(CFG_SCHEDULE)) {
-                    schedule = (String)context.lookup(CFG_SCHEDULE);
-                    if (StringUtils.isNotEmpty(schedule))
+                    if (StringUtils.isNotBlank(valor)) {
+                        schedule = valor;
                         logger.info("\tagenda=%s", schedule);
-                    else
-                        schedule = null;
+                    }
                 } else {
-                    Object value = processarSubstituicoes(context.lookup(cfg), sc);
-                    jobData.put(cfg, value);
-                    logger.info("\t%s=%s", cfg, value);
+                    if (StringUtils.isNotBlank(valor)) {
+                        Object value = processarSubstituicoes(valor, sc);
+                        jobData.put(cfg, value);
+                        logger.info("\t%s=%s", cfg, value);
+                    }
                 }
             }
 
@@ -118,7 +131,7 @@ public class QuartzStartListener implements ServletContextListener {
                 logger.error("Nome da classe nao foi especificado para o job %s.", jobName);
                 return;
             }
-            Class<? extends Job> jobClazz = (Class<Job>)Class.forName(jobClass);
+            Class<? extends Job> jobClazz = (Class<Job>) Class.forName(jobClass);
             JobBuilder jb = JobBuilder.newJob().ofType(jobClazz);
             if (!jobData.isEmpty())
                 jb.usingJobData(jobData);
@@ -144,8 +157,6 @@ public class QuartzStartListener implements ServletContextListener {
             else
                 logger.warn("Tarefa %s nao iniciada pois nao possui agenda definida.", jobName);
 
-        } catch (NamingException e) {
-            logger.fatal("Job %s/%s nao encontrado no JNDI.", JNDI_QUARTZ_PATH, jobName, e);
         } catch (ClassNotFoundException e) {
             logger.fatal("Erro instanciando a tarefa %s.", jobName, e);
         } catch (SchedulerException e) {
@@ -170,13 +181,13 @@ public class QuartzStartListener implements ServletContextListener {
     /**
      * Verifica se o valor é do tipo String e, caso seja, processa as substituições existentes, caso haja alguma.
      */
-    private Object processarSubstituicoes(Object value, ServletContext sc) throws ClassNotFoundException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+    private Object processarSubstituicoes(Object value, ServletContext sc) throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException {
 
         // Processa somente valores string
         if (!(value instanceof String))
             return value;
 
-        StringBuilder sb = new StringBuilder((String)value);
+        StringBuilder sb = new StringBuilder((String) value);
         int i = -1;
         int j = -1;
         while ((i = sb.indexOf("${")) > -1 && (j = sb.indexOf("}")) > -1) {
