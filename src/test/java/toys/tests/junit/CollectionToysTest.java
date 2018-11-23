@@ -36,7 +36,7 @@ public class CollectionToysTest {
 
     @Test
     public void testUniqueAdd() {
-        var l = new ArrayList<Integer>(Arrays.asList(1, 2, 4, 5, 6));
+        List<Integer> l = new ArrayList<>(Arrays.asList(1, 2, 4, 5, 6));
         assertTrue(CollectionToys.uniqueAdd(l, 4) >= 0);
         assertEquals(5, l.size());
         assertTrue(CollectionToys.uniqueAdd(l, 3) < 0);

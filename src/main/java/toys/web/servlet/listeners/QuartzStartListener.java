@@ -52,7 +52,7 @@ public class QuartzStartListener implements ServletContextListener {
 
         // Cria um mapa agrupando os jobs e supas propriedades específicas
         logger.debug("Processando configuracoes de tarefas.");
-        var jobsProps = new HashMap<String, Properties>();
+        Map<String, Properties> jobsProps = new HashMap<>();
         for (Map.Entry<Object, Object> entry: quartzProps.entrySet()) {
             String propName = (String) entry.getKey();
             int i = propName.indexOf('.');

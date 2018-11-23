@@ -57,7 +57,7 @@ public class SpringSecurityToys {
         if (sc != null) {
             Authentication auth = sc.getAuthentication();
             if (auth != null) {
-                var authorities = new ArrayList<String>();
+                List<String> authorities = new ArrayList<>();
                 for (GrantedAuthority ga: auth.getAuthorities())
                     authorities.add(ga.getAuthority().substring(5));
                 return authorities;

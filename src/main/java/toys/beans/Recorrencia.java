@@ -121,7 +121,7 @@ public class Recorrencia {
 		if (tipo == null)
 			return res.getString("semRecorrencia");
 
-        var sb = new StringBuilder()
+        StringBuilder sb = new StringBuilder()
 			.append(res.getString("aCada")).append(" ")
 			.append(intervalo).append(" ");
 		DateFormatSymbols dfs = new DateFormatSymbols();

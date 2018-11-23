@@ -10,7 +10,7 @@ public class NumeroExtensoTest {
 
     @Test
     public void testNumeroExtenso() {
-        var ne = new NumeroExtenso();
+        NumeroExtenso ne = new NumeroExtenso();
         Assert.assertEquals("dez reais", ne.toString(new BigDecimal(10)));
         Assert.assertEquals("oitenta reais", ne.toString(new BigDecimal(80)));
         Assert.assertEquals("um mil, duzentos e trinta e cinco reais", ne.toString(new BigDecimal(1235)));

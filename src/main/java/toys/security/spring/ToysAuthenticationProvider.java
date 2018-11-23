@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>Classe abstrata com métodos e propriedades comuns de provedores de autneticação e autorização customizados.
@@ -117,7 +118,7 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
     protected UsernamePasswordAuthenticationToken getAuthenticationToken(String username, String password, boolean credentialsNonExpired) {
 
         // Caso o usuário tenha sido autenticado com sucesso, adiciona as roles e finaliza o processo de autenticação.
-        var roles = new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> roles = new ArrayList<>();
         String[] rolenames = getRoles(username);
         for (String rolename : rolenames) {
             logger.debug("Atribuindo role: %s", rolename);
