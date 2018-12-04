@@ -10,7 +10,6 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -65,7 +64,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
             }
 
             if (key != null)
-                builder.signWith(SignatureAlgorithm.HS256, key.getEncoded());
+                builder.signWith(SignatureAlgorithm.HS256, key);
 
             String token = builder.compact();
             logger.debug("Token gerado: " + token);
