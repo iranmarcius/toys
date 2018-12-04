@@ -1,8 +1,6 @@
 package toys.security.spring;
 
 import io.jsonwebtoken.Claims;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import toys.utils.SecurityToys;
