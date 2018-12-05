@@ -12,7 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import toys.SecurityToys;
+import toys.ToysSecretKey;
 import toys.utils.Crypt;
 import toys.utils.JNDIToys;
 
@@ -83,7 +83,7 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
 
         if (StringUtils.isNotBlank(masterKey) && StringUtils.isNotBlank(password)) {
             try {
-                String mkDecoded = Crypt.decode(masterKey, SecurityToys.secretKey());
+                String mkDecoded = Crypt.decode(masterKey, ToysSecretKey.getInstance());
                 if (password.equals(mkDecoded)) {
                     logger.debug("Autenticado por senha mestre.");
                     return true;

@@ -8,11 +8,11 @@ import javax.crypto.spec.SecretKeySpec;
  * @author Iran
  * @since 09/10/2018
  */
-public class SecurityToys {
+public class ToysSecretKey {
     private static final String ALGORITHM = "AES";
-    private static SecretKey keyInstance;
+    private static SecretKey instance;
 
-    private SecurityToys() {
+    private ToysSecretKey() {
         super();
     }
 
@@ -30,10 +30,10 @@ public class SecurityToys {
     /**
      * Retorna uma instância da chave secreta.
      */
-    public static synchronized SecretKey secretKey() {
-        if (keyInstance == null)
-            keyInstance = new SecretKeySpec(getKey(), ALGORITHM);
-        return keyInstance;
+    public static synchronized SecretKey getInstance() {
+        if (instance == null)
+            instance = new SecretKeySpec(getKey(), ALGORITHM);
+        return instance;
     }
 
 }

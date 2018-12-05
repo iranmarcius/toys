@@ -4,8 +4,8 @@ import com.unboundid.ldap.sdk.*;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
 import org.apache.commons.lang3.StringUtils;
-import toys.SecurityToys;
 import toys.ToysConsts;
+import toys.ToysSecretKey;
 import toys.exceptions.ToysRuntimeException;
 
 import javax.crypto.BadPaddingException;
@@ -85,7 +85,7 @@ public class LDAPUtils {
         this.baseDN = baseDN;
         this.searchExpr = StringUtils.defaultString(searchExpr, "(" + ToysConsts.LA_ACC_NAME + "=%s)");
         try {
-            this.password = Crypt.decode(password, SecurityToys.secretKey());
+            this.password = Crypt.decode(password, ToysSecretKey.getInstance());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException e) {
             throw new ToysRuntimeException("Erro decodificando senha para acesso ao servidor LDAP.", e);
         }
