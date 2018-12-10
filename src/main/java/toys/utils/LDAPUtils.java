@@ -4,6 +4,8 @@ import com.unboundid.ldap.sdk.*;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import toys.ToysConsts;
 import toys.ToysSecretKey;
 import toys.exceptions.ToysRuntimeException;
@@ -28,6 +30,7 @@ import static toys.ToysConsts.LDAP_PORT;
  */
 public class LDAPUtils {
     public static final String CFG_HOST = "host";
+    private final Logger logger = LogManager.getFormatterLogger(getClass());
     public static final String CFG_BINDDN = "bindDN";
     public static final String CFG_CREDENTIALS = "password";
     public static final String CFG_BASEDN = "baseDN";
@@ -136,7 +139,9 @@ public class LDAPUtils {
      * @return Retorna a entrada encontrada ou nulo.
      */
     public synchronized Entry pesquisar(LDAPConnection conn, String accountName) throws LDAPSearchException {
-        SearchResult result = conn.search(baseDN, SearchScope.SUB, String.format(searchExpr, accountName));
+        String searchPattern = String.format(searchExpr, accountName);
+        logger.debug("Pesquisando conta utilizando a expressao %s.", searchPattern);
+        SearchResult result = conn.search(baseDN, SearchScope.SUB, searchPattern);
         if (result.getEntryCount() == 1)
             return result.getSearchEntries().get(0);
         else if (result.getEntryCount() > 1)
@@ -160,8 +165,11 @@ public class LDAPUtils {
         } catch (LDAPException e) {
             if (e.getResultCode().equals(ResultCode.INVALID_CREDENTIALS) && e.getDiagnosticMessage() != null) {
                 String[] ss = e.getDiagnosticMessage().split(" *, *");
-                if (ss.length > 2 && ss[2].matches("^data .+$"))
-                    return ss[2].substring(5);
+                if (ss.length > 2 && ss[2].matches("^data .+$")) {
+                    String errorCode = ss[2].substring(5);
+                    logger.error("Autenticacao no servidor ldap retornou o erro %s. bindDN=%s", errorCode, bindDN);
+                    return errorCode;
+                }
             }
             throw e;
         } finally {
