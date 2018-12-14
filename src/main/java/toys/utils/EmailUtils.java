@@ -1,8 +1,11 @@
 package toys.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.logging.log4j.LogManager;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * Classe com métodos utilitários e constantes utilizadas no envio de e-mails.
@@ -21,27 +24,37 @@ public final class EmailUtils {
         super();
     }
 
+	/**
+	 * Cria um e-mail html utilizando os parâmetros informados.
+	 * @param hostname Host SMTP que será utilizado para envio do e-mail.
+	 * @param from Nome e e-mai do remetente.
+	 * @param to Email do destinatário.
+	 * @param toName Nome do destinatário. Não é obrigatório.
+	 * @param subject Assunto da mensagem.
+	 * @param content Conteúdo textual da mensagem.
+	 */
+    public static synchronized HtmlEmail criarEmailHtml(String hostname, String from, String to, String toName, String subject, String content) throws EmailException {
+    	HtmlEmail email = new HtmlEmail();
+		email.setHostName(hostname);
+		if (StringUtils.isNotBlank(toName))
+			email.addTo(to, toName, StandardCharsets.UTF_8.toString());
+		else
+			email.addTo(to);
+		email.setFrom(from);
+		email.setCharset(StandardCharsets.UTF_8.toString());
+		email.setSubject(subject);
+		email.setHtmlMsg(content);
+		return email;
+	}
+
+
     /**
-     * Método utilitário par aenvio de emails de uma forma padronizada.
-     * @param hostname Host SMTP para envio do ee-mail.
-     * @param from Remetente.
-     * @param to Email do destinatário.
-     * @param toName Nome do destinatário. Não é obrigatório.
-     * @param subject Assunto da mensagem.
-     * @param content Conteúdo textual da mensagem.
+     * Método de conveniência para criar e enviar um e-mail html com os parâmetros informados retornando se houve sucesso na operação ou não.
+	 * @see #criarEmailHtml(String, String, String, String, String, String)
      */
     public static synchronized boolean enviarEmailHtml(String hostname, String from, String to, String toName, String subject, String content) {
         try {
-            HtmlEmail email = new HtmlEmail();
-            email.setHostName(hostname);
-            if (StringUtils.isNotBlank(toName))
-                email.addTo(to, toName, "utf-8");
-            else
-                email.addTo(to);
-            email.setFrom(from);
-            email.setCharset("utf-8");
-            email.setSubject(subject);
-            email.setHtmlMsg(content);
+            HtmlEmail email = criarEmailHtml(hostname, from, to, toName, subject, content);
             email.send();
             LogManager.getFormatterLogger(EmailUtils.class).debug("Email enviado para %s (%s).", to, toName);
             return true;
