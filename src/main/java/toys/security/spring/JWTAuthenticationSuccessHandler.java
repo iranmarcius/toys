@@ -70,7 +70,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
 
 			String token = builder.compact();
 			logger.debug("Token gerado: " + token);
-			response.setHeader("Authorization", token);
+			response.setHeader("Access-Token", token);
 		} else {
 			logger.error("Nenhum nome de usuario encontrado no contexto para gerar o token.");
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Nenhum usuario autenticado no contexto.");
