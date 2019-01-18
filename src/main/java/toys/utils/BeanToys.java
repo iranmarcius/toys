@@ -112,7 +112,7 @@ public final class BeanToys {
                 return getValor(o, restante);
         }
 
-        // caso nenhuma dos dois métodos tenha funcionado, retorna um valor nulo
+        // Caso nenhum dos dois métodos tenha funcionado, retorna um valor nulo
         return null;
     }
 
