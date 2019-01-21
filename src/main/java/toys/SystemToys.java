@@ -2,7 +2,7 @@
  * Criado em 06/06/2007 09:44:30
  */
 
-package toys.utils;
+package toys;
 
 /**
  * Esta classe possui métodos utilitários para interagir com aspectos relacionados ao ambiente

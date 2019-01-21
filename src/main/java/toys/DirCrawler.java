@@ -1,7 +1,7 @@
 /*
  * Criado em 25/11/2008
  */
-package toys.fs;
+package toys;
 
 import java.io.File;
 import java.io.FileFilter;
