@@ -29,8 +29,8 @@ import static toys.ToysConsts.LDAP_PORT;
  * @author Iran
  */
 public class LDAPUtils {
+	private final Logger logger = LogManager.getFormatterLogger(getClass());
     public static final String CFG_HOST = "host";
-    private final Logger logger = LogManager.getFormatterLogger(getClass());
     public static final String CFG_BINDDN = "bindDN";
     public static final String CFG_CREDENTIALS = "password";
     public static final String CFG_BASEDN = "baseDN";
