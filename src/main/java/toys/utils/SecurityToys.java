@@ -26,7 +26,7 @@ public class SecurityToys {
      * @return Retorna uma string representando o token JWT ou nulo caso não haja um token.
      */
     public static String getJWTFromHeader(String header) {
-        if (header != null && header.startsWith("Bearer"))
+        if (header != null && header.startsWith("Bearer") && header.length() > 7)
             return header.substring(7);
         else
             return null;
