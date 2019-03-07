@@ -5,14 +5,17 @@ package toys;
  */
 public class ToysConsts {
 
-    // Nomes de propriedades de configuração
-
+    // Constantes relacionadas a segurança.
     public static final String SECURITY_ALGORITHM = "security.algorithm";
     public static final String SECURITY_USERNAME_MINLENGTH = "security.username.minLength";
     public static final String SECURITY_CREDENTIAL_MINLENGTH = "security.password.minLength";
+    public static final String SECURITY_AUTHORITIES = "security.authorities";
+
+    // Constantes relacionadas a configurações de e-mail
     public static final String EMAIL_SMTP_ADDRESS = "email.smtp.address";
     public static final String EMAIL_STORE_ADDRESS = "email.store.address";
     public static final String EMAIL_STORE_PROTOCOL = "email.store.protocol";
+
     public static final String CHARSET_ENCODING = "charset.encoding";
     public static final String APPLICATION_DEBUG = "application.debug";
 
