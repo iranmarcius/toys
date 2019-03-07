@@ -16,11 +16,14 @@ import java.io.IOException;
 import java.security.Key;
 import java.util.Date;
 
+import static toys.ToysConsts.SECURITY_AUTHORITIES;
+
 /**
  * Este filtro é responsável por gerar um JWT e retorná-lo através do cabeçalho <code>Authorization</code>.
+ * Além das informações comuns no token, serão armazenados também os privilégios do usuário.
  *
  * @author Iran
- * @since 13/11/2018
+ * @since 11/2018
  */
 public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 	private RequestCache requestCache = new HttpSessionRequestCache();
@@ -54,6 +57,10 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
 				.setId(String.format("%d", System.currentTimeMillis()))
 				.setIssuedAt(new Date())
 				.setSubject(principal);
+
+			var privilegios = SpringSecurityToys.getAuthorities();
+			builder.claim(SECURITY_AUTHORITIES, privilegios);
+			logger.debug("Privilegios: " + privilegios.size());
 
 			if (StringUtils.isNotBlank(issuer)) {
 				logger.debug("Issuer: " + issuer);
