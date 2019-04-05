@@ -1,16 +1,13 @@
 package toys.tests.junit;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
 import toys.utils.StringToys;
 
-public class StringToysTestCase extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    public static Test suite() {
-        return new TestSuite(StringToysTestCase.class);
-    }
+public class StringToysTestCase {
 
+    @Test
     public void testSpacesRight() {
         assertEquals(StringToys.spacesRight("teste1", 10), "teste1    ");
         assertEquals(StringToys.spacesRight("teste2", 5), "teste");
