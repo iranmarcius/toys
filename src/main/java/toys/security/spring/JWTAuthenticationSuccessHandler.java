@@ -32,9 +32,9 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
 	private Key key;
 
 	/**
-	 * construtor padrão.
+	 * Construtor padrão.
 	 *
-	 * @param issuer emissor do token.
+	 * @param issuer Emissor do token.
 	 * @param ttl    Tempo de vida em milissegundos.
 	 * @param key    Chave utilizada na assinatura.
 	 */
