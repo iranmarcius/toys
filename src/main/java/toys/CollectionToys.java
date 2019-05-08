@@ -43,16 +43,16 @@ public class CollectionToys {
      * Retorna uma lista convertida em string utilizando os separadores informados e
      * envolvendo cada item com o quote informado.
      *
-     * @param l     Lista de itens.
+     * @param c     Lista de itens.
      * @param sep   Separator de itens.
      * @param quote Sinal para ser utilizado como quote.
      * @return <code>String</code>
      */
-    public static String asString(List<?> l, String sep, String quote) {
-        if (l == null || l.isEmpty())
+    public static String asString(Collection<?> c, String sep, String quote) {
+        if (c == null || c.isEmpty())
             return "";
         StringBuilder sb = new StringBuilder();
-        for (Object o : l) {
+        for (Object o : c) {
             if (quote != null)
                 sb.append(quote);
             sb.append(o);
@@ -73,7 +73,7 @@ public class CollectionToys {
      * @param separator Separador.
      * @return <code>String</code>
      */
-    public static String asString(List<?> l, String separator) {
+    public static String asString(Collection<?> l, String separator) {
         return asString(l, separator, null);
     }
 
@@ -83,7 +83,7 @@ public class CollectionToys {
      * @param l Lista com os valores.
      * @return <code>String</code>
      */
-    public static String asString(List<?> l) {
+    public static String asString(Collection<?> l) {
         return asString(l, ", ", null);
     }
 
@@ -146,7 +146,7 @@ public class CollectionToys {
      */
     @SuppressWarnings("unchecked")
     public static <T> T find(List<T> l, T key) {
-        int i = Collections.binarySearch((List<Comparable<T>>)l, key);
+        int i = Collections.binarySearch((List<Comparable<T>>) l, key);
         return i >= 0 ? l.get(i) : null;
     }
 
