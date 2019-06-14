@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
 import toys.ToysConsts;
+import toys.exceptions.ToysException;
 import toys.utils.SecurityToys;
 
 import javax.crypto.SecretKey;
@@ -30,18 +31,21 @@ public class JWTAuthenticationManager implements AuthenticationManager {
         this.key = key;
     }
 
-
     @Override
     @SuppressWarnings("unchecked")
     public Authentication authenticate(Authentication authentication) {
         try {
             String token = (String)authentication.getCredentials();
             Claims claims = SecurityToys.getClaims(token, key);
-            var authorities = (List<String>)claims.get(ToysConsts.SECURITY_AUTHORITIES);
-            List<GrantedAuthority> springAuthorities = authorities.stream()
-                .map(a -> new SimpleGrantedAuthority("ROLE_" + a))
-                .collect(Collectors.toList());
-            return new PreAuthenticatedAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), springAuthorities);
+            if (claims != null) {
+                var authorities = (List<String>) claims.get(ToysConsts.SECURITY_AUTHORITIES);
+                List<GrantedAuthority> springAuthorities = authorities.stream()
+                    .map(a -> new SimpleGrantedAuthority("ROLE_" + a))
+                    .collect(Collectors.toList());
+                return new PreAuthenticatedAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), springAuthorities);
+            } else {
+                throw new ToysException("Nenhuma claim do token.");
+            }
         } catch (Exception e) {
             throw new PreAuthenticatedCredentialsNotFoundException("Erro extraindo informacoes de pre-autenticacao do token.", e);
         }

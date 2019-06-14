@@ -1,6 +1,7 @@
 package toys.security.spring;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import toys.utils.SecurityToys;
@@ -33,14 +34,17 @@ public class JWTPreAuthenticatedFilter extends AbstractPreAuthenticatedProcessin
      */
     @Override
     protected Object getPreAuthenticatedPrincipal(HttpServletRequest request) {
-        Claims claims = SecurityToys.getClaims(request, key);
-        if (claims != null) {
-            String subject = claims.getSubject();
-            logger.debug("Principal armazenado no token: " + subject);
-            return subject;
-        } else {
-            return null;
+        try {
+            Claims claims = SecurityToys.getClaims(request, key);
+            if (claims != null) {
+                String subject = claims.getSubject();
+                logger.debug("Principal armazenado no token: " + subject);
+                return subject;
+            }
+        } catch (ExpiredJwtException e) {
+            logger.error("Token expirado.");
         }
+        return null;
     }
 
     /**
