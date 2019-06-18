@@ -3,7 +3,7 @@
  * Todos os direitos reservados
  */
 
-package toys.utils;
+package toys;
 
 import org.apache.commons.lang3.time.DateUtils;
 

@@ -6,11 +6,8 @@ import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import toys.ToysConsts;
-import toys.ToysSecretKey;
+import toys.*;
 import toys.exceptions.ToysRuntimeException;
-import toys.utils.JNDIToys;
-import toys.utils.LDAPUtils;
 
 import javax.crypto.SecretKey;
 import java.util.Properties;
@@ -24,7 +21,7 @@ import static toys.ToysConsts.*;
  * <li><b>toys/seguranca/ldap/host:</b> endereço do servidor LDAP que será utilizado no processo de autenticação.</li>
  * <li><b>toys/seguranca/ldap/bindDN:</b> DistinguishedName de um usuário com permissões para realizar pesquisas e trocas de senha.</li>
  * <li><b>toys/seguranca/ldap/password</b>: Senha do usuário especificado no parâmetro <b>bindDN</b>. Este valor deve ter sido codificado com o
- * método {@link toys.utils.Crypt#encode(String, SecretKey)} utilizando a chave fornecida por {@link ToysSecretKey#getInstance()}, do contrário
+ * método {@link Crypt#encode(String, SecretKey)} utilizando a chave fornecida por {@link ToysSecretKey#getInstance()}, do contrário
  * a autenticação não será possível.</li>
  * <li><b>toys/seguranca/ldap/baseDN:</b> DistinguishedName do local à partir de onde as pesquisas serão realizadas.</li>
  * <li><b>toys/seguranca.ldap/searchExpr:</b> expressão que será utilizada nas pesquisas de contas. O valor <b>%s</b> da expressão será substituído

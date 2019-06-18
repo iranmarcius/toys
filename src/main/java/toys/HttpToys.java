@@ -1,8 +1,8 @@
-package toys.utils;
-
-import javax.servlet.http.HttpServletRequest;
+package toys;
 
 import org.apache.commons.lang3.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Classe utilitária com métodos relacionados ao protocolo HTTP.

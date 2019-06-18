@@ -1,11 +1,11 @@
 /*
  * Criado em 18/08/2009 16:06:55
  */
-package toys.utils.bancos;
+package toys.bancos;
 
+import toys.DateToys;
+import toys.NumberToys;
 import toys.exceptions.ToysRuntimeException;
-import toys.utils.DateToys;
-import toys.utils.NumberToys;
 
 import java.util.Date;
 

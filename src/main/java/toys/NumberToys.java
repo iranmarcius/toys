@@ -1,4 +1,4 @@
-package toys.utils;
+package toys;
 
 /**
  * Esta classe possui métodos utilitários para operações com valores numéricos.

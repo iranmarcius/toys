@@ -1,4 +1,4 @@
-package toys.utils;
+package toys;
 
 import com.unboundid.ldap.sdk.*;
 import com.unboundid.util.ssl.SSLUtil;
@@ -6,8 +6,6 @@ import com.unboundid.util.ssl.TrustAllTrustManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import toys.ToysConsts;
-import toys.ToysSecretKey;
 import toys.exceptions.ToysRuntimeException;
 
 import javax.crypto.BadPaddingException;

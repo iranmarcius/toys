@@ -2,7 +2,7 @@
  * Criado em 21/01/2010 11:08:46
  */
 
-package toys.utils;
+package toys;
 
 
 /**

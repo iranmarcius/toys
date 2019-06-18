@@ -1,7 +1,7 @@
 package toys.tests.junit;
 
 import org.junit.Test;
-import toys.utils.StringToys;
+import toys.StringToys;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

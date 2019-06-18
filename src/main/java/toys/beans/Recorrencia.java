@@ -1,8 +1,8 @@
 package toys.beans;
 
 import org.apache.commons.lang3.time.DateUtils;
-import toys.utils.DateToys;
-import toys.utils.NumberToys;
+import toys.DateToys;
+import toys.NumberToys;
 
 import java.text.DateFormatSymbols;
 import java.util.Arrays;

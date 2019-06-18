@@ -2,9 +2,7 @@
  * Todos os direitos reservados
  */
 
-package toys.utils;
-
-import toys.ToysConsts;
+package toys;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
@@ -15,6 +13,7 @@ import java.util.*;
 
 /**
  * Possui métodos utilitários para manipulação de strings.
+ *
  * @author Iran Marcius
  */
 public class StringToys {
@@ -26,6 +25,7 @@ public class StringToys {
     /**
      * Retorna se uma string estfá num formato que represente um número com casas
      * decimais.
+     *
      * @param number String representando um número
      * @return <code>boolean</code>
      */
@@ -35,7 +35,8 @@ public class StringToys {
 
     /**
      * Retorna uma string fornecida com seu tamanho limitado para o máximo informado.
-     * @param s String que será processada
+     *
+     * @param s         String que será processada
      * @param maxLength Tamanho máximo do valor que será retornado
      * @return Retorna a string com o tamanho truncado para o máximo permitido ou, caso
      * o valor original seja nulo ou seu tamanho não ultrapasse o máximo, a própria
@@ -48,7 +49,8 @@ public class StringToys {
     /**
      * Gera uma string com uma quantidade de espaços à direita e limita seu tamanho
      * ao limite informado.
-     * @param s String original.
+     *
+     * @param s         String original.
      * @param maxLength Tamanho da string resultante
      * @return <code>String</code>
      */
@@ -60,9 +62,10 @@ public class StringToys {
     /**
      * Retorna um double formatado com zeros à esquerda, limitando seu tamanho ao máximo
      * informado e com o número de casas decimais informadas.
-     * @param n Número que será formatado
+     *
+     * @param n         Número que será formatado
      * @param maxLength Tamanho máximo
-     * @param decimals Casas decimais
+     * @param decimals  Casas decimais
      * @return <code>String</code>
      */
     public static String zerosLeft(double n, int maxLength, int decimals) {
@@ -73,7 +76,8 @@ public class StringToys {
     /**
      * Retorna um inteiro formatado com zeros à esquerda limitando seu tamanho ao máximo
      * informado.
-     * @param n Número que será formatado
+     *
+     * @param n         Número que será formatado
      * @param maxLength Tamanho máximo
      * @return <code>String</code>
      */
@@ -84,6 +88,7 @@ public class StringToys {
 
     /**
      * Retorna a representação de uma string em hexadecimal.
+     *
      * @param s String que será transformada
      * @return <code>String</code>
      */
@@ -93,6 +98,7 @@ public class StringToys {
 
     /**
      * Retorna o array de bytes como uma string de valores hexadecimais.
+     *
      * @param bytes Array de bytes
      * @return <code>String</code>
      */
@@ -105,6 +111,7 @@ public class StringToys {
 
     /**
      * Converte uma string com representações hexadecimais em uma string normal.
+     *
      * @param s String com a representação hexadecimal dos bytes
      * @return <code>String</code>
      */
@@ -113,12 +120,13 @@ public class StringToys {
             return null;
         byte[] b = new byte[s.length() / 2];
         for (int i = 0; i < s.length(); i += 2)
-            b[(i + 1) / 2] = (byte)Integer.parseInt(s.substring(i, i + 2), 16);
+            b[(i + 1) / 2] = (byte) Integer.parseInt(s.substring(i, i + 2), 16);
         return new String(b);
     }
 
     /**
      * Retorna um array de inteiros a partir de uma string que representando um número.
+     *
      * @param s String a ser processada
      * @return Returna um array de <code>int</code> com os números contidos na string.
      * Caso qualquer um dos caracteres da string não sejam a representação de um
@@ -133,13 +141,14 @@ public class StringToys {
 
     /**
      * Converte um valor string numa lista de valores considerando a vírgula e os finais de linha como separadores de itens.
+     *
      * @param str Valor string.
      * @return <code>List&lt;String&gt;</code>
      */
     public static List<String> toList(String str) {
         List<String> l = new ArrayList<>();
         String[] sa = str.split("\r\n");
-        for (String s: sa) {
+        for (String s : sa) {
             String[] ss = s.split(" *, *");
             l.addAll(Arrays.asList(ss));
         }
@@ -149,7 +158,8 @@ public class StringToys {
     /**
      * Retorna uma string que está delimitada entre outras duas informadas ou
      * <code>null</code> caso não haja uma string entre as duas informadas.
-     * @param s String a ser pesquisada
+     *
+     * @param s  String a ser pesquisada
      * @param s1 Primeira string
      * @param s2 Segunda string
      * @return <code>String</code>
@@ -165,7 +175,8 @@ public class StringToys {
 
     /**
      * Retorna uma nova string composta pela repetição da string original.
-     * @param s String a ser repetida
+     *
+     * @param s     String a ser repetida
      * @param count Número de repetições
      * @return String
      */
@@ -180,7 +191,8 @@ public class StringToys {
     /**
      * Retorna uma nova string criada a partir da string informada, preenchida com espaços à
      * direita de acordo com o tamanho especificado.
-     * @param s String original
+     *
+     * @param s      String original
      * @param length Tamanho
      * @return <code>String</code>
      */
@@ -191,7 +203,8 @@ public class StringToys {
 
     /**
      * Processa uma string mantendo apenas os desejados.
-     * @param s String a ser processada
+     *
+     * @param s     String a ser processada
      * @param allow Regular expression com os caracteres que devem ser mantidos na string.
      * @return String
      */
@@ -207,6 +220,7 @@ public class StringToys {
 
     /**
      * Retorna uma string criada a partir do erro informado.
+     *
      * @param t Objeto com o erro
      * @return <code>String</code>
      */
@@ -219,6 +233,7 @@ public class StringToys {
     /**
      * Retorna a primeira palavra antes do primeiro espaço em uma string.
      * Caso não haja espaços retorna a string original.
+     *
      * @param s String
      * @return String
      */
@@ -231,13 +246,14 @@ public class StringToys {
 
     /**
      * Retorna um mapa de chaves e valores a partir de uma string com um formato específico.
+     *
      * @param s String com os nomes de chaves e valores. Deve estar no formado <code>chave1=valor1|chave2=valor2|...chaveN=valorN</code>.
      * @return {@link Map}
      */
     public static Map<String, String> toMap(String s) {
         String[] kvs = s.split("\\|");
         Map<String, String> m = new HashMap<>();
-        for (String kv: kvs) {
+        for (String kv : kvs) {
             String[] ss = kv.split("=");
             m.put(ss[0], ss[1]);
         }
@@ -246,7 +262,8 @@ public class StringToys {
 
     /**
      * Formata uma string com a máscara informada.
-     * @param s Valor a ser formatado.
+     *
+     * @param s       Valor a ser formatado.
      * @param mascara Máscara que será aplicada à string.
      * @return <code>String</code>
      */
@@ -258,6 +275,7 @@ public class StringToys {
 
     /**
      * Método de conveniência para aplicar a máscara de CPF à string informada.
+     *
      * @param cpf CPF a ser formatado.
      * @see ToysConsts#MASK_CPF
      */
@@ -267,6 +285,7 @@ public class StringToys {
 
     /**
      * Método de conveniência para aplicar a máscara de IPTE à string informada.
+     *
      * @param ipte IPTE a ser formatado.
      * @see ToysConsts#MASK_IPTE
      */

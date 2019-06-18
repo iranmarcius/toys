@@ -2,7 +2,7 @@
 package toys.tests.junit;
 
 import org.junit.Test;
-import toys.utils.NumberToys;
+import toys.NumberToys;
 
 import static org.junit.Assert.assertEquals;
 

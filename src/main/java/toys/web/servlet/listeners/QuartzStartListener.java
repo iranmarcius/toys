@@ -5,8 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+import toys.LocaleToys;
 import toys.ToysConfig;
-import toys.utils.LocaleToys;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;

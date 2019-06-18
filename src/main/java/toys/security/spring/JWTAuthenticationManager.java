@@ -7,9 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
+import toys.SecurityToys;
 import toys.ToysConsts;
 import toys.exceptions.ToysException;
-import toys.utils.SecurityToys;
 
 import javax.crypto.SecretKey;
 import java.util.List;

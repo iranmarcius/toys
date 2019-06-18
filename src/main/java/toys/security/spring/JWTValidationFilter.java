@@ -2,7 +2,7 @@ package toys.security.spring;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.web.filter.OncePerRequestFilter;
-import toys.utils.SecurityToys;
+import toys.SecurityToys;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

@@ -2,7 +2,7 @@
  * Criado em 29/09/2010 15:07:20
  */
 
-package toys.utils;
+package toys;
 
 import java.sql.SQLException;
 

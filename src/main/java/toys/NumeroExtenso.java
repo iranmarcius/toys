@@ -1,4 +1,4 @@
-package toys.utils;
+package toys;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

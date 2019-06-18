@@ -2,7 +2,7 @@ package toys.tests.junit;
 
 import org.junit.Assert;
 import org.junit.Test;
-import toys.utils.NumeroExtenso;
+import toys.NumeroExtenso;
 
 import java.math.BigDecimal;
 

@@ -1,4 +1,4 @@
-package toys.utils;
+package toys;
 
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;

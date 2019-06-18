@@ -3,8 +3,8 @@ package toys.tests.junit;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import toys.utils.DateToys;
-import toys.utils.LocaleToys;
+import toys.DateToys;
+import toys.LocaleToys;
 
 import java.sql.Time;
 import java.sql.Timestamp;

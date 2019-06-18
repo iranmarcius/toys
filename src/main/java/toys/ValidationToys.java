@@ -2,9 +2,7 @@
  * Criado em 04/06/2008 14:49:20
  */
 
-package toys.utils;
-
-import toys.ToysConsts;
+package toys;
 
 /**
  * Esta classe possui métodos utilitários para validação de informações.

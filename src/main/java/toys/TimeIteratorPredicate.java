@@ -2,7 +2,7 @@
  * Criado em 31/08/2009 17:26:33
  */
 
-package toys.utils;
+package toys;
 
 import java.util.Date;
 

@@ -12,9 +12,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import toys.Crypt;
+import toys.JNDIToys;
 import toys.ToysSecretKey;
-import toys.utils.Crypt;
-import toys.utils.JNDIToys;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;

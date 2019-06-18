@@ -1,4 +1,4 @@
-package toys.utils;
+package toys;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

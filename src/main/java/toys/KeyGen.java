@@ -1,21 +1,15 @@
-package toys.utils;
+package toys;
 
+import org.apache.commons.cli.*;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.io.FileOutputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import java.util.Base64;
 import java.util.Set;
-
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Programa para geração de chaves secretas.

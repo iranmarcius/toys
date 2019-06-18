@@ -4,7 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-import toys.utils.SecurityToys;
+import toys.SecurityToys;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;

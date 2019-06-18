@@ -1,7 +1,7 @@
 package toys.web.jsf;
 
+import toys.LDAPUtils;
 import toys.ToysMessages;
-import toys.utils.LDAPUtils;
 import toys.web.application.WebAppUtils;
 
 import javax.faces.application.FacesMessage;

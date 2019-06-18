@@ -1,7 +1,7 @@
 /*
  * Criado em 18/08/2009 15:57:47
  */
-package toys.utils.bancos;
+package toys.bancos;
 
 import java.util.Date;
 

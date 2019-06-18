@@ -1,4 +1,4 @@
-package toys.utils;
+package toys;
 
 import javax.mail.Session;
 import javax.naming.*;

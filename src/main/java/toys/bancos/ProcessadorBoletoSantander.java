@@ -1,11 +1,11 @@
 /*
  * Criado em 25/04/2010 11:45:33
  */
-package toys.utils.bancos;
+package toys.bancos;
 
+import toys.DateToys;
+import toys.NumberToys;
 import toys.exceptions.ToysRuntimeException;
-import toys.utils.DateToys;
-import toys.utils.NumberToys;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;

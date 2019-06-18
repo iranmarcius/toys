@@ -2,8 +2,8 @@ package toys.web.servlet.listeners;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import toys.utils.JNDIToys;
-import toys.utils.LDAPUtils;
+import toys.JNDIToys;
+import toys.LDAPUtils;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
