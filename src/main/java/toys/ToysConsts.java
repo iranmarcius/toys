@@ -66,7 +66,7 @@ public class ToysConsts {
     public static final String PATTERN_TIMESTAMP = "yyyy-MM-dd HH:mm:ss.SSS";
 
     // Expressões regulares
-    public static final String RE_EMAIL = "^[a-zA-Z0-9_][a-zA-Z0-9_.\\-]*[a-zA-Z0-9_]@([a-zA-Z0-9_\\-]+\\.)+[a-zA-Z]+$";
+    public static final String RE_EMAIL = "^.+@.+\\..+$";
     public static final String RE_DECIMAL_NUMBER = "^\\d+([,.]\\d+)?$";
     public static final String RE_CURRENCY_BR = "^(\\d{1,3}\\.)*\\d{1,3},\\d+$";
     public static final String RE_ZIP = "^\\d{5}\\-?\\d{3}$";
@@ -120,8 +120,8 @@ public class ToysConsts {
     public static final String LA_PRINCIPAL_NAME = "userPrincipalName";
     public static final String LA_UNICODE_PW = "unicodePwd";
 
-     // Valor base para cálculos de conversão de datas entre valores do LDAP e do Java.
-    public static final long LDAP_UNIXTS = (((1970-1601) * 365) - 3 + Math.round((1970d-1601d) / 4d)) * 86400L;
+    // Valor base para cálculos de conversão de datas entre valores do LDAP e do Java.
+    public static final long LDAP_UNIXTS = (((1970 - 1601) * 365) - 3 + Math.round((1970d - 1601d) / 4d)) * 86400L;
 
     private ToysConsts() {
         super();
