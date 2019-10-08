@@ -21,7 +21,7 @@ public class CollectionToysTest {
 
     @Test
     public void testFragmentar() {
-        List<List<Integer>> listas = CollectionToys.fragmentar(lista, 3);
+        List<List<Integer>> listas = CollectionToys.subLists(lista, 3);
         assertEquals(2, listas.size());
         assertEquals(3, listas.get(0).size());
         assertEquals(3, listas.get(1).size());

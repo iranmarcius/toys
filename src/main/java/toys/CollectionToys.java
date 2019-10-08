@@ -25,7 +25,7 @@ public class CollectionToys {
      * @param tamanho Tamanho máximo das sublistas.
      * @return <code>List&lt;List&lt;?&gt;&gt;</code>
      */
-    public static <T> List<List<T>> fragmentar(List<T> l, int tamanho) {
+    public static <T> List<List<T>> subLists(List<T> l, int tamanho) {
         int i = 0;
         int f;
         List<List<T>> listas = new ArrayList<>();
