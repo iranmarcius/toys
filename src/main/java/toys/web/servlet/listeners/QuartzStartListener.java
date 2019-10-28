@@ -103,26 +103,31 @@ public class QuartzStartListener implements ServletContextListener {
             for (Map.Entry<Object, Object> entry: props.entrySet()) {
                 String cfg = entry.getKey().toString();
                 String valor = (String)entry.getValue();
-                if (cfg.equals(CFG_JOB_CLASS)) {
-                    jobClass = valor;
-                    logger.info("\tclass=%s", jobClass);
-                } else if (cfg.equals(CFG_DELAY)) {
-                    if (StringUtils.isNotEmpty(valor)) {
-                        delay = StringUtils.isNotBlank(valor) ? Integer.valueOf(valor) : 0;
-                        if (delay > 0)
-                            logger.info("\tatraso na execucao=%ds", delay);
-                    }
-                } else if (cfg.equals(CFG_SCHEDULE)) {
-                    if (StringUtils.isNotBlank(valor)) {
-                        schedule = valor;
-                        logger.info("\tagenda=%s", schedule);
-                    }
-                } else {
-                    if (StringUtils.isNotBlank(valor)) {
-                        Object value = processarSubstituicoes(valor, sc);
-                        jobData.put(cfg, value);
-                        logger.info("\t%s=%s", cfg, value);
-                    }
+                switch (cfg) {
+                    case CFG_JOB_CLASS:
+                        jobClass = valor;
+                        logger.info("\tclass=%s", jobClass);
+                        break;
+                    case CFG_DELAY:
+                        if (StringUtils.isNotEmpty(valor)) {
+                            delay = StringUtils.isNotBlank(valor) ? Integer.parseInt(valor) : 0;
+                            if (delay > 0)
+                                logger.info("\tatraso na execucao=%ds", delay);
+                        }
+                        break;
+                    case CFG_SCHEDULE:
+                        if (StringUtils.isNotBlank(valor)) {
+                            schedule = valor;
+                            logger.info("\tagenda=%s", schedule);
+                        }
+                        break;
+                    default:
+                        if (StringUtils.isNotBlank(valor)) {
+                            Object value = processarSubstituicoes(valor, sc);
+                            jobData.put(cfg, value);
+                            logger.info("\t%s=%s", cfg, value);
+                        }
+                        break;
                 }
             }
 
@@ -188,8 +193,8 @@ public class QuartzStartListener implements ServletContextListener {
             return value;
 
         StringBuilder sb = new StringBuilder((String) value);
-        int i = -1;
-        int j = -1;
+        int i;
+        int j;
         while ((i = sb.indexOf("${")) > -1 && (j = sb.indexOf("}")) > -1) {
             String expr = sb.substring(i, j + 1);
             String replace = null;
