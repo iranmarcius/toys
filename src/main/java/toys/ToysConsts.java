@@ -123,6 +123,13 @@ public class ToysConsts {
     // Valor base para cálculos de conversão de datas entre valores do LDAP e do Java.
     public static final long LDAP_UNIXTS = (((1970 - 1601) * 365) - 3 + Math.round((1970d - 1601d) / 4d)) * 86400L;
 
+    // Nomes de cabeçalhos HTTP
+    public static final String HTTP_HEADER_REFERER = "Referer";
+    public static final String HTTP_HEADER_X_FORWARDED_FOR = "X-Forwarded-For";
+    public static final String HTTP_HEADER_AUTHORIZATION = "Authorization";
+    public static final String HTTP_HEADER_ACCESS_TOKEN = "Access-Token";
+    public static final String HTTP_HEADER_USER_AGENT = "User-Agent";
+
     private ToysConsts() {
         super();
     }
