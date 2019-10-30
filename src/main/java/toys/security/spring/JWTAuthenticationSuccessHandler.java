@@ -77,8 +77,19 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
 
 			String token = builder.compact();
 			logger.debug("Token gerado: " + token);
+
 			response.setHeader("Access-Token", token);
-		} else {
+
+            // Registra a autenticação no log
+			StringBuilder sb = new StringBuilder()
+                .append(principal).append(" - ")
+                .append("ip=").append(request.getRemoteAddr());
+            String xForwardedFor = request.getHeader("X-Forwarded-For");
+            if (xForwardedFor != null)
+                sb.append(" - xForwardedFor=").append(xForwardedFor);
+            logger.info(sb);
+
+        } else {
 			logger.error("Nenhum nome de usuario encontrado no contexto para gerar o token.");
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, "Nenhum usuario autenticado no contexto.");
 		}

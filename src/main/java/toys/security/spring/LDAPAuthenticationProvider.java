@@ -46,7 +46,7 @@ public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
             Properties props = JNDIToys.getLDAPConfig();
             ldapUtils = new LDAPUtils(props);
 
-            errorOnCredentialsExpired = Boolean.valueOf(props.getProperty("toys.seguranca.ldap.errorOnCredentialsExpired", "false"));
+            errorOnCredentialsExpired = Boolean.parseBoolean(props.getProperty("toys.seguranca.ldap.errorOnCredentialsExpired", "false"));
 
             logger.info("Inicializado com sucesso: %s", ldapUtils);
         } catch (Exception e) {
@@ -65,7 +65,7 @@ public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
         String username = credentials[0];
         String password = credentials[1];
 
-        Entry entry = null;
+        Entry entry;
         try {
             entry = ldapUtils.pesquisar(username);
         } catch (Exception e) {
@@ -104,9 +104,6 @@ public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
                 throw new InternalAuthenticationServiceException(String.format("Erro realizando autenticacao no servidor LDAP. ldap=%s, accountDN=%s", ldapUtils, accountDN));
             }
         }
-
-        logger.debug("Autenticado pelo servidor LDAP.");
-
 
         // Retorna o token de autenticação
         return getAuthenticationToken(username, password, credentialsNonExpired);
