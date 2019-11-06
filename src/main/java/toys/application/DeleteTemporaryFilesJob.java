@@ -21,6 +21,7 @@ import java.nio.file.Files;
  * 	Qualquer arquivo com idade superior à informada será deletado.</li>
  * 	<li><b>debug:</b> este parâmetro é opcional. Se for informado como TRUE os arquivos não serão apagados, apenas listados no log.</li>
  * </ul>
+ *
  * @author Iran
  */
 public class DeleteTemporaryFilesJob implements Job {
@@ -37,12 +38,12 @@ public class DeleteTemporaryFilesJob implements Job {
 
         // Filtra os arquivos que se enquadrem no critério de deleção
         File[] tempFiles = FileUtils.getTempDirectory().listFiles(f ->
-            f.isFile() && f.canWrite() && (System.currentTimeMillis() - f.lastModified() > maxAge) && f.getName().matches(regex)
+                f.isFile() && f.canWrite() && (System.currentTimeMillis() - f.lastModified() > maxAge) && f.getName().matches(regex)
         );
 
         if (tempFiles != null) {
             logger.info("%d arquivos temporarios encontrados.", tempFiles.length);
-            for (File f: tempFiles)
+            for (File f : tempFiles)
                 if (debug == null || !debug) {
                     try {
                         Files.delete(f.toPath());

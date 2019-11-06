@@ -4,11 +4,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Implementação básica para suporte a threads.
+ * Implementação básica para suporte a runnables.
+ *
  * @author Iran Marcius
  */
-public abstract class ToyRunnable implements Runnable {
-    private final Logger logger = LogManager.getLogger(getClass());
+public abstract class ToysRunnable implements Runnable {
+    protected final Logger logger = LogManager.getLogger(getClass());
 
     /**
      * Flag indicando se a execução da thread deve ser finalizada. Enquanto
@@ -24,7 +25,7 @@ public abstract class ToyRunnable implements Runnable {
     /**
      * Construtor default.
      */
-    public ToyRunnable() {
+    public ToysRunnable() {
         super();
         intervalo = 250;
         executando = false;
@@ -41,6 +42,7 @@ public abstract class ToyRunnable implements Runnable {
             }
         } catch (InterruptedException e) {
             logger.error(e);
+            Thread.currentThread().interrupt();
         }
     }
 

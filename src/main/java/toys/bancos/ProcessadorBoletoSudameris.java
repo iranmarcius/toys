@@ -38,7 +38,7 @@ public class ProcessadorBoletoSudameris extends ProcessadorBoleto {
         int soma = 0;
         String idStr = Long.toString(codigoOriginal);
         for (int i = 0; i < idStr.length(); i++)
-            soma += Integer.valueOf(idStr.substring(i, i + 1)) * (9 - i);
+            soma += Integer.parseInt(idStr.substring(i, i + 1)) * (9 - i);
         int resto = soma % 11;
         if (resto == 0)
             return 1;
@@ -63,7 +63,7 @@ public class ProcessadorBoletoSudameris extends ProcessadorBoleto {
                 .append(String.format("%04d", diferencaDias))
                 .append(String.format("%011.2f", valor).replaceAll("[,.]", ""))
                 .append(agencia, 0, 3)
-                .append(conta.replaceAll("-", ""))
+                .append(conta.replace("-", ""))
                 .append(codigo)
                 .append("00000");
 
@@ -71,7 +71,7 @@ public class ProcessadorBoletoSudameris extends ProcessadorBoleto {
         int soma = 0;
         StringBuilder sb = new StringBuilder().append(parte1).append(parte2);
         for (int i = sb.length() - 1; i >= 0; i--) {
-            soma += Integer.valueOf(sb.substring(i, i + 1)) * multiplicador;
+            soma += Integer.parseInt(sb.substring(i, i + 1)) * multiplicador;
             if (++multiplicador > 9)
                 multiplicador = 2;
         }
@@ -99,7 +99,7 @@ public class ProcessadorBoletoSudameris extends ProcessadorBoleto {
         parte1.append(NumberToys.modulo10(parte1.toString()));
 
         StringBuilder parte2 = new StringBuilder()
-                .append(conta.replaceAll("-", "").substring(2))
+                .append(conta.replace("-", "").substring(2))
                 .append(codigo, 0, 4);
         parte2.append(NumberToys.modulo10(parte2.toString()));
 
@@ -109,9 +109,8 @@ public class ProcessadorBoletoSudameris extends ProcessadorBoleto {
         parte3.append(NumberToys.modulo10(parte3.toString()));
 
         int dias = DateToys.deltaDays(vencimento, dataBase, true);
-        StringBuilder parte4 = new StringBuilder()
-                .append(String.format("%04d", dias))
-                .append(String.format("%011.2f", valor).replaceAll("[,.]", ""));
+
+        String parte4 = String.format("%04d", dias) + String.format("%011.2f", valor).replaceAll("[,.]", "");
 
         linhaDigitavel =
                 parte1.substring(0, 5) + "." + parte1.substring(5) + "  " +

@@ -14,6 +14,8 @@ import static toys.ToysConsts.ATTR_MOBILE;
 /**
  * Este filtro analisa o cabeçalho User-Agent da requisição para determinar se o dispositivo de origem é
  * um dispositivo móvel e armazenar a informação na sessão corrente.
+ *
+ * @author Iran
  */
 public class MobileFilter implements Filter {
     private final Logger logger = LogManager.getFormatterLogger(getClass());
@@ -25,7 +27,7 @@ public class MobileFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest)req;
+        HttpServletRequest request = (HttpServletRequest) req;
         HttpSession session = request.getSession(false);
         if (session != null) {
             Object o = session.getAttribute(ATTR_MOBILE);

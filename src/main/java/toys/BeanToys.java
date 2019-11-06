@@ -10,6 +10,7 @@ import java.lang.reflect.Modifier;
 
 /**
  * Implementa métodos utilitários para operações com objetos.
+ *
  * @author Iran Marcius
  */
 public final class BeanToys {
@@ -21,13 +22,14 @@ public final class BeanToys {
     /**
      * Pesquisa no array de objetos do tipo {@link Method} o método cujo nome corresponda
      * ao padrão informado.
+     *
      * @param methods Array de métodos que será pesquisado.
-     * @param regex Expressão regular que será utilizada para localizar o método.
+     * @param regex   Expressão regular que será utilizada para localizar o método.
      * @return Retorna uma referência para o método procurado ou <code>null</code> caso nenhum
      * método seja encontrado ou não seja possível acessá-lo.
      */
     public static Method pesquisarMetodo(Method[] methods, String regex) {
-        for (Method m: methods)
+        for (Method m : methods)
             if (m.getName().matches(regex) && Modifier.isPublic(m.getModifiers()))
                 return m;
         return null;
@@ -36,21 +38,23 @@ public final class BeanToys {
     /**
      * Pesquisa dentro de um array com objetos do tipo {@link Field} um cujo nome seja
      * igual ao nome informado.
+     *
      * @param fields Array de objetos do tipo {@link Field}.
-     * @param nome Nome do campo desejado.
+     * @param nome   Nome do campo desejado.
      * @return Retorna o campo cujo nome corresponda ao informado ou <code>null</code> caso
      * não exista nenhum ou não seja possível ler seu valor.
      */
     public static Field pesquisarCampo(Field[] fields, String nome) {
-        for (Field f: fields)
+        for (Field f : fields)
             if (f.getName().equals(nome) && Modifier.isPublic(f.getModifiers()))
-                    return f;
+                return f;
         return null;
     }
 
     /**
      * Retorna o tipo da propriedade do objeto informado.
-     * @param obj Objeto
+     *
+     * @param obj  Objeto
      * @param prop Nome da propriedade
      * @return Retorna o tipo da propriedade
      */
@@ -72,12 +76,13 @@ public final class BeanToys {
      * Retorna o valor de uma propriedade de um objeto. O método tentará, primeiro, obter o valor
      * da propriedade através de um getter. Caso não exista ou não esteja acessível, o método
      * tentará obter o valor diretamente do campo declarado.
-     * @param obj Objeto de onde será lido o valor da propriedade
+     *
+     * @param obj  Objeto de onde será lido o valor da propriedade
      * @param prop Nome da propriedade desejada. Ex.:
-     * <ul>
-     * 	<li><code>nome = obj.getNome()</code></li>
-     * 	<li><code>situacao.descricao = obj.getSituacao().getDescricao()</code></li>
-     * </ul>
+     *             <ul>
+     *             	<li><code>nome = obj.getNome()</code></li>
+     *             	<li><code>situacao.descricao = obj.getSituacao().getDescricao()</code></li>
+     *             </ul>
      * @return Retorna o valor da propriedade desejada ou <code>null</code> caso não seja possível
      * acessar o valor ou caso não exista nenhum método ou campo com o nome informado no objeto.
      */
@@ -121,8 +126,9 @@ public final class BeanToys {
      * Seta o valor de uma propriedade de um objeto. O método tentará setar o valor primeiramente
      * através do método setter. Caso não exista ou não seja acessível, tentará setar o valor diretamente
      * no campo declarado.
-     * @param obj Objeto com a propriedade que será modificada.
-     * @param prop Nome da propriedade que será modificada.
+     *
+     * @param obj   Objeto com a propriedade que será modificada.
+     * @param prop  Nome da propriedade que será modificada.
      * @param valor Valor que será atribuído
      */
     public static void setValor(Object obj, String prop, Object valor) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
@@ -171,9 +177,10 @@ public final class BeanToys {
 
     /**
      * Popula as propriedades de um bean com os valores fornecidos no array.
-     * @param bean Objeto cujos valores serão preenchidos
+     *
+     * @param bean       Objeto cujos valores serão preenchidos
      * @param properties Nome das propriedades que serão setadas no objeto
-     * @param values Array com os valores que serão atribuídos às propriedades do bean
+     * @param values     Array com os valores que serão atribuídos às propriedades do bean
      * @param startIndex Índice a partir do qual os valores do array serão lidos
      */
     public static void populate(Object bean, String[] properties, Object[] values, int startIndex) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
@@ -183,9 +190,10 @@ public final class BeanToys {
 
     /**
      * Formata uma string utilizando o formato e os valores das propriedades informadas.
-     * @param obj Objeto com os valores
+     *
+     * @param obj     Objeto com os valores
      * @param formato Formato
-     * @param props Propriedades do objeto que serão lidas.
+     * @param props   Propriedades do objeto que serão lidas.
      * @return <code>String</code>
      */
     public static String format(Object obj, String formato, String... props) throws IllegalAccessException, InvocationTargetException {
@@ -197,7 +205,8 @@ public final class BeanToys {
 
     /**
      * Verifica se o objeto passado é nulo. Se for, retorna uma nova instância da classe informada.
-     * @param o Objeto
+     *
+     * @param o     Objeto
      * @param clazz Classe que será instanciada caso o objeto seja nulo
      * @return <code>Object</code>
      */
@@ -208,6 +217,7 @@ public final class BeanToys {
     /**
      * Retorna se dois objetos são iguals realizando a comparação através do método
      * <code>equals</code> destes, mesmo sendo valores nulos.
+     *
      * @param o1 Primeiro objeto
      * @param o2 Segundo objeto
      * @return Retorna uma flag indicando se os elementos são iguais ou não,
@@ -226,11 +236,11 @@ public final class BeanToys {
     public static void toUpperCase(Object o, String... props) {
         if (o == null || props == null)
             return;
-        for (String prop: props) {
+        for (String prop : props) {
             String getterName = "get" + StringUtils.capitalize(prop);
             String setterName = "set" + StringUtils.capitalize(prop);
             try {
-                String s = (String)o.getClass().getMethod(getterName).invoke(o);
+                String s = (String) o.getClass().getMethod(getterName).invoke(o);
                 o.getClass().getMethod(setterName, String.class).invoke(o, s.toUpperCase());
             } catch (Exception e) {
                 LogManager.getFormatterLogger(BeanToys.class).warn("Erro setando valor para a propriedade %s do objeto.", prop, e);

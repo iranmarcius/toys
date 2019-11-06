@@ -1,7 +1,6 @@
 package toys;
 
 import javax.crypto.*;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -11,6 +10,7 @@ import java.util.Random;
 
 /**
  * Fornece métodos utilitários para criptografia.
+ *
  * @author Iran Marcius
  */
 public final class Crypt {
@@ -24,12 +24,11 @@ public final class Crypt {
     }
 
     /**
-     * Método utilitário para retornar uma string criptografada com seus bytes
-     * convertidos para na representação hexadecimal.
-     * @param s String a ser criptografada
+     * Método utilitário para retornar uma string criptografada convertida para hexadecimal.
+     *
+     * @param s         String a ser criptografada
      * @param algorithm Algorítmo
      * @return <code>String</code>
-     * @see #encrypt(String, String)
      */
     public static String digest(String s, String algorithm) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance(algorithm);
@@ -39,6 +38,7 @@ public final class Crypt {
 
     /**
      * Gera uma chave à partir da string a ser criptografada.
+     *
      * @param s String
      * @return <code>short</int>
      */
@@ -46,8 +46,8 @@ public final class Crypt {
         int um = 1;
         short k = 0;
         char[] chars = s.toCharArray();
-        for (char c: chars) {
-            k += (short)c * um;
+        for (char c : chars) {
+            k += (short) c * um;
             um *= -1;
         }
         return k;
@@ -55,8 +55,9 @@ public final class Crypt {
 
     /**
      * Codifica uma string utilizando o algorítmo proprietário &quot;gorgonzola&quot;.
+     *
      * @param string String a ser codificada
-     * @param chave Palavra chave
+     * @param chave  Palavra chave
      * @return <code>String</code>
      */
     public static String gorgonzolaEnc(String string, String chave) {
@@ -64,13 +65,13 @@ public final class Crypt {
         int k = makeKey(chave) - r;
         char[] chars = string.toCharArray();
         StringBuilder sb = new StringBuilder();
-        for (char c: chars) {
-            short cs = (short)c;
+        for (char c : chars) {
+            short cs = (short) c;
             cs += k;
             if (NumberToys.inRange(cs, 48, 57) ||
-                NumberToys.inRange(cs, 65, 90) ||
-                NumberToys.inRange(cs, 101, 122)) {
-                sb.append((char)cs);
+                    NumberToys.inRange(cs, 65, 90) ||
+                    NumberToys.inRange(cs, 101, 122)) {
+                sb.append((char) cs);
             } else {
                 int ca = Math.abs(cs);
                 if (NumberToys.inRange(ca, 0, 255)) {
@@ -79,9 +80,9 @@ public final class Crypt {
                     int h = ca / 256;
                     int l = ca % 256;
                     sb
-                        .append(cs < 0 ? HLNEG : HLPOS)
-                        .append(String.format("%02x", h))
-                        .append(String.format("%02x", l));
+                            .append(cs < 0 ? HLNEG : HLPOS)
+                            .append(String.format("%02x", h))
+                            .append(String.format("%02x", l));
                 }
             }
         }
@@ -94,8 +95,9 @@ public final class Crypt {
     /**
      * Decodifica uma string previamente codificada com o algorítmo proprietário
      * &quot;gorgonzola&quot;.
+     *
      * @param string String a ser decodificada
-     * @param chave Chave para decodificação
+     * @param chave  Chave para decodificação
      * @return <code>String</code>
      */
     public static String gorgonzolaDec(String string, String chave) {
@@ -112,7 +114,7 @@ public final class Crypt {
                 String ls = String.format("%c%c", chars[i + 4], chars[i + 5]);
                 short h = Short.valueOf(hs, 16);
                 short l = Short.valueOf(ls, 16);
-                c = (short)((h * 256) + l);
+                c = (short) ((h * 256) + l);
                 if (chars[i + 1] == HLNEG) c *= -1;
                 i += 5;
             } else if ((chars[i] == CNEG) || (chars[i] == CPOS)) {
@@ -121,7 +123,7 @@ public final class Crypt {
                 if (chars[i] == CNEG) c *= -1;
                 i += 2;
             } else {
-                c = (short)chars[i];
+                c = (short) chars[i];
             }
             c -= k;
             sb.append((char) c);
@@ -132,17 +134,12 @@ public final class Crypt {
 
     /**
      * Criotograma uma string utilizando a chave informada e retorna o resultado codificado em Base64.
+     *
      * @param valor Valor a ser codificado.
-     * @param key Chave que será utilizada na codificação.
+     * @param key   Chave que será utilizada na codificação.
      * @return <code>String</code>
-     * @throws NoSuchPaddingException
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
-     * @throws UnsupportedEncodingException
-     * @throws BadPaddingException
-     * @throws IllegalBlockSizeException
      */
-    public static String encode(String valor, SecretKey key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
+    public static String encode(String valor, SecretKey key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         Cipher cipher = Cipher.getInstance(key.getAlgorithm());
         cipher.init(Cipher.ENCRYPT_MODE, key);
         return Base64.getEncoder().encodeToString(cipher.doFinal(valor.getBytes(StandardCharsets.UTF_8)));
@@ -150,17 +147,12 @@ public final class Crypt {
 
     /**
      * Descriptograva um valor codificado em Base64 utilizando a chave informada.
+     *
      * @param base64 Valor codificado em base64.
-     * @param key Chave que será utilizada na decodificação.
+     * @param key    Chave que será utilizada na decodificação.
      * @return <code>String</code>
-     * @throws NoSuchPaddingException
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeyException
-     * @throws BadPaddingException
-     * @throws IllegalBlockSizeException
-     * @throws UnsupportedEncodingException
      */
-    public static String decode(String base64, SecretKey key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException {
+    public static String decode(String base64, SecretKey key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         Cipher cipher = Cipher.getInstance(key.getAlgorithm());
         cipher.init(Cipher.DECRYPT_MODE, key);
         return new String(cipher.doFinal(Base64.getDecoder().decode(base64)), StandardCharsets.UTF_8);

@@ -88,7 +88,7 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
                     logger.debug("Autenticado por senha mestre.");
                     return true;
                 }
-            } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException | UnsupportedEncodingException | IllegalBlockSizeException e) {
+            } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
                 throw new InternalAuthenticationServiceException("Erro tentando decodificar senha mestre.", e);
             }
         }

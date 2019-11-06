@@ -33,6 +33,7 @@ public class DefaultProgressNotifierImpl implements ProgressNotifier {
 	
 	@Override
 	public void cancel() {
+		// Nenhuma implementação definida.
 	}
 
 	@Override

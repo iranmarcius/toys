@@ -87,7 +87,7 @@ public class LDAPUtils {
         this.searchExpr = StringUtils.defaultString(searchExpr, "(" + ToysConsts.LA_ACC_NAME + "=%s)");
         try {
             this.password = Crypt.decode(password, ToysSecretKey.getInstance());
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             throw new ToysRuntimeException("Erro decodificando senha para acesso ao servidor LDAP.", e);
         }
     }
