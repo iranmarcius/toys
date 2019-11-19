@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -28,6 +29,7 @@ import static toys.ToysConsts.*;
  * @since 11/2018
  */
 public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    private final Logger localLogger = LogManager.getFormatterLogger(getClass());
     private RequestCache requestCache = new HttpSessionRequestCache();
     private String issuer;
     private long ttl;
@@ -53,7 +55,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
 
         String principal = ToysSpringUtils.getPrincipalName();
         if (principal != null) {
-            logger.debug("Gerando token JWT para o principal autenticado.");
+            localLogger.debug("Gerando token JWT para o principal autenticado.");
 
             JwtBuilder builder = Jwts.builder()
                 .setId(String.format("%d", System.currentTimeMillis()))
@@ -62,15 +64,15 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
 
             var privilegios = ToysSpringUtils.getAuthorities();
             builder.claim(SECURITY_AUTHORITIES, privilegios);
-            logger.debug("Privilegios: " + privilegios.size());
+            localLogger.debug("Privilegios: " + privilegios.size());
 
             if (StringUtils.isNotBlank(issuer)) {
-                logger.debug("Issuer: " + issuer);
+                localLogger.debug("Issuer: " + issuer);
                 builder.setIssuer(issuer);
             }
 
             if (ttl > 0) {
-                logger.debug("Tempo de vida em milissegundos: " + ttl);
+                localLogger.debug("Tempo de vida em milissegundos: " + ttl);
                 builder.setExpiration(new Date(System.currentTimeMillis() + ttl));
             }
 
@@ -78,7 +80,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
                 builder.signWith(SignatureAlgorithm.HS256, key);
 
             String token = builder.compact();
-            logger.debug("Token gerado: " + token);
+            localLogger.debug("Token gerado: " + token);
 
             response.setHeader(HTTP_HEADER_ACCESS_TOKEN, token);
 
@@ -98,7 +100,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
             LogManager.getLogger("auth").info(sb);
 
         } else {
-            logger.error("Nenhum nome de usuario encontrado no contexto para gerar o token.");
+            localLogger.error("Nenhum nome de usuario encontrado no contexto para gerar o token.");
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Nenhum usuario autenticado no contexto.");
         }
 
