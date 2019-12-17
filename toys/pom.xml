@@ -11,7 +11,7 @@
     </parent>
 	<groupId>toys</groupId>
 	<artifactId>toys</artifactId>
-	<version>1.6.0</version>
+	<version>1.6.0.1</version>
 
 	<build>
 		<plugins>
