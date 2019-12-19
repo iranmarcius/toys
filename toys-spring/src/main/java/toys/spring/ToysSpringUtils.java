@@ -29,7 +29,7 @@ public class ToysSpringUtils {
      *
      * @return {@link User}
      */
-    public synchronized static User getPrincipal() {
+    public static synchronized User getPrincipal() {
         SecurityContext sc = SecurityContextHolder.getContext();
         if (sc != null) {
             Object principal = sc.getAuthentication().getPrincipal();
