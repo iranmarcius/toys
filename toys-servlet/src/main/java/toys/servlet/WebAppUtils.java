@@ -75,7 +75,8 @@ public class WebAppUtils {
      * @see #logMsg(HttpServletRequest, String, boolean, String, Object...)
      */
     public static synchronized String logMsg(HttpServletRequest request, boolean detalhes, String msg, Object... params) {
-        return logMsg(request, request.getUserPrincipal().getName(), detalhes, msg, params);
+        String principal = request.getUserPrincipal() != null ? request.getUserPrincipal().getName() : null;
+        return logMsg(request, principal, detalhes, msg, params);
     }
 
 }
