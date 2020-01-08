@@ -174,21 +174,6 @@ public class StringToys {
     }
 
     /**
-     * Retorna uma nova string composta pela repetição da string original.
-     *
-     * @param s     String a ser repetida
-     * @param count Número de repetições
-     * @return String
-     */
-    public static String repeat(String s, int count) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < count; i++) {
-            sb.append(s);
-        }
-        return sb.toString();
-    }
-
-    /**
      * Retorna uma nova string criada a partir da string informada, preenchida com espaços à
      * direita de acordo com o tamanho especificado.
      *
