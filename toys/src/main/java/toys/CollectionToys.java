@@ -104,34 +104,16 @@ public class CollectionToys {
     }
 
     /**
-     * Insere um item em uma lista somente se ele não existir. Os itens serão inseridos ordenadamente de acordo com
-     * o valor retornado por {@link Collections#binarySearch(List, Object)}.
-     *
-     * @param l Lista onde o item será inserido.
-     * @param o Objeto que será inserido na lista.
-     * @return O valor retornado segue a definição do método {@link Collections#binarySearch(List, Object)}, o que significa que
-     * um valor negativo indica que o elemento não voi encontrado na lista e portando foi adicionado.
-     */
-    @SuppressWarnings("unchecked")
-    public static int uniqueAdd(List l, Comparable o) {
-        int i = Collections.binarySearch(l, o);
-        if (i < 0)
-            l.add((i * -1) - 1, o);
-        return i;
-    }
-
-
-    /**
      * Método de conveniência que utiliza o {@link Collections#binarySearch(List, Object, Comparator)} para localizar
      * e retornar o elemento correspondente à chave informada dentro de uma lista. A lista deve estar previamente ordenada
      * utilizando o mesmo comparator informado.
      *
-     * @param l    Lista a ser pesquisada. Deve estar classificada pelo mesmo comparator informado no parâmetro.
      * @param key  Chave do objeto pesquisado.
+     * @param l    Lista a ser pesquisada. Deve estar classificada pelo mesmo comparator informado no parâmetro.
      * @param comp comparator a ser utilizado na pesquisa.
      * @return Retorna o objeto correspondente à chave ou null caso ele não seja encontrado.
      */
-    public static <T> T find(List<T> l, T key, Comparator<T> comp) {
+    public static <T> T find(T key, List<T> l, Comparator<T> comp) {
         int i = Collections.binarySearch(l, key, comp);
         return i >= 0 ? l.get(i) : null;
     }
@@ -140,12 +122,12 @@ public class CollectionToys {
      * Método de conveniência que utiliza o {@link Collections#binarySearch(List, Object)} para localizar e retornar o elemento
      * correspondente à chave informada dentro de uma lista. A lista deve estar previamente ordenada.
      *
-     * @param l   Lista a ser pesquisada. Deve estar classificada pelo mesmo comparator informado no parâmetro.
      * @param key Chave do objeto pesquisado.
+     * @param l   Lista a ser pesquisada. Deve estar classificada pelo mesmo comparator informado no parâmetro.
      * @return Retorna o objeto correspondente à chave ou null caso ele não seja encontrado.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T find(List<T> l, T key) {
+    public static <T> T find(T key, List<T> l) {
         int i = Collections.binarySearch((List<Comparable<T>>) l, key);
         return i >= 0 ? l.get(i) : null;
     }
