@@ -59,10 +59,12 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
     }
 
     /**
-     * verifica que as credenciais tenham sido informadas gerando um erro em caso negativo.
+     * Certifica que as credenciais tenham sido fornecidas. Em casio negativo um erro será gerado.
+     *
      * @param authentication Objeto contendo as informações de autenticação.
      * @return Retorna um array de strings onde o primeiro e o segundo elemento serão respectivamente o username
      * e a senha informados.
+     * @throws BadCredentialsException Caso as credenciais não tenham sido informadas.
      */
     protected String[] ensureCredentials(Authentication authentication) {
         String username = authentication.getName();
