@@ -67,6 +67,7 @@ public class ToysConsts {
 
     // Expressões regulares
     public static final String RE_EMAIL = "^\\w[\\w\\-.]+[\\w\\-]@[\\w]+(\\.\\w+)+$";
+    public static final String RE_NUMBER = "^\\d+$";
     public static final String RE_DECIMAL_NUMBER = "^\\d+([,.]\\d+)?$";
     public static final String RE_CURRENCY_BR = "^(\\d{1,3}\\.)*\\d{1,3},\\d+$";
     public static final String RE_ZIP = "^\\d{5}\\-?\\d{3}$";
