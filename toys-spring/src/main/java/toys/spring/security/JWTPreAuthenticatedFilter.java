@@ -14,6 +14,7 @@ import java.security.Key;
 /**
  * Este filtro extrai e verifica a validade de um JWT provendo as informações necessárias para
  * posterior autorização.
+ *
  * @author Iran
  * @since 12/10/2018
  */
@@ -23,8 +24,9 @@ public class JWTPreAuthenticatedFilter extends AbstractPreAuthenticatedProcessin
 
     /**
      * Construtor padrão.
+     *
      * @param authenticationManager {@link AuthenticationManager} que será utilizado para validar a autenticação.
-     * @param key Chave utilizada no token.
+     * @param key                   Chave utilizada no token.
      */
     public JWTPreAuthenticatedFilter(AuthenticationManager authenticationManager, Key key) {
         super();

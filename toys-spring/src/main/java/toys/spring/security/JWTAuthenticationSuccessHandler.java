@@ -22,14 +22,14 @@ import java.util.Date;
 import static toys.ToysConsts.*;
 
 /**
- * Este filtro é responsável por gerar um JWT e retorná-lo através do cabeçalho <code>Authorization</code>.
+ * Este handler é responsável por gerar um JWT e retorná-lo através do cabeçalho <code>Authorization</code>.
  * Além das informações comuns no token, serão armazenados também os privilégios do usuário.
  *
  * @author Iran
  * @since 11/2018
  */
 public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    private final Logger localLogger = LogManager.getFormatterLogger(getClass());
+    protected final Logger localLogger = LogManager.getFormatterLogger(getClass());
     private RequestCache requestCache = new HttpSessionRequestCache();
     private String issuer;
     private long ttl;
@@ -116,6 +116,17 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
         }
 
         clearAuthenticationAttributes(request);
+    }
+
+    /**
+     * Seta dados extras para o token. Por padrão nenhuma informação é adicionada, mas este método pode
+     * ser redefinido em outras implementações.
+     *
+     * @param builder        Builder do token
+     * @param authentication Dados da autenticação.
+     */
+    protected void setExtraTokenData(JwtBuilder builder, Authentication authentication) {
+        // Nenhuma operação
     }
 
     public void setRequestCache(RequestCache requestCache) {
