@@ -76,6 +76,8 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
                 builder.setExpiration(new Date(System.currentTimeMillis() + ttl));
             }
 
+            setExtraTokenData(builder, authentication);
+
             if (key != null)
                 builder.signWith(SignatureAlgorithm.HS256, key);
 
