@@ -11,6 +11,8 @@ import java.io.PrintStream;
 import java.text.ParseException;
 import java.util.*;
 
+import static toys.ToysConsts.RE_MANTER_SOMENTE_NUMEROS;
+
 /**
  * Possui métodos utilitários para manipulação de strings.
  *
@@ -259,23 +261,39 @@ public class StringToys {
     }
 
     /**
-     * Método de conveniência para aplicar a máscara de CPF à string informada.
+     * Aplica uma máscara de CPF à string informada.
      *
-     * @param cpf CPF a ser formatado.
-     * @see ToysConsts#MASK_CPF
+     * @param cpf Valor.
+     * @return String
      */
-    public static String formatCPF(String cpf) throws ParseException {
-        return formatMask(cpf, ToysConsts.MASK_CPF);
+    public static String formatCPF(String cpf) {
+        return cpf
+            .replaceAll(RE_MANTER_SOMENTE_NUMEROS, "")
+            .replaceAll("^(\\d{3})(\\d{3})(\\d{3})(\\d{2})$", "$1.$2.$3-$4");
     }
 
     /**
-     * Método de conveniência para aplicar a máscara de IPTE à string informada.
+     * Aplica uma máscada de CNPJ à string informada.
      *
-     * @param ipte IPTE a ser formatado.
-     * @see ToysConsts#MASK_IPTE
+     * @param cnpj Valor a ser formatado.
+     * @return String
      */
-    public static String formatIPTE(String ipte) throws ParseException {
-        return formatMask(ipte, ToysConsts.MASK_IPTE);
+    public static String formatCNPJ(String cnpj) {
+        return cnpj
+            .replaceAll(RE_MANTER_SOMENTE_NUMEROS, "")
+            .replaceAll("^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})$", "$1.$2.$3/$4-$5");
+    }
+
+    /**
+     * Aplica uma máscara de IPTE à string informada.
+     *
+     * @param ipte Valor
+     * @return String
+     */
+    public static String formatIPTE(String ipte) {
+        return ipte
+            .replaceAll(RE_MANTER_SOMENTE_NUMEROS, "")
+            .replaceAll("^(\\d{5})(\\d{5})(\\d{5})(\\d{6})(\\d{5})(\\d{6})(\\d{1})(\\d{14})$", "$1.$2 $3.$4 $5.$6 $7 $8");
     }
 
 }
