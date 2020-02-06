@@ -6,6 +6,7 @@ import java.util.Properties;
 
 /**
  * Métodos utilitários para operaçoes JNDI.
+ *
  * @author Iran Marcius
  */
 public final class JNDIToys {
@@ -14,22 +15,22 @@ public final class JNDIToys {
     /**
      * Nome default da sessão de e-mail.
      */
-    public static final String PATH_MAIL_SESSION = "java:/comp/env/mail/Session";
+    public static final String PATH_MAIL_SESSION = "java:global/mail/Session";
 
     /**
      * Caminho para o armazenamento da flag de ambiente de desenvolvimento.
      */
-    public static final String PATH_AMBIENTE_DESENVOLVIMENTO = "java:/comp/env/toys/ambienteDesenvolvimento";
+    public static final String PATH_AMBIENTE_DESENVOLVIMENTO = "java:global/toys/ambienteDesenvolvimento";
 
     /**
      * Caminho para o armazenamento da senha mestre nas configurações de segurança.
      */
-    public static final String PATH_MASTER_KEY = "java:/comp/env/toys/seguranca/masterKey";
+    public static final String PATH_MASTER_KEY = "java:global/toys/seguranca/masterKey";
 
     /**
      * Caminho base onde são armazenadas as configurações de segurança.
      */
-    public static final String PATH_LDAP_CONFIG = "java:/comp/env/toys/seguranca/ldap";
+    public static final String PATH_LDAP_CONFIG = "java:global/toys/seguranca/ldap";
 
     protected JNDIToys() {
         super();
