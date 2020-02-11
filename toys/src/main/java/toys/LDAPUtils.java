@@ -26,7 +26,7 @@ import static toys.ToysConsts.LDAP_PORT;
  * @author Iran
  */
 public class LDAPUtils {
-	private final Logger logger = LogManager.getFormatterLogger(getClass());
+    private final Logger logger = LogManager.getFormatterLogger(getClass());
     public static final String CFG_HOST = "host";
     public static final String CFG_BINDDN = "bindDN";
     public static final String CFG_CREDENTIALS = "password";
@@ -100,32 +100,14 @@ public class LDAPUtils {
     }
 
     /**
-     * Retorna uma conexão segura com o servidor LDAP utilizando os parâmetros.
-     */
-    public LDAPConnection getSSLConnection() throws GeneralSecurityException, LDAPException {
-        SSLUtil sslUtil = new SSLUtil(new TrustAllTrustManager());
-        SSLSocketFactory sslSocketFactory = sslUtil.createSSLSocketFactory();
-        LDAPConnection conn = new LDAPConnection(sslSocketFactory);
-        conn.connect(host, ToysConsts.LDAPS_PORT);
-        conn.bind(bindDN, password);
-        return conn;
-
-    }
-
-    /**
      * Pesquisa uma entrada pelo nome da conta.
      *
      * @param accountName Nome da conta.
      * @return Retorna a entrada encontrada ou null caso nenhuma seja correspondente.
      */
     public synchronized Entry pesquisar(String accountName) throws LDAPException {
-        LDAPConnection conn = null;
-        try {
-            conn = new LDAPConnection(host, LDAP_PORT, bindDN, password);
+        try (LDAPConnection conn = new LDAPConnection(host, LDAP_PORT, bindDN, password)) {
             return pesquisar(conn, accountName);
-        } finally {
-            if (conn != null)
-                conn.close();
         }
     }
 
@@ -155,9 +137,7 @@ public class LDAPUtils {
      * @return Retorna o código de erro da autenticação ou null caso tenha ocorrido com sucesso.
      */
     public synchronized String autenticar(String bindDN, String password) throws LDAPException {
-        LDAPConnection conn = null;
-        try {
-            conn = new LDAPConnection(host, LDAP_PORT, bindDN, password);
+        try (LDAPConnection conn = new LDAPConnection(host, LDAP_PORT, bindDN, password)) {
             return null;
         } catch (LDAPException e) {
             if (e.getResultCode().equals(ResultCode.INVALID_CREDENTIALS) && e.getDiagnosticMessage() != null) {
@@ -169,9 +149,6 @@ public class LDAPUtils {
                 }
             }
             throw e;
-        } finally {
-            if (conn != null)
-                conn.close();
         }
     }
 
@@ -196,9 +173,7 @@ public class LDAPUtils {
     public synchronized void alterarSenha(String accountName, String novaSenha, boolean forcarTroca) throws GeneralSecurityException, LDAPException {
         SSLUtil sslUtil = new SSLUtil(new TrustAllTrustManager());
         SSLSocketFactory sslSocketFactory = sslUtil.createSSLSocketFactory();
-        LDAPConnection conn = null;
-        try {
-            conn = new LDAPConnection(sslSocketFactory);
+        try (LDAPConnection conn = new LDAPConnection(sslSocketFactory)) {
             conn.connect(host, ToysConsts.LDAPS_PORT);
             conn.bind(bindDN, password);
             SearchResult result = conn.search(baseDN, SearchScope.SUB, String.format(searchExpr, accountName));
@@ -226,9 +201,6 @@ public class LDAPUtils {
                     String.format("Entrada nao encontrada. accountName=%s", accountName) :
                     String.format("Foram encontrados %d resultados. accountName=%s", result.getEntryCount(), accountName));
             }
-        } finally {
-            if (conn != null)
-                conn.close();
         }
     }
 
