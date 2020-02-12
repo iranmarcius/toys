@@ -77,6 +77,23 @@ public final class JNDIToys {
     }
 
     /**
+     * Tenta obter um valor do JNDI retornando o valor  default caso ele não exista. O valor
+     * armazenado no JNDI deve ser do mesmo tipo do valor default.
+     *
+     * @param lookup       Nome para pesquisa.
+     * @param defaultValue Valor default caso o nome original não exista.
+     * @return Retorna o valor armazenado no JNDI ou o valor default.
+     */
+    @SuppressWarnings("unchecked")
+    public static synchronized <T> T lookup(String lookup, T defaultValue) {
+        try {
+            return (T) getInitialContext().lookup(lookup);
+        } catch (NamingException e) {
+            return defaultValue;
+        }
+    }
+
+    /**
      * Retorna a senha mestre armazenada nas configurações de segurança no caminho especificado em {@link #PATH_MASTER_KEY}.
      */
     public static synchronized String getMasterKey() throws NamingException {
