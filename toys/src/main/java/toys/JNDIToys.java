@@ -47,6 +47,7 @@ public final class JNDIToys {
 
     /**
      * Retorna uma sessão de email com o nome default de sessão de e-mail.
+     *
      * @return Retorna uma sessão de e-mail.
      * @see #PATH_MAIL_SESSION
      */
@@ -56,32 +57,36 @@ public final class JNDIToys {
 
     /**
      * Retorna a sessão de e-mail correspondente ao caminho fornecido. Caso nenhum nome tenha sido especificado, utiliza o nome detault.
+     *
      * @param jndiPath Caminho do objeto de sessão dentro do diretório.
      * @return Session Retorna uma sessão de e-mail.
      * @see #PATH_MAIL_SESSION
      */
+    @Deprecated
     public static synchronized Session getMailSession(String jndiPath) throws NamingException {
         Object o = getInitialContext().lookup(jndiPath != null ? jndiPath : PATH_MAIL_SESSION);
-        return (Session)o;
+        return (Session) o;
     }
 
     /**
      * Retorna o valor da propriedade <b>ambienteDesenvolvimento</b> armazenada no contexto JNDI.
      */
+    @Deprecated
     public static synchronized boolean isAmbienteDesenvolvimento() throws NamingException {
-        return (Boolean)getInitialContext().lookup(PATH_AMBIENTE_DESENVOLVIMENTO);
+        return (Boolean) getInitialContext().lookup(PATH_AMBIENTE_DESENVOLVIMENTO);
     }
 
     /**
      * Retorna a senha mestre armazenada nas configurações de segurança no caminho especificado em {@link #PATH_MASTER_KEY}.
      */
     public static synchronized String getMasterKey() throws NamingException {
-        return (String)getInitialContext().lookup(PATH_MASTER_KEY);
+        return (String) getInitialContext().lookup(PATH_MASTER_KEY);
     }
 
     /**
      * Retorna as configurações de segurança em forma de propriedades. As configurações serão lidas a partir do caminho especificado
      * em {@link #PATH_LDAP_CONFIG}.
+     *
      * @return Retorna um mapa de propriedades contendo as configurações de segurança.
      */
     public static synchronized Properties getLDAPConfig() throws NamingException {
