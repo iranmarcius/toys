@@ -3,6 +3,7 @@ package toys;
 import javax.crypto.*;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -69,8 +70,8 @@ public final class Crypt {
             short cs = (short) c;
             cs += k;
             if (NumberToys.inRange(cs, 48, 57) ||
-                    NumberToys.inRange(cs, 65, 90) ||
-                    NumberToys.inRange(cs, 101, 122)) {
+                NumberToys.inRange(cs, 65, 90) ||
+                NumberToys.inRange(cs, 101, 122)) {
                 sb.append((char) cs);
             } else {
                 int ca = Math.abs(cs);
@@ -80,9 +81,9 @@ public final class Crypt {
                     int h = ca / 256;
                     int l = ca % 256;
                     sb
-                            .append(cs < 0 ? HLNEG : HLPOS)
-                            .append(String.format("%02x", h))
-                            .append(String.format("%02x", l));
+                        .append(cs < 0 ? HLNEG : HLPOS)
+                        .append(String.format("%02x", h))
+                        .append(String.format("%02x", l));
                 }
             }
         }
@@ -108,7 +109,7 @@ public final class Crypt {
         StringBuilder sb = new StringBuilder();
         int i = 1;
         while (i < chars.length - 1) {
-            short c = 0;
+            short c;
             if (chars[i] == HLNEG || chars[i] == HLPOS) {
                 String hs = String.format("%c%c", chars[i + 2], chars[i + 3]);
                 String ls = String.format("%c%c", chars[i + 4], chars[i + 5]);
@@ -139,7 +140,7 @@ public final class Crypt {
      * @param key   Chave que será utilizada na codificação.
      * @return <code>String</code>
      */
-    public static String encode(String valor, SecretKey key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public static String encode(String valor, Key key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         Cipher cipher = Cipher.getInstance(key.getAlgorithm());
         cipher.init(Cipher.ENCRYPT_MODE, key);
         return Base64.getEncoder().encodeToString(cipher.doFinal(valor.getBytes(StandardCharsets.UTF_8)));
