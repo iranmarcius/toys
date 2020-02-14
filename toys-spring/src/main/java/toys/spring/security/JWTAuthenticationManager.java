@@ -7,11 +7,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
+import toys.Crypt;
 import toys.ToysConsts;
 import toys.exceptions.ToysException;
 import toys.servlet.SecurityToys;
 
 import javax.crypto.SecretKey;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,14 +34,15 @@ public class JWTAuthenticationManager implements AuthenticationManager {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Authentication authenticate(Authentication authentication) {
         try {
-            String token = (String)authentication.getCredentials();
+            String token = (String) authentication.getCredentials();
             Claims claims = SecurityToys.getClaims(token, key);
             if (claims != null) {
-                var authorities = (List<String>) claims.get(ToysConsts.SECURITY_AUTHORITIES);
-                List<GrantedAuthority> springAuthorities = authorities.stream()
+                String encodedAuthoritiesExpr = (String) claims.get(ToysConsts.SECURITY_AUTHORITIES);
+                String decodedAuthorities = Crypt.decode(encodedAuthoritiesExpr, key);
+                String[] authorities = decodedAuthorities.split(";");
+                List<GrantedAuthority> springAuthorities = Arrays.stream(authorities)
                     .map(a -> new SimpleGrantedAuthority("ROLE_" + a))
                     .collect(Collectors.toList());
                 return new PreAuthenticatedAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), springAuthorities);

@@ -11,12 +11,19 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
+import toys.CollectionToys;
+import toys.Crypt;
 import toys.spring.ToysSpringUtils;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 import static toys.ToysConsts.*;
@@ -62,9 +69,17 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
                 .setIssuedAt(new Date())
                 .setSubject(principal);
 
-            var privilegios = ToysSpringUtils.getAuthorities();
-            builder.claim(SECURITY_AUTHORITIES, privilegios);
-            localLogger.debug("Privilegios: " + privilegios.size());
+            var authorities = ToysSpringUtils.getAuthorities();
+            var authoritiesExpr = CollectionToys.asString(authorities, ";");
+            localLogger.debug("Privilegios: %s", authoritiesExpr);
+            try {
+                var encodedAuthoritiesExpr = Crypt.encode(authoritiesExpr, key);
+                localLogger.debug("Privilegios codificados: %s", encodedAuthoritiesExpr);
+                builder.claim(SECURITY_AUTHORITIES, encodedAuthoritiesExpr);
+            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+                localLogger.fatal("Erro codificando privilegios.", e);
+                throw new IOException(e);
+            }
 
             if (StringUtils.isNotBlank(issuer)) {
                 localLogger.debug("Issuer: " + issuer);
