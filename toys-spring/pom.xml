@@ -6,7 +6,7 @@
 
     <groupId>toys</groupId>
     <artifactId>toys-spring</artifactId>
-    <version>1.6.0-2</version>
+    <version>1.6.0-3</version>
 
     <parent>
         <groupId>br.unitoledo</groupId>
@@ -17,7 +17,7 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
+                <artifactId>maven-source-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
