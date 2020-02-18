@@ -27,7 +27,8 @@ public class JPAUtils {
         if (transaction == null)
             return;
         try {
-            if (transaction.getStatus() == Status.STATUS_MARKED_ROLLBACK)
+            int status = transaction.getStatus();
+            if (status == Status.STATUS_ACTIVE || status == Status.STATUS_MARKED_ROLLBACK)
                 transaction.rollback();
         } catch (SystemException e) {
             logger.fatal("Erro realizando rollback na transacao.", e);
