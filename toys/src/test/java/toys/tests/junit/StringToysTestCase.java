@@ -27,6 +27,7 @@ public class StringToysTestCase {
     public void normalizarTelefone() {
         assertEquals("9999999999", StringToys.normalizarTelefone("(099) 9999-9999"));
         assertEquals("9999999999", StringToys.normalizarTelefone("(99) 9999-9999"));
+        assertEquals("9999999999", StringToys.normalizarTelefone("099 99999999"));
         assertNull(StringToys.normalizarTelefone(null));
     }
 
