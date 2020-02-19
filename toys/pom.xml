@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>toys</groupId>
     <artifactId>toys</artifactId>
-    <version>1.6.0-10</version>
+    <version>1.6.0-11</version>
 
     <parent>
         <groupId>br.unitoledo</groupId>

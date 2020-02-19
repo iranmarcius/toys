@@ -296,4 +296,16 @@ public class StringToys {
             .replaceAll("^(\\d{5})(\\d{5})(\\d{5})(\\d{6})(\\d{5})(\\d{6})(\\d{1})(\\d{14})$", "$1.$2 $3.$4 $5.$6 $7 $8");
     }
 
+    /**
+     * Remove todos os caracteres que não sejam números da string informada e o número zero inicial caso exista.
+     *
+     * @param telefone Número de telefone.
+     * @return <code>String</code>
+     */
+    public static String normalizarTelefone(String telefone) {
+        if (telefone == null)
+            return null;
+        return telefone.replaceAll(RE_MANTER_SOMENTE_NUMEROS, "").replaceFirst("^0", "");
+    }
+
 }
