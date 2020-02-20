@@ -6,6 +6,7 @@ import org.junit.Test;
 import toys.persistence.jdbc.JDBCUtils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -29,7 +30,7 @@ public class JDBCUtilsTest {
 
     @Test
     public void extrairCSVTest() throws IOException, SQLException {
-        jdbcUtils.extrairCSV(conn, "select * from spletivo", "ISO-8859-1", ";", "c:/temp/saida.csv");
+        jdbcUtils.extrairCSV(conn, "select * from spletivo", StandardCharsets.ISO_8859_1, ";", "c:/temp/saida.csv");
         assertTrue(true);
     }
 
