@@ -1,6 +1,7 @@
 package toys.persistence.jdbc;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,11 +25,11 @@ public class JDBCUtils {
      * @param separador Separador de campos.
      * @return Retorna o número de registros resultantes da consulta.
      */
-    public int extrair(Connection conn, String sql, OutputStream out, String charset, String separador) throws SQLException, IOException {
+    public int extrair(Connection conn, String sql, OutputStream out, Charset charset, String separador) throws SQLException, IOException {
         int total = 0;
         try (Statement st = conn.createStatement()) {
             try (ResultSet rs = st.executeQuery(sql)) {
-                try (OutputStreamWriter outWriter = new OutputStreamWriter(out, charset)) {
+                try (OutputStreamWriter outWriter = new OutputStreamWriter(out, charset.name())) {
                     try (BufferedWriter writer = new BufferedWriter(outWriter)) {
 
                         var sb = new StringBuilder();
@@ -66,9 +67,9 @@ public class JDBCUtils {
     /**
      * Método de conveniência para extrair a saida para um arquivo.
      *
-     * @see #extrair(Connection, String, OutputStream, String, String)
+     * @see #extrair(Connection, String, OutputStream, Charset, String)
      */
-    public int extrairCSV(Connection conn, String sql, String charset, String separator, String caminhoSaida) throws IOException, SQLException {
+    public int extrairCSV(Connection conn, String sql, Charset charset, String separator, String caminhoSaida) throws IOException, SQLException {
         try (FileOutputStream out = new FileOutputStream(caminhoSaida)) {
             return extrair(conn, sql, out, charset, separator);
         }
