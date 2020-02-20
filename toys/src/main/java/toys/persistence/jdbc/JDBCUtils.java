@@ -14,7 +14,18 @@ import java.sql.Statement;
  */
 public class JDBCUtils {
 
-    public void extrair(Connection conn, String sql, OutputStream out, String charset, String separador) throws SQLException, IOException {
+    /**
+     * Extrai os dados de uma consulta SQL salvando-os no stream informado no formato CSV.
+     *
+     * @param conn      Conexão com o banco de dados.
+     * @param sql       SQL a ser executada.
+     * @param out       Stream de saída.
+     * @param charset   Charset das informações.
+     * @param separador Separador de campos.
+     * @return Retorna o número de registros resultantes da consulta.
+     */
+    public int extrair(Connection conn, String sql, OutputStream out, String charset, String separador) throws SQLException, IOException {
+        int total = 0;
         try (Statement st = conn.createStatement()) {
             try (ResultSet rs = st.executeQuery(sql)) {
                 try (OutputStreamWriter outWriter = new OutputStreamWriter(out, charset)) {
@@ -31,6 +42,7 @@ public class JDBCUtils {
 
                         // Percorre o resultset salvando os resultados
                         while (rs.next()) {
+                            total++;
                             sb.setLength(0);
                             for (int i = 1; i <= metadata.getColumnCount(); i++) {
                                 var value = rs.getObject(i);
@@ -48,11 +60,17 @@ public class JDBCUtils {
                 }
             }
         }
+        return total;
     }
 
-    public void extrairCSV(Connection conn, String sql, String charset, String separator, String caminhoSaida) throws IOException, SQLException {
+    /**
+     * Método de conveniência para extrair a saida para um arquivo.
+     *
+     * @see #extrair(Connection, String, OutputStream, String, String)
+     */
+    public int extrairCSV(Connection conn, String sql, String charset, String separator, String caminhoSaida) throws IOException, SQLException {
         try (FileOutputStream out = new FileOutputStream(caminhoSaida)) {
-            extrair(conn, sql, out, charset, separator);
+            return extrair(conn, sql, out, charset, separator);
         }
     }
 
