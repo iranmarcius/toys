@@ -12,7 +12,6 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import toys.CollectionToys;
-import toys.Crypt;
 import toys.spring.ToysSpringUtils;
 
 import javax.crypto.BadPaddingException;
@@ -69,11 +68,11 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
                 .setIssuedAt(new Date())
                 .setSubject(principal);
 
-            var authorities = ToysSpringUtils.getAuthorities();
-            var authoritiesExpr = CollectionToys.asString(authorities, ";");
-            localLogger.debug("Privilegios: %s", authoritiesExpr);
             try {
-                var encodedAuthoritiesExpr = Crypt.encode(authoritiesExpr, key);
+                var authorities = ToysSpringUtils.getAuthorities();
+                if (localLogger.isDebugEnabled())
+                    localLogger.debug("Relacao de privilegios: %s", CollectionToys.asString(authorities, ";"));
+                var encodedAuthoritiesExpr = ToysSpringUtils.encodeAuthorities(authorities, key);
                 localLogger.debug("Privilegios codificados: %s", encodedAuthoritiesExpr);
                 builder.claim(SECURITY_AUTHORITIES, encodedAuthoritiesExpr);
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
