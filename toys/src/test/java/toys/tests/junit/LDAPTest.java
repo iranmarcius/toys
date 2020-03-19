@@ -22,7 +22,7 @@ public class LDAPTest {
             "Administrador@unitoledo.acad",
             "KLyz+ami1AsVCROZUhJjaw==",
             "DC=unitoledo,DC=acad",
-            null
+            "(sAMAccountName=%s)"
         );
     }
 
