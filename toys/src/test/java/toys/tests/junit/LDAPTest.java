@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LDAPTest {
     private static LDAPUtils ldapUtils;
-    private static final String USERNAME = "";
+    private static final String USERNAME = "teste";
     private static final String PASSWORD = "";
 
     @BeforeClass
@@ -35,7 +35,7 @@ public class LDAPTest {
 
     @Test
     public void ldapChangePasswordTest() throws GeneralSecurityException, LDAPException {
-        ldapUtils.alterarSenha(USERNAME, PASSWORD);
+        ldapUtils.alterarSenha(USERNAME, PASSWORD, true);
         assertTrue(Boolean.TRUE);
     }
 
