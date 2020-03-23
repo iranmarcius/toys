@@ -17,8 +17,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-import static toys.ToysConsts.LDAPS_PORT;
-import static toys.ToysConsts.LDAP_PORT;
+import static toys.ToysConsts.*;
 
 /**
  * Classe utilitários para operações com o servidor LDAP.
@@ -204,8 +203,16 @@ public class LDAPUtils {
                 mods.add(new Modification(ModificationType.REPLACE, ToysConsts.LA_UNICODE_PW, b));
 
                 // Modificação para forçar a troca de senha no próximo logon
-                if (forcarTroca)
-                    mods.add(new Modification(ModificationType.REPLACE, ToysConsts.LA_PW_LAST_SET, "0"));
+                int accControl = entry.getAttributeValueAsInteger(LA_USER_ACC_CONTROL);
+                if (forcarTroca) {
+                    accControl |= LDAP_UACC_PASSWORD_EXPIRED;
+                    accControl &= ~LDAP_UACC_DONT_EXPIRE_PASSWORD;
+                    mods.add(new Modification(ModificationType.REPLACE, LA_PW_LAST_SET, "0"));
+                } else {
+                    accControl &= ~LDAP_UACC_PASSWORD_EXPIRED;
+                    accControl |= LDAP_UACC_DONT_EXPIRE_PASSWORD;
+                }
+                mods.add(new Modification(ModificationType.REPLACE, LA_USER_ACC_CONTROL, Integer.toString(accControl)));
 
                 LDAPResult ldpr = conn.modify(dn, mods);
                 if (!ldpr.getResultCode().equals(ResultCode.SUCCESS))
