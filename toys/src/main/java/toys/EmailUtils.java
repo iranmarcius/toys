@@ -28,18 +28,21 @@ public final class EmailUtils {
 	 * Cria um e-mail html utilizando os parâmetros informados.
 	 * @param hostname Host SMTP que será utilizado para envio do e-mail.
 	 * @param from Nome e e-mai do remetente.
+     * @param replyTo Endereço de resposta.
 	 * @param to Email do destinatário.
 	 * @param toName Nome do destinatário. Não é obrigatório.
 	 * @param subject Assunto da mensagem.
 	 * @param content Conteúdo textual da mensagem.
 	 */
-    public static synchronized HtmlEmail criarEmailHtml(String hostname, String from, String to, String toName, String subject, String content) throws EmailException {
+    public static synchronized HtmlEmail criarEmailHtml(String hostname, String from, String replyTo, String to, String toName, String subject, String content) throws EmailException {
     	HtmlEmail email = new HtmlEmail();
 		email.setHostName(hostname);
 		if (StringUtils.isNotBlank(toName))
 			email.addTo(to, toName, StandardCharsets.UTF_8.toString());
 		else
 			email.addTo(to);
+		if (StringUtils.isNotBlank(replyTo))
+		    email.addReplyTo(replyTo);
 		email.setFrom(from);
 		email.setCharset(StandardCharsets.UTF_8.toString());
 		email.setSubject(subject);
@@ -47,14 +50,21 @@ public final class EmailUtils {
 		return email;
 	}
 
+    /**
+     * Método de conveniência para criar um e-mail HTML sem o campo reply-to.
+     * @see #criarEmailHtml(String, String, String, String, String, String, String)
+     */
+	public static synchronized HtmlEmail criarEmailHtml(String hostname, String from, String to, String toName, String subject, String content) throws EmailException {
+        return criarEmailHtml(hostname, from, null, to, toName, subject, content);
+    }
 
     /**
      * Método de conveniência para criar e enviar um e-mail html com os parâmetros informados retornando se houve sucesso na operação ou não.
-	 * @see #criarEmailHtml(String, String, String, String, String, String)
+	 * @see #criarEmailHtml(String, String, String, String, String, String, String)
      */
-    public static synchronized boolean enviarEmailHtml(String hostname, String from, String to, String toName, String subject, String content) {
+    public static synchronized boolean enviarEmailHtml(String hostname, String from, String replyTo, String to, String toName, String subject, String content) {
         try {
-            HtmlEmail email = criarEmailHtml(hostname, from, to, toName, subject, content);
+            HtmlEmail email = criarEmailHtml(hostname, from, replyTo, to, toName, subject, content);
             email.send();
             LogManager.getFormatterLogger(EmailUtils.class).debug("Email enviado para %s (%s).", to, toName);
             return true;
@@ -62,6 +72,14 @@ public final class EmailUtils {
             LogManager.getFormatterLogger(EmailUtils.class).fatal("Erro enviando email para %s, (%s).", to, toName, e);
             return false;
         }
+    }
+
+    /**
+     * Método de conveniência para envio de e-mail sem o campo reply-to.
+     * @see #enviarEmailHtml(String, String, String, String, String, String, String) 
+     */
+    public static synchronized boolean enviarEmailHtml(String hostname, String from, String to, String toName, String subject, String content) {
+        return enviarEmailHtml(hostname, from, null, to, toName, subject, content);
     }
 
 }
