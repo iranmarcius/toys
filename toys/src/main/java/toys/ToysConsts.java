@@ -122,6 +122,15 @@ public class ToysConsts {
     public static final String LA_PRINCIPAL_NAME = "userPrincipalName";
     public static final String LA_UNICODE_PW = "unicodePwd";
 
+    // Bits para serem utilizado no user account control
+    public static final int LDAP_UACC_DISABLED =             0x000002;
+    public static final int LDAP_UACC_BLOCK =                0x000010;
+    public static final int LDAP_UACC_PASSWD_NOTREQD =       0x000020;
+    public static final int LDAP_UACC_PASSWD_CANT_CHANGE =   0x000040;
+    public static final int LDAP_UACC_NORMAL_ACCOUNT =       0x000200;
+    public static final int LDAP_UACC_DONT_EXPIRE_PASSWORD = 0x010000;
+    public static final int LDAP_UACC_PASSWORD_EXPIRED =     0x800000;
+
     // Valor base para cálculos de conversão de datas entre valores do LDAP e do Java.
     public static final long LDAP_UNIXTS = (((1970 - 1601) * 365) - 3 + Math.round((1970d - 1601d) / 4d)) * 86400L;
 
