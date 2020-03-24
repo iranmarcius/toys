@@ -139,10 +139,10 @@ public class ToysConsts {
     public static final String HTTP_HEADER_X_FORWARDED_FOR = "X-Forwarded-For";
     public static final String HTTP_HEADER_AUTHORIZATION = "Authorization";
     public static final String HTTP_HEADER_ACCESS_TOKEN = "Access-Token";
+    public static final String HTTP_HEADER_AUTH_OPTIONS = "Auth-Options";
     public static final String HTTP_HEADER_USER_AGENT = "User-Agent";
 
     private ToysConsts() {
-        super();
     }
 
 }
