@@ -155,7 +155,7 @@ public class LDAPUtils {
      * @return Retorna o código de erro da autenticação ou null caso tenha ocorrido com sucesso.
      */
     public String autenticar(String bindDN, String password) throws LDAPException {
-        try (var conn = getConnection()) {
+        try (var conn = new LDAPConnection(host, LDAP_PORT, bindDN, password)) {
             return null;
         } catch (LDAPException e) {
             if (e.getResultCode().equals(ResultCode.INVALID_CREDENTIALS) && e.getDiagnosticMessage() != null) {
