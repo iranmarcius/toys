@@ -5,13 +5,12 @@ import com.unboundid.ldap.sdk.LDAPException;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import toys.*;
 import toys.exceptions.ToysRuntimeException;
 
-import javax.crypto.SecretKey;
 import java.util.Properties;
 
+import static toys.JNDIToys.PATH_LDAP_CONFIG;
 import static toys.ToysConsts.*;
 
 /**
@@ -21,7 +20,7 @@ import static toys.ToysConsts.*;
  * <li><b>toys/seguranca/ldap/host:</b> endereço do servidor LDAP que será utilizado no processo de autenticação.</li>
  * <li><b>toys/seguranca/ldap/bindDN:</b> DistinguishedName de um usuário com permissões para realizar pesquisas e trocas de senha.</li>
  * <li><b>toys/seguranca/ldap/password</b>: Senha do usuário especificado no parâmetro <b>bindDN</b>. Este valor deve ter sido codificado com o
- * método {@link Crypt#encode(String, SecretKey)} utilizando a chave fornecida por {@link ToysSecretKey#getInstance()}, do contrário
+ * método {@link Crypt#encode(String, java.security.Key)} utilizando a chave fornecida por {@link ToysSecretKey#getInstance()}, do contrário
  * a autenticação não será possível.</li>
  * <li><b>toys/seguranca/ldap/baseDN:</b> DistinguishedName do local à partir de onde as pesquisas serão realizadas.</li>
  * <li><b>toys/seguranca.ldap/searchExpr:</b> expressão que será utilizada nas pesquisas de contas. O valor <b>%s</b> da expressão será substituído
@@ -34,24 +33,34 @@ import static toys.ToysConsts.*;
  * @author Iran
  * @since 09/10/2018
  */
-@Component
 public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
     private LDAPUtils ldapUtils;
     private boolean errorOnCredentialsExpired;
 
-    public LDAPAuthenticationProvider() {
+    /**
+     * Construtor.
+     *
+     * @param basePath Caminho base para litura das configurações à partir do diretório JNDI.
+     * @see LDAPUtils
+     */
+    public LDAPAuthenticationProvider(String basePath) {
         super();
         try {
             logger.info("Configurando provedor de autenticacao.");
-            Properties props = JNDIToys.getLDAPConfig();
+            Properties props = JNDIToys.getJNDIProperties(basePath);
             ldapUtils = new LDAPUtils(props);
-
-            errorOnCredentialsExpired = Boolean.parseBoolean(props.getProperty("toys.seguranca.ldap.errorOnCredentialsExpired", "false"));
-
+            errorOnCredentialsExpired = Boolean.parseBoolean(props.getProperty("errorOnCredentialsExpired", "false"));
             logger.info("Inicializado com sucesso: %s", ldapUtils);
         } catch (Exception e) {
             throw new ToysRuntimeException("Erro inicializando provedor de autenticacao LDAP.", e);
         }
+    }
+
+    /**
+     * Construtor. Configurações serão lidas à partir do caminho definido na constante {@link JNDIToys#PATH_LDAP_CONFIG}.
+     */
+    public LDAPAuthenticationProvider() {
+        this(PATH_LDAP_CONFIG);
     }
 
     /**
