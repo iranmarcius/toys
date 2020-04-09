@@ -13,7 +13,6 @@ public class ToysSecretKey {
     private static SecretKey instance;
 
     private ToysSecretKey() {
-        super();
     }
 
     /**
