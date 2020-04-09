@@ -62,18 +62,9 @@ public final class JNDIToys {
      * @return Session Retorna uma sessão de e-mail.
      * @see #PATH_MAIL_SESSION
      */
-    @Deprecated
     public static synchronized Session getMailSession(String jndiPath) throws NamingException {
         Object o = getInitialContext().lookup(jndiPath != null ? jndiPath : PATH_MAIL_SESSION);
         return (Session) o;
-    }
-
-    /**
-     * Retorna o valor da propriedade <b>ambienteDesenvolvimento</b> armazenada no contexto JNDI.
-     */
-    @Deprecated
-    public static synchronized boolean isAmbienteDesenvolvimento() throws NamingException {
-        return (Boolean) getInitialContext().lookup(PATH_AMBIENTE_DESENVOLVIMENTO);
     }
 
     /**
@@ -101,13 +92,15 @@ public final class JNDIToys {
     }
 
     /**
-     * Retorna as configurações de segurança em forma de propriedades. As configurações serão lidas a partir do caminho especificado
-     * em {@link #PATH_LDAP_CONFIG}.
+     * Retorna um objeto de propriedades lidas à partir de um caminho JNDI fornecido. Os nomes
+     * das propriedades não irão conter o caminho informado, ou seja, caso o caminho final seja
+     * <code>java:/global/seguranca/servidor</code> o nome da propriedade será apenas <code>servidor</code>.
      *
-     * @return Retorna um mapa de propriedades contendo as configurações de segurança.
+     * @param basePath Caminho base para a leitura das configuraçõe.
+     * @return Retorna um objeto do tipo {@link Properties}.
      */
-    public static synchronized Properties getLDAPConfig() throws NamingException {
-        NamingEnumeration<Binding> enums = getInitialContext().listBindings(PATH_LDAP_CONFIG);
+    public static synchronized Properties getJNDIProperties(String basePath) throws NamingException {
+        NamingEnumeration<Binding> enums = getInitialContext().listBindings(basePath);
         Properties props = new Properties();
         while (enums.hasMoreElements()) {
             Binding b = enums.nextElement();
