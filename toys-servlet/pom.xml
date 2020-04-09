@@ -12,7 +12,7 @@
 
     <groupId>toys</groupId>
     <artifactId>toys-servlet</artifactId>
-    <version>1.6.0.1</version>
+    <version>1.6.0-2</version>
 
     <build>
         <plugins>
@@ -31,7 +31,6 @@
         <dependency>
             <groupId>toys</groupId>
             <artifactId>toys</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
