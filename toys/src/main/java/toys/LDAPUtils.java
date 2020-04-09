@@ -25,12 +25,12 @@ import static toys.ToysConsts.*;
  * @author Iran
  */
 public class LDAPUtils {
-    private final Logger logger = LogManager.getFormatterLogger(getClass());
     public static final String CFG_HOST = "host";
     public static final String CFG_BINDDN = "bindDN";
     public static final String CFG_CREDENTIALS = "password";
     public static final String CFG_BASEDN = "baseDN";
     public static final String CFG_SEARCH_EXPR = "searchExpr";
+    private final Logger logger = LogManager.getFormatterLogger(getClass());
     private String host;
     private String bindDN;
     private String baseDN;
@@ -137,7 +137,8 @@ public class LDAPUtils {
      */
     public Entry pesquisar(LDAPConnection conn, String accountName) throws LDAPSearchException {
         String searchPattern = String.format(searchExpr, accountName);
-        logger.debug("Pesquisando conta utilizando a expressao %s.", searchPattern);
+        logger.debug("Pesquisando conta %s. host=%s, baseDN=%s, searchPattern=%s",
+            accountName, host, baseDN, searchPattern);
         SearchResult result = conn.search(baseDN, SearchScope.SUB, searchPattern);
         if (result.getEntryCount() == 1)
             return result.getSearchEntries().get(0);
@@ -155,6 +156,7 @@ public class LDAPUtils {
      * @return Retorna o código de erro da autenticação ou null caso tenha ocorrido com sucesso.
      */
     public String autenticar(String bindDN, String password) throws LDAPException {
+        logger.debug("Tentando autenticacao: host=%s, bindDN=%s", host, bindDN);
         try (var conn = new LDAPConnection(host, LDAP_PORT, bindDN, password)) {
             return null;
         } catch (LDAPException e) {
