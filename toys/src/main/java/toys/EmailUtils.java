@@ -29,20 +29,29 @@ public final class EmailUtils {
 	 * @param hostname Host SMTP que será utilizado para envio do e-mail.
 	 * @param from Nome e e-mai do remetente.
      * @param replyTo Endereço de resposta.
-	 * @param to Email do destinatário.
-	 * @param toName Nome do destinatário. Não é obrigatório.
+	 * @param to Email do destinatário. Pode ser um único endereço ou vários separados por vírgula.
+	 * @param toName Nome do destinatário. Este parâmetro é opcional e será ignorado caso o parâmetro <code>to</code> contenha mais de um endereço.
 	 * @param subject Assunto da mensagem.
 	 * @param content Conteúdo textual da mensagem.
 	 */
     public static synchronized HtmlEmail criarEmailHtml(String hostname, String from, String replyTo, String to, String toName, String subject, String content) throws EmailException {
     	HtmlEmail email = new HtmlEmail();
 		email.setHostName(hostname);
-		if (StringUtils.isNotBlank(toName))
-			email.addTo(to, toName, StandardCharsets.UTF_8.toString());
-		else
-			email.addTo(to);
+
+		if (to.contains(",")) {
+		    String[] dests = to.split(" *, *");
+		    for (String dest: dests)
+		        email.addTo(dest);
+        } else {
+            if (StringUtils.isNotBlank(toName))
+                email.addTo(to, toName, StandardCharsets.UTF_8.toString());
+            else
+                email.addTo(to);
+        }
+
 		if (StringUtils.isNotBlank(replyTo))
 		    email.addReplyTo(replyTo);
+
 		email.setFrom(from);
 		email.setCharset(StandardCharsets.UTF_8.toString());
 		email.setSubject(subject);
