@@ -99,7 +99,7 @@ public final class JNDIToys {
      * @param basePath Caminho base para a leitura das configuraçõe.
      * @return Retorna um objeto do tipo {@link Properties}.
      */
-    public static synchronized Properties getJNDIProperties(String basePath) throws NamingException {
+    public static synchronized Properties toProperties(String basePath) throws NamingException {
         NamingEnumeration<Binding> enums = getInitialContext().listBindings(basePath);
         Properties props = new Properties();
         while (enums.hasMoreElements()) {
