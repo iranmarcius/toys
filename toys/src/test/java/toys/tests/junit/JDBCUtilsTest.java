@@ -30,7 +30,7 @@ public class JDBCUtilsTest {
 
     @Test
     public void extrairCSVTest() throws IOException, SQLException {
-        jdbcUtils.extrairCSV(conn, "select * from spletivo", StandardCharsets.ISO_8859_1, ";", "c:/temp/saida.csv");
+        jdbcUtils.extrairCSV(conn, "select * from sdocumento", StandardCharsets.ISO_8859_1, ";", "c:/temp/saida.csv");
         assertTrue(true);
     }
 
