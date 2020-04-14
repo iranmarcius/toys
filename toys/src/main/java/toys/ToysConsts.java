@@ -98,13 +98,17 @@ public class ToysConsts {
     public static final int ADS_UF_DONT_EXPIRE_PASSWD = 0x00010000;
     public static final int ADS_UF_PASSWORD_EXPIRED = 0x00800000;
 
-    // Códigos de detalhes de erro de LDAP
-    public static final String IC_AD_INVALID_CREDENTIALS = "52e";
+    // Códigos de detalhes do erro 49 (Invalid Credentials) de servidores LDAP
     public static final String IC_USER_NOT_FOUND = "525";
+    public static final String IC_AD_INVALID_CREDENTIALS = "52e";
+    public static final String IC_INVALID_TIME = "530";
+    public static final String IC_INVALID_WORKSTATION = "531";
     public static final String IC_CREDENTIAL_EXPIRED = "532";
     public static final String IC_ACCOUNT_DISABLED = "533";
+    public static final String IC_LOGON_REQUEST_NOT_GRANTED = "534";
     public static final String IC_ACCOUNT_EXPIRED = "701";
     public static final String IC_USER_MUST_RESET_CREDENTIAL = "773";
+    public static final String IC_ACCOUNT_LOCKED = "775";
 
     // Nomes de atributos de contas LDAP
     public static final String LA_ACC_NAME = "sAMAccountName";
