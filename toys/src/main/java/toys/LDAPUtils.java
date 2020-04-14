@@ -6,16 +6,22 @@ import com.unboundid.util.ssl.TrustAllTrustManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import toys.exceptions.ToysLDAPException;
+import toys.exceptions.ToysLDAPNotFoundException;
 import toys.exceptions.ToysRuntimeException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import static toys.ToysConsts.*;
 
@@ -24,18 +30,19 @@ import static toys.ToysConsts.*;
  *
  * @author Iran
  */
-public class LDAPUtils {
+public class LDAPUtils implements Serializable {
     public static final String CFG_HOST = "host";
     public static final String CFG_BINDDN = "bindDN";
     public static final String CFG_CREDENTIALS = "password";
     public static final String CFG_BASEDN = "baseDN";
     public static final String CFG_SEARCH_EXPR = "searchExpr";
-    private final Logger logger = LogManager.getFormatterLogger(getClass());
+    private static final long serialVersionUID = -7100346347048600852L;
+    private final transient Logger logger = LogManager.getFormatterLogger(getClass());
     private String host;
     private String bindDN;
     private String baseDN;
     private String password;
-    private String searchExpr;
+    private String defaultSearchExpr;
 
     /**
      * Cria uma instância da classe utilizando os parâmetros informados.
@@ -70,19 +77,19 @@ public class LDAPUtils {
     /**
      * Cria uma instância da ferramenta setando as opções informadas.
      *
-     * @param host       Endereço do servidor LDAP.
-     * @param bindDN     Nome distinto do usuário principal de autenticação.
-     * @param password   Senha que será utilizada com o usuário principal.
-     * @param baseDN     Nome distinto do objeto raiz para realização de pesquisas.
-     * @param searchExpr Expressão que será utilizada na pesquisa de usuários. Caso não seja informada será utilizado o valor
-     *                   <code>(sAMAccountName=%s)</code>, onde %s será substituído pelo nome do usuário pesquisado.
+     * @param host              Endereço do servidor LDAP.
+     * @param bindDN            Nome distinto do usuário principal de autenticação.
+     * @param password          Senha que será utilizada com o usuário principal.
+     * @param baseDN            Nome distinto do objeto raiz para realização de pesquisas.
+     * @param defaultSearchExpr Expressão que será utilizada na pesquisa de usuários. Caso não seja informada será utilizado o valor
+     *                          <code>(sAMAccountName=%s)</code>, onde %s será substituído pelo nome do usuário pesquisado.
      */
-    public LDAPUtils(String host, String bindDN, String password, String baseDN, String searchExpr) {
+    public LDAPUtils(String host, String bindDN, String password, String baseDN, String defaultSearchExpr) {
         super();
         this.host = host;
         this.bindDN = bindDN;
         this.baseDN = baseDN;
-        this.searchExpr = StringUtils.defaultString(searchExpr, "(" + ToysConsts.LA_ACC_NAME + "=%s)");
+        this.defaultSearchExpr = StringUtils.defaultString(defaultSearchExpr, "(" + LA_ACC_NAME + "=%s)");
         try {
             this.password = Crypt.decode(password, ToysSecretKey.getInstance());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
@@ -95,20 +102,20 @@ public class LDAPUtils {
      */
     @Override
     public String toString() {
-        return String.format("[LDAPUtils] host: %s, bindDN=%s, baseDN=%s, searchExpr=%s", host, bindDN, baseDN, searchExpr);
+        return String.format("[LDAPUtils] host: %s, bindDN=%s, baseDN=%s, defaultSearchExpr=%s", host, bindDN, baseDN, defaultSearchExpr);
     }
 
     /**
      * Cria e retorna uma nova conexão com o servidor.
      */
-    public LDAPConnection getConnection() throws LDAPException {
+    public synchronized LDAPConnection getConnection() throws LDAPException {
         return new LDAPConnection(host, LDAP_PORT, bindDN, password);
     }
 
     /**
      * Cria e retorna uma nova conexão segura com o servidor.
      */
-    public LDAPConnection getSSLConnection() throws GeneralSecurityException, LDAPException {
+    public synchronized LDAPConnection getSSLConnection() throws GeneralSecurityException, LDAPException {
         var sslUtil = new SSLUtil(new TrustAllTrustManager());
         var sslSocketFactory = sslUtil.createSSLSocketFactory();
         var conn = new LDAPConnection(sslSocketFactory);
@@ -118,33 +125,51 @@ public class LDAPUtils {
     }
 
     /**
-     * Pesquisa uma entrada pelo nome da conta.
+     * Pesquisa uma entrada contendo o valor informado utilizando a expressão de pesquisa
+     * informada em {@link #defaultSearchExpr}. Uma nova conexão será feita para realização da pesquisa.
      *
-     * @param accountName Nome da conta.
+     * @param value Valor a ser pesquisado.
      * @return Retorna a entrada encontrada ou null caso nenhuma seja correspondente.
      */
-    public Entry pesquisar(String accountName) throws LDAPException {
+    public synchronized Entry query(String value) throws LDAPException, ToysLDAPException {
         try (LDAPConnection conn = getConnection()) {
-            return pesquisar(conn, accountName);
+            return query(conn, value);
         }
+    }
+
+    /**
+     * Pesquisa ma entrada contendo o valor informado utilizado a expressão ´de pesquisa
+     * informda em {@link #defaultSearchExpr}.
+     *
+     * @param conn  Conexão que será utilizada para pesquisa.
+     * @param value Valor a ser pesquisado.
+     * @return Retorna a entrada enontrada ou null aso nenhuma seja correspondente.
+     */
+    public synchronized Entry query(LDAPConnection conn, String value) throws LDAPSearchException, ToysLDAPException {
+        return query(conn, value, defaultSearchExpr);
     }
 
     /**
      * Pesquisa uma conta de usuário no servidor LDAP utilizando uma conexão previamente estabelecida.
      *
-     * @param conn Conexão com o servidor.
+     * @param conn       Conexão com o servidor.
+     * @param value      Valor a ser pesquisado.
+     * @param searchExpr Expressão que será utilizada na pesquisa.
      * @return Retorna a entrada encontrada ou nulo.
      */
-    public Entry pesquisar(LDAPConnection conn, String accountName) throws LDAPSearchException {
-        String searchPattern = String.format(searchExpr, accountName);
-        logger.debug("Pesquisando conta %s. host=%s, baseDN=%s, searchPattern=%s",
-            accountName, host, baseDN, searchPattern);
+    public synchronized Entry query(LDAPConnection conn, String value, String searchExpr) throws LDAPSearchException, ToysLDAPException {
+        String searchPattern = String.format(searchExpr, value);
+        logger.debug("Pesquisando conta %s. host=%s, baseDN=%s, searchPattern=%s", value, host, baseDN, searchPattern);
         SearchResult result = conn.search(baseDN, SearchScope.SUB, searchPattern);
-        if (result.getEntryCount() == 1)
-            return result.getSearchEntries().get(0);
-        else if (result.getEntryCount() > 1)
-            throw new ToysRuntimeException("Foram encontrados %d resultados.", result.getEntryCount());
-        else
+        if (result.getEntryCount() == 1) {
+            var entry = result.getSearchEntries().get(0);
+            if (!entry.getDN().contains("Deleted Objects"))
+                return result.getSearchEntries().get(0);
+            else
+                return null;
+        } else if (result.getEntryCount() > 1) {
+            throw new ToysLDAPException("Foram encontrados %d resultados.", result.getEntryCount(), this);
+        } else
             return null;
     }
 
@@ -155,8 +180,10 @@ public class LDAPUtils {
      * @param password Senha de conexão.
      * @return Retorna o código de erro da autenticação ou null caso tenha ocorrido com sucesso.
      */
-    public String autenticar(String bindDN, String password) throws LDAPException {
+    public synchronized String authenticate(String bindDN, String password) throws LDAPException {
         logger.debug("Tentando autenticacao: host=%s, bindDN=%s", host, bindDN);
+        if (bindDN.contains("Deleted Objects"))
+            return IC_USER_NOT_FOUND;
         try (var conn = new LDAPConnection(host, LDAP_PORT, bindDN, password)) {
             return null;
         } catch (LDAPException e) {
@@ -173,76 +200,71 @@ public class LDAPUtils {
     }
 
     /**
-     * Método de conveniência para invocar o {@link #autenticar(String, String)} utilizando um {@link Entry}.
+     * Método de conveniência para invocar o {@link #authenticate(String, String)} utilizando um {@link Entry}.
      *
      * @param entry    Dados da entrada para obter o nome de usuário.
      * @param password Senha.
      * @return Retorna o código de erro da autenticação ou null caso tenha ocorrido com sucesso.
      */
-    public String autenticar(Entry entry, String password) throws LDAPException {
-        return autenticar(entry.getAttributeValue(ToysConsts.LA_DN), password);
+    public synchronized String authenticate(Entry entry, String password) throws LDAPException {
+        return authenticate(entry.getDN(), password);
     }
 
     /**
      * Altera a senha de uma conta para a nova senha.
      *
-     * @param accountName Nome da conta.
-     * @param novaSenha   Nova senha que será atribuida à conta.
-     * @param forcarTroca Flag indicando se o usuário deve trocar a senha no próximo login.
+     * @param entry       entrada da cnta cuja senha será trocada.
+     * @param newPassword Nova senha que será atribuida à conta.
+     * @param forceChange Flag indicando se o usuário deve trocar a senha no próximo login.
      */
-    public void alterarSenha(String accountName, String novaSenha, boolean forcarTroca) throws GeneralSecurityException, LDAPException {
+    public synchronized void changePassword(Entry entry, String newPassword, boolean forceChange) throws GeneralSecurityException, LDAPException, ToysLDAPException {
         try (LDAPConnection conn = getSSLConnection()) {
-            SearchResult result = conn.search(baseDN, SearchScope.SUB, String.format(searchExpr, accountName));
-            if (result.getEntryCount() == 1) {
-                List<SearchResultEntry> entries = result.getSearchEntries();
-                SearchResultEntry entry = entries.get(0);
-                String dn = entry.getAttributeValue(ToysConsts.LA_DN);
+            List<Modification> mods = new ArrayList<>();
 
-                List<Modification> mods = new ArrayList<>();
+            // Modificação de troca de senha
+            byte[] b = ('"' + newPassword + '"').getBytes(StandardCharsets.UTF_16LE);
+            mods.add(new Modification(ModificationType.REPLACE, ToysConsts.LA_UNICODE_PW, b));
 
-                // Modificação de troca de senha
-                byte[] b = ('"' + novaSenha + '"').getBytes(StandardCharsets.UTF_16LE);
-                mods.add(new Modification(ModificationType.REPLACE, ToysConsts.LA_UNICODE_PW, b));
-
-                // Modificação para forçar a troca de senha no próximo logon
-                int accControl = entry.getAttributeValueAsInteger(LA_USER_ACC_CONTROL);
-                if (forcarTroca) {
-                    accControl |= LDAP_UACC_PASSWORD_EXPIRED;
-                    accControl &= ~LDAP_UACC_DONT_EXPIRE_PASSWORD;
-                    mods.add(new Modification(ModificationType.REPLACE, LA_PW_LAST_SET, "0"));
-                } else {
-                    accControl &= ~LDAP_UACC_PASSWORD_EXPIRED;
-                    accControl |= LDAP_UACC_DONT_EXPIRE_PASSWORD;
-                }
-                mods.add(new Modification(ModificationType.REPLACE, LA_USER_ACC_CONTROL, Integer.toString(accControl)));
-
-                LDAPResult ldpr = conn.modify(dn, mods);
-                if (!ldpr.getResultCode().equals(ResultCode.SUCCESS))
-                    throw new ToysRuntimeException("Ocorreu um erro durante a alteracao da senha. %s", ldpr.getResultString());
-
+            // Modificação para forçar a troca de senha no próximo logon
+            int accControl = entry.getAttributeValueAsInteger(LA_USER_ACC_CONTROL);
+            if (forceChange) {
+                accControl |= LDAP_UACC_PASSWORD_EXPIRED;
+                accControl &= ~LDAP_UACC_DONT_EXPIRE_PASSWORD;
+                mods.add(new Modification(ModificationType.REPLACE, LA_PW_LAST_SET, "0"));
             } else {
-                throw new ToysRuntimeException(result.getEntryCount() == 0 ?
-                    String.format("Entrada nao encontrada. accountName=%s", accountName) :
-                    String.format("Foram encontrados %d resultados. accountName=%s", result.getEntryCount(), accountName));
+                accControl &= ~LDAP_UACC_PASSWORD_EXPIRED;
+                accControl |= LDAP_UACC_DONT_EXPIRE_PASSWORD;
             }
+            mods.add(new Modification(ModificationType.REPLACE, LA_USER_ACC_CONTROL, Integer.toString(accControl)));
+
+            LDAPResult ldpr = conn.modify(entry.getDN(), mods);
+            if (!ldpr.getResultCode().equals(ResultCode.SUCCESS))
+                throw new ToysLDAPException("Ocorreu um erro durante a alteracao da senha. result=%s", ldpr.getResultString(), this);
         }
     }
 
     /**
-     * Método de conveniência para efetuar troca de senha sem forçar troca.
+     * Realiza a troca de senha de uma entrada cujo nome da conta seja o fornecido.
      *
-     * @see #alterarSenha(String, String, boolean)
+     * @param accountName Nome da conta. A entrada será pesquisada utilizadno a expressão de pesqusa definida em {@link #defaultSearchExpr}.
+     * @param newPassword Nova senha.
+     * @param forceChange Flag indicando se o usuário deve trocar a senha no próximo login.
      */
-    public synchronized void alterarSenha(String accountName, String novaSenha) throws LDAPException, GeneralSecurityException {
-        alterarSenha(accountName, novaSenha, false);
+    public synchronized void changePassword(String accountName, String newPassword, boolean forceChange) throws LDAPException, GeneralSecurityException, ToysLDAPException {
+        Entry entry = query(accountName);
+        if (entry != null)
+            changePassword(entry, newPassword, forceChange);
+        else
+            throw new ToysLDAPNotFoundException("Nenhuma entrada encontrada. value=%s", accountName, this);
     }
 
     /**
-     * Converte um timestamp LDAP para uma data Java.
+     * Método de conveniência para efetuar troca de senha sem ligar a flag para forçar troca no próximo logon.
+     *
+     * @see #changePassword(String, String, boolean)
      */
-    public synchronized Date ldapTimestamp2Date(long nanos) {
-        long millis = nanos / 10000000;
-        return new Date((millis - ToysConsts.LDAP_UNIXTS) * 1000L);
+    public synchronized void changePassword(String accountName, String newPassword) throws LDAPException, GeneralSecurityException, ToysLDAPException {
+        changePassword(accountName, newPassword, false);
     }
 
     public synchronized String getHost() {
@@ -257,8 +279,8 @@ public class LDAPUtils {
         return baseDN;
     }
 
-    public String getSearchExpr() {
-        return searchExpr;
+    public String getDefaultSearchExpr() {
+        return defaultSearchExpr;
     }
 
 }
