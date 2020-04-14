@@ -47,7 +47,7 @@ public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
         super();
         try {
             logger.info("Configurando provedor de autenticacao.");
-            Properties props = JNDIToys.getJNDIProperties(basePath);
+            Properties props = JNDIToys.toProperties(basePath);
             ldapUtils = new LDAPUtils(props);
             errorOnCredentialsExpired = Boolean.parseBoolean(props.getProperty("errorOnCredentialsExpired", "false"));
             logger.info("Inicializado com sucesso: %s", ldapUtils);
@@ -76,7 +76,7 @@ public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
 
         Entry entry;
         try {
-            entry = ldapUtils.pesquisar(username);
+            entry = ldapUtils.query(username);
         } catch (Exception e) {
             throw new InternalAuthenticationServiceException("Erro pesquisando conta no servidor LDAP.", e);
         }
@@ -94,7 +94,7 @@ public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
 
                 // Tenta realizar a autenticação do usuário no servidor LDAP utilizando as credenciais informadas
                 // e obtendo o código de erro.
-                String error = ldapUtils.autenticar(accountDN, password);
+                String error = ldapUtils.authenticate(accountDN, password);
 
                 if (IC_ACCOUNT_DISABLED.equals(error)) {
                     throw new DisabledException(String.format("Conta desabilitada. error=%s", error));
