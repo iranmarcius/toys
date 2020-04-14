@@ -1,14 +1,13 @@
 package toys.tests.junit;
 
+import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import toys.LDAPUtils;
+import toys.exceptions.ToysLDAPException;
 
-import java.security.GeneralSecurityException;
-
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LDAPTest {
     private static LDAPUtils ldapUtilsAcad;
@@ -38,16 +37,24 @@ public class LDAPTest {
     }
 
     @Test
-    public void testAuthAcad() throws LDAPException {
-        var entry = ldapUtilsAcad.pesquisar("teste-acad");
-        String erro = ldapUtilsAcad.autenticar(entry, "testeacad");
+    public void testSearch() throws ToysLDAPException, LDAPException {
+        assertNotNull(ldapUtilsAcad.query("teste-acad"));
+        assertNull(ldapUtilsAcad.query("teste-corp"));
+        assertNotNull(ldapUtilsCorp.query("teste-corp"));
+        assertNull(ldapUtilsCorp.query("teste-acad"));
+    }
+
+    @Test
+    public void testAuthAcad() throws LDAPException, ToysLDAPException {
+        var entry = ldapUtilsAcad.query("teste-acad");
+        String erro = ldapUtilsAcad.authenticate(entry, "sucesso");
         assertNull(erro);
     }
 
     @Test
-    public void testAuthCorp() throws LDAPException {
-        var entry = ldapUtilsCorp.pesquisar("teste-corp");
-        String erro = ldapUtilsCorp.autenticar(entry, "testecorp");
+    public void testAuthCorp() throws LDAPException, ToysLDAPException {
+        var entry = ldapUtilsCorp.query("teste-corp");
+        String erro = ldapUtilsCorp.authenticate(entry, "testecorp");
         assertNull(erro);
     }
 
