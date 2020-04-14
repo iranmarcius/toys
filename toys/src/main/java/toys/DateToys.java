@@ -148,8 +148,8 @@ public final class DateToys {
                 int s = t.length > 2 ? Integer.parseInt(t[2]) : 0;
 
                 if (inRange(c, h, Calendar.HOUR_OF_DAY)
-                        && inRange(c, m, Calendar.MINUTE)
-                        && inRange(c, s, Calendar.SECOND)) {
+                    && inRange(c, m, Calendar.MINUTE)
+                    && inRange(c, s, Calendar.SECOND)) {
                     c.clear();
                     c.set(Calendar.SECOND, s);
                     c.set(Calendar.MINUTE, m);
@@ -352,8 +352,8 @@ public final class DateToys {
         c2.setTime(d2);
 
         int d =
-                ((c2.get(Calendar.YEAR) - c1.get(Calendar.YEAR)) * 12) +
-                        (c2.get(Calendar.MONTH) - c1.get(Calendar.MONTH));
+            ((c2.get(Calendar.YEAR) - c1.get(Calendar.YEAR)) * 12) +
+                (c2.get(Calendar.MONTH) - c1.get(Calendar.MONTH));
         if (c2.get(Calendar.DAY_OF_MONTH) < c1.get(Calendar.DAY_OF_MONTH)) {
             d--;
         }
@@ -404,9 +404,9 @@ public final class DateToys {
      */
     public static void normalizeMilliseconds(Date reference, Date target) {
         setTimeField(
-                target,
-                Calendar.MILLISECOND,
-                getTimeField(reference, Calendar.MILLISECOND)
+            target,
+            Calendar.MILLISECOND,
+            getTimeField(reference, Calendar.MILLISECOND)
         );
     }
 
@@ -434,7 +434,7 @@ public final class DateToys {
      */
     public static boolean inRange(Calendar c, int v, int field) {
         return NumberToys.inRange(v, c.getActualMinimum(field),
-                c.getActualMaximum(field));
+            c.getActualMaximum(field));
     }
 
     /**
@@ -557,9 +557,9 @@ public final class DateToys {
         Calendar c2 = Calendar.getInstance();
         c2.setTime(d2);
         return
-                (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)) &&
-                        (c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH)) &&
-                        (c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH));
+            (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)) &&
+                (c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH)) &&
+                (c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH));
     }
 
     /**
@@ -597,11 +597,11 @@ public final class DateToys {
      */
     public static boolean estaEntre(Date d, Date d1, Date d2) {
         return
-                d != null &&
-                        d1 != null &&
-                        d1.getTime() <= d.getTime() &&
-                        d2 != null &&
-                        d2.getTime() >= d.getTime();
+            d != null &&
+                d1 != null &&
+                d1.getTime() <= d.getTime() &&
+                d2 != null &&
+                d2.getTime() >= d.getTime();
     }
 
     /**
@@ -615,10 +615,10 @@ public final class DateToys {
     public static boolean estaEntre(Date d1, Date d2) {
         long agora = System.currentTimeMillis();
         return
-                d1 != null &&
-                        d1.getTime() <= agora &&
-                        d2 != null &&
-                        d2.getTime() >= agora;
+            d1 != null &&
+                d1.getTime() <= agora &&
+                d2 != null &&
+                d2.getTime() >= agora;
     }
 
     /**
@@ -630,7 +630,7 @@ public final class DateToys {
      */
     public static List<String> getWeekdays(Locale locale) {
         DateFormatSymbols dfs = locale != null ? DateFormatSymbols.getInstance(locale) :
-                DateFormatSymbols.getInstance();
+            DateFormatSymbols.getInstance();
         String[] s = dfs.getWeekdays();
         List<String> l = new ArrayList<>();
         l.add(s[Calendar.SUNDAY]);
@@ -662,7 +662,7 @@ public final class DateToys {
      */
     public static List<String> getMonths(Locale locale) {
         DateFormatSymbols dfs = locale != null ? DateFormatSymbols.getInstance(locale) :
-                DateFormatSymbols.getInstance();
+            DateFormatSymbols.getInstance();
         String[] s = dfs.getMonths();
         List<String> l = new ArrayList<>();
         l.add(s[Calendar.JANUARY]);
@@ -725,10 +725,10 @@ public final class DateToys {
      */
     public static boolean interseccao(Date f1d1, Date f1d2, Date f2d1, Date f2d2) {
         return
-                NumberToys.inRange(f1d1.getTime(), f2d1.getTime(), f2d2.getTime()) ||
-                        NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime()) ||
-                        NumberToys.inRange(f2d1.getTime(), f1d1.getTime(), f1d2.getTime()) ||
-                        NumberToys.inRange(f2d2.getTime(), f1d1.getTime(), f1d2.getTime());
+            NumberToys.inRange(f1d1.getTime(), f2d1.getTime(), f2d2.getTime()) ||
+                NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime()) ||
+                NumberToys.inRange(f2d1.getTime(), f1d1.getTime(), f1d2.getTime()) ||
+                NumberToys.inRange(f2d2.getTime(), f1d1.getTime(), f1d2.getTime());
     }
 
     /**
@@ -742,8 +742,8 @@ public final class DateToys {
      */
     public static boolean contido(Date f1d1, Date f1d2, Date f2d1, Date f2d2) {
         return
-                NumberToys.inRange(f1d1.getTime(), f2d1.getTime(), f2d2.getTime()) &&
-                        NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime());
+            NumberToys.inRange(f1d1.getTime(), f2d1.getTime(), f2d2.getTime()) &&
+                NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime());
     }
 
     /**
@@ -799,6 +799,14 @@ public final class DateToys {
      */
     public static boolean expirado(Date d, long validade) {
         return d.getTime() + validade < System.currentTimeMillis();
+    }
+
+    /**
+     * Converte um timestamp LDAP para uma data Java.
+     */
+    public static Date ldapTimestamp2Date(long nanos) {
+        long millis = nanos / 10000000;
+        return new Date((millis - ToysConsts.LDAP_UNIXTS) * 1000L);
     }
 
 }
