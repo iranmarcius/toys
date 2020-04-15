@@ -38,11 +38,11 @@ public class LDAPUtils implements Serializable {
     public static final String CFG_SEARCH_EXPR = "searchExpr";
     private static final long serialVersionUID = -7100346347048600852L;
     private final transient Logger logger = LogManager.getFormatterLogger(getClass());
-    private String host;
-    private String bindDN;
-    private String baseDN;
-    private String password;
-    private String defaultSearchExpr;
+    private final String host;
+    private final String bindDN;
+    private final String baseDN;
+    private final String password;
+    private final String defaultSearchExpr;
 
     /**
      * Cria uma instância da classe utilizando os parâmetros informados.
@@ -89,7 +89,7 @@ public class LDAPUtils implements Serializable {
         this.host = host;
         this.bindDN = bindDN;
         this.baseDN = baseDN;
-        this.defaultSearchExpr = StringUtils.defaultString(defaultSearchExpr, "(" + LA_ACC_NAME + "=%s)");
+        this.defaultSearchExpr = StringUtils.defaultString(defaultSearchExpr, "(sAMAccountName=%s)");
         try {
             this.password = Crypt.decode(password, ToysSecretKey.getInstance());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
@@ -161,15 +161,11 @@ public class LDAPUtils implements Serializable {
         String searchPattern = String.format(searchExpr, value);
         logger.debug("Pesquisando conta %s. host=%s, baseDN=%s, searchPattern=%s", value, host, baseDN, searchPattern);
         SearchResult result = conn.search(baseDN, SearchScope.SUB, searchPattern);
-        if (result.getEntryCount() == 1) {
-            var entry = result.getSearchEntries().get(0);
-            if (!entry.getDN().contains("Deleted Objects"))
-                return result.getSearchEntries().get(0);
-            else
-                return null;
-        } else if (result.getEntryCount() > 1) {
+        if (result.getEntryCount() == 1)
+            return result.getSearchEntries().get(0);
+        else if (result.getEntryCount() > 1)
             throw new ToysLDAPException("Foram encontrados %d resultados.", result.getEntryCount(), this);
-        } else
+        else
             return null;
     }
 
@@ -182,8 +178,6 @@ public class LDAPUtils implements Serializable {
      */
     public synchronized String authenticate(String bindDN, String password) throws LDAPException {
         logger.debug("Tentando autenticacao: host=%s, bindDN=%s", host, bindDN);
-        if (bindDN.contains("Deleted Objects"))
-            return IC_USER_NOT_FOUND;
         try (var conn = new LDAPConnection(host, LDAP_PORT, bindDN, password)) {
             return null;
         } catch (LDAPException e) {

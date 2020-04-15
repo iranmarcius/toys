@@ -112,6 +112,7 @@ public class ToysConsts {
 
     // Nomes de atributos de contas LDAP
     public static final String LA_ACC_NAME = "sAMAccountName";
+    public static final String LA_IS_DELETED = "isDeleted";
     public static final String LA_DN = "distinguishedName";
     public static final String LA_CN = "cn";
     public static final String LA_USER_ACC_CONTROL = "userAccountControl";

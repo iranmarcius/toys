@@ -1,19 +1,19 @@
 package toys.tests.junit;
 
-import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import toys.LDAPUtils;
 import toys.exceptions.ToysLDAPException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class LDAPTest {
-    private static LDAPUtils ldapUtilsAcad;
-    private static LDAPUtils ldapUtilsCorp;
     private static final String USERNAME = "testeacad";
     private static final String PASSWORD = "";
+    private static LDAPUtils ldapUtilsAcad;
+    private static LDAPUtils ldapUtilsCorp;
 
     @BeforeClass
     public static void inicializar() {
@@ -23,7 +23,7 @@ public class LDAPTest {
             "Administrador@unitoledo.acad",
             "KLyz+ami1AsVCROZUhJjaw==",
             "DC=unitoledo,DC=acad",
-            "(sAMAccountName=%s)"
+            null
         );
 
         ldapUtilsCorp = new LDAPUtils(
@@ -31,7 +31,7 @@ public class LDAPTest {
             "Administrador@unitoledo.corp",
             "KLyz+ami1AsVCROZUhJjaw==",
             "DC=unitoledo,DC=corp",
-            "(sAMAccountName=%s)"
+            null
         );
 
     }
