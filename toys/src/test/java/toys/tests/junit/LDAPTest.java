@@ -4,7 +4,9 @@ import com.unboundid.ldap.sdk.LDAPException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import toys.LDAPUtils;
+import toys.LDAPUtilsHUB;
 import toys.exceptions.ToysLDAPException;
+import toys.exceptions.ToysLDAPNotFoundException;
 
 import java.security.GeneralSecurityException;
 
@@ -15,6 +17,7 @@ public class LDAPTest {
     private static final String PASSWORD = "";
     private static LDAPUtils ldapUtilsAcad;
     private static LDAPUtils ldapUtilsCorp;
+    private static LDAPUtilsHUB ldapHub;
 
     @BeforeClass
     public static void inicializar() {
@@ -34,6 +37,10 @@ public class LDAPTest {
             "DC=unitoledo,DC=corp",
             null
         );
+
+        ldapHub = new LDAPUtilsHUB();
+        ldapHub.add(ldapUtilsAcad);
+        ldapHub.add(ldapUtilsCorp);
 
     }
 
@@ -68,6 +75,17 @@ public class LDAPTest {
     @Test
     public void testChangePasswordCorp() throws LDAPException, GeneralSecurityException, ToysLDAPException {
         ldapUtilsCorp.changePassword("teste-corp", "senhacorp", false);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testAuthenticateHub() throws ToysLDAPException, LDAPException {
+        assertNull(ldapHub.authenticate("teste-corp", "sucesso"));
+    }
+
+    @Test
+    public void testChangePasswordHub() throws ToysLDAPNotFoundException {
+        ldapHub.changePassword("teste-corp", "sucesso", false);
         assertTrue(true);
     }
 

@@ -35,16 +35,25 @@ public class LDAPUtilsHUB implements Serializable {
     }
 
     /**
+     * Adiciona um servidor ao hub.
+     *
+     * @param lu Instância da classe {@link LDAPUtils}.
+     */
+    public void add(LDAPUtils lu) {
+        luList.add(lu);
+        logger.debug("Configuracao de servidor LDAP adicionada ao HUB: %s", lu);
+    }
+
+    /**
      * Adiciona uma configuração de servidor a partir de valores armazenados no JNDI. As configurações serão lidas
      * através do método {@link JNDIToys#toProperties(String)}.
      *
-     * @param basePash Caminho base para a leitira das configuraçoes.
+     * @param basePath Caminho base para a leitira das configuraçoes.
      */
-    public void addFromJNDI(String basePash) throws NamingException {
-        var props = JNDIToys.toProperties(basePash);
-        var lu = new LDAPUtils(props);
-        luList.add(lu);
-        logger.debug("Configuracao de servidor LDAP adicionada ao HUB: %s", lu);
+    public void addFromJNDI(String basePath) throws NamingException {
+        var props = JNDIToys.toProperties(basePath);
+        logger.debug("configuracoes de servidor LDAP lidas de %s no JNDI.", basePath);
+        add(new LDAPUtils(props));
     }
 
     /**
@@ -76,10 +85,25 @@ public class LDAPUtilsHUB implements Serializable {
         String result = null;
         for (LDAPUtils ldapUtils : luList) {
             result = ldapUtils.authenticate(entry, password);
-            if (result == null || !result.equals(IC_USER_NOT_FOUND))
+            if (result == null)
                 return result;
         }
         return result;
+    }
+
+    /**
+     * tenta realizar a autennticação de uma conta em todos os servidores.
+     *
+     * @param accountName Nome da conta. A entrada corespondente será localizada através de realização de pesquisa com o método {@link #query(String)}.
+     * @param password    Senha para autenticação.
+     * @return Retorna nulo caso a autentocação tenha sucesso ou o código de erro de autennticação.
+     */
+    public String authenticate(String accountName, String password) throws ToysLDAPException, LDAPException {
+        Entry entry = query(accountName);
+        if (entry != null)
+            return authenticate(entry, password);
+        else
+            return IC_USER_NOT_FOUND;
     }
 
     /**
