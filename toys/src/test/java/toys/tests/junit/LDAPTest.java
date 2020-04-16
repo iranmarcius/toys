@@ -6,8 +6,9 @@ import org.junit.Test;
 import toys.LDAPUtils;
 import toys.exceptions.ToysLDAPException;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.security.GeneralSecurityException;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LDAPTest {
     private static final String USERNAME = "testeacad";
@@ -54,8 +55,20 @@ public class LDAPTest {
     @Test
     public void testAuthCorp() throws LDAPException, ToysLDAPException {
         var entry = ldapUtilsCorp.query("teste-corp");
-        String erro = ldapUtilsCorp.authenticate(entry, "testecorp");
+        String erro = ldapUtilsCorp.authenticate(entry, "senhacorp");
         assertNull(erro);
+    }
+
+    @Test
+    public void testChangePasswordAcad() throws LDAPException, GeneralSecurityException, ToysLDAPException {
+        ldapUtilsAcad.changePassword("teste-acad", "senhaacad", false);
+        assertTrue(true);
+    }
+
+    @Test
+    public void testChangePasswordCorp() throws LDAPException, GeneralSecurityException, ToysLDAPException {
+        ldapUtilsCorp.changePassword("teste-corp", "senhacorp", false);
+        assertTrue(true);
     }
 
 }
