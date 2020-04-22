@@ -61,7 +61,6 @@ public class JDBCUtils {
      * @return Retorna o número de registros resultantes da consulta.
      */
     public int extrair(Connection conn, String sql, OutputStream out, Charset charset, String separador) throws SQLException, IOException {
-        int total = 0;
         var result = extrair(conn, sql, true);
         try (OutputStreamWriter outWriter = new OutputStreamWriter(out, charset.name())) {
             try (BufferedWriter writer = new BufferedWriter(outWriter)) {
@@ -80,7 +79,7 @@ public class JDBCUtils {
                 }
             }
         }
-        return total;
+        return result.size();
     }
 
     /**
