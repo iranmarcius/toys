@@ -3,6 +3,7 @@ package toys.tests.junit;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import toys.exceptions.ToysException;
 import toys.persistence.jdbc.JDBCUtils;
 
 import java.io.IOException;
@@ -11,15 +12,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JDBCUtilsTest {
     private static Connection conn;
-    private JDBCUtils jdbcUtils = new JDBCUtils();
+    private final JDBCUtils jdbcUtils = new JDBCUtils();
 
     @BeforeClass
-    public static void inicializar() throws ClassNotFoundException, SQLException {
-        Class.forName("net.sourceforge.jtds.jdbc.Driver");
+    public static void inicializar() throws SQLException {
         conn = DriverManager.getConnection("jdbc:jtds:sqlserver://totvs-beta.redeinterna.unitoledo.br/CorporeRMDevelop", "rm", "rm");
     }
 
@@ -29,8 +30,14 @@ public class JDBCUtilsTest {
     }
 
     @Test
-    public void extrairCSVTest() throws IOException, SQLException {
-        jdbcUtils.extrairCSV(conn, "select * from sdocumento", StandardCharsets.ISO_8859_1, ";", "c:/temp/saida.csv");
+    public void extrairListTest() throws ToysException, SQLException {
+        var list = jdbcUtils.extrairLista(conn, "select * from spletivo", true);
+        assertFalse(list.isEmpty());
+    }
+
+    @Test
+    public void extrairCSVTest() throws IOException, SQLException, ToysException {
+        jdbcUtils.extrairCSV(conn, "select * from sdocumento", StandardCharsets.ISO_8859_1, "c:/temp/saida.csv");
         assertTrue(true);
     }
 

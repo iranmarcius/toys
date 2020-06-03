@@ -1,6 +1,11 @@
 package toys.persistence.jdbc;
 
-import java.io.*;
+import toys.exceptions.ToysException;
+
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -18,78 +23,59 @@ import java.util.List;
 public class JDBCUtils {
 
     /**
-     * Executa a conslta informada extraindo os dados para uma lista contendo arrays de objetos
-     * contendo os valores de cada coluna da consulta.
+     * Executa a consulta extraindo os dados utilizando a saída informada para salvar os dados.
      *
      * @param conn          Conexão com o banco de dados.
      * @param sql           Query a ser executada.
-     * @param columnHeaders flag indicando se a primeira linha dos resultados deve conter os nomes das colunas.
-     * @return <code>List&lt;Object[]&gt;</code>
+     * @param columnHeaders Flag indicando se a primeira linha dos resultados deve conter os nomes das colunas.
+     * @param queryOutput   Objeto responsável pela saída dos dados.
      */
-    public List<Object[]> extrair(Connection conn, String sql, boolean columnHeaders) throws SQLException {
-        List<Object[]> result = new ArrayList<>();
+    public void extrair(Connection conn, String sql, boolean columnHeaders, QueryOutput queryOutput) throws SQLException, ToysException {
+        queryOutput.resetRowCount();
         try (Statement st = conn.createStatement()) {
             try (ResultSet rs = st.executeQuery(sql)) {
-                var metadata = rs.getMetaData();
-
-                if (columnHeaders) {
-                    var headers = new Object[metadata.getColumnCount()];
-                    for (int i = 1; i <= metadata.getColumnCount(); i++)
-                        headers[i - 1] = metadata.getColumnName(i);
-                    result.add(headers);
-                }
-
-                while (rs.next()) {
-                    var row = new Object[metadata.getColumnCount()];
-                    for (int i = 1; i <= metadata.getColumnCount(); i++)
-                        row[i - 1] = rs.getObject(i);
-                    result.add(row);
-                }
+                if (columnHeaders)
+                    queryOutput.writeHeader(rs);
+                while (rs.next())
+                    queryOutput.writeRow(rs);
             }
         }
-        return result;
     }
 
     /**
-     * Extrai os dados de uma consulta SQL salvando-os no stream informado no formato CSV.
+     * Executa a consulta informada extraindo os dados para uma lista de arrays de objetos.
      *
-     * @param conn      Conexão com o banco de dados.
-     * @param sql       SQL a ser executada.
-     * @param out       Stream de saída.
-     * @param charset   Charset das informações.
-     * @param separador Separador de campos.
+     * @param conn          Conexão com o banco de dados.
+     * @param sql           SQL a ser executada.
+     * @param columnHeaders Flag indicando se as colunas devem ser incluídas nos resultados.
      * @return Retorna o número de registros resultantes da consulta.
+     * @see #extrair(Connection, String, boolean, QueryOutput)
      */
-    public int extrair(Connection conn, String sql, OutputStream out, Charset charset, String separador) throws SQLException, IOException {
-        var result = extrair(conn, sql, true);
-        try (OutputStreamWriter outWriter = new OutputStreamWriter(out, charset.name())) {
-            try (BufferedWriter writer = new BufferedWriter(outWriter)) {
-                var sb = new StringBuilder();
-                for (Object[] row : result) {
-                    sb.setLength(0);
-                    for (Object value : row) {
-                        if (value instanceof String)
-                            sb.append(value.toString().trim());
-                        else
-                            sb.append(value);
-                        sb.append(separador);
-                    }
-                    writer.write(sb.substring(0, sb.length() - 1));
-                    writer.newLine();
-                }
-            }
-        }
-        return result.size();
+    public List<Object[]> extrairLista(Connection conn, String sql, boolean columnHeaders) throws ToysException, SQLException {
+        var list = new ArrayList<Object[]>();
+        var queryOutput = new ListQueryOutput(list);
+        extrair(conn, sql, columnHeaders, queryOutput);
+        return list;
     }
 
     /**
      * Método de conveniência para extrair a saida para um arquivo.
      *
-     * @see #extrair(Connection, String, OutputStream, Charset, String)
+     * @param conn         Conexão com o banco de dados.
+     * @param sql          Consulta a ser executada.
+     * @param charset      Charset utilizado na criação do arquivo de saída.
+     * @param caminhoSaida Caminho onde o arquivo será salvo.
+     * @return Retorna o total de registros.
      */
-    public int extrairCSV(Connection conn, String sql, Charset charset, String separator, String caminhoSaida) throws IOException, SQLException {
+    public long extrairCSV(Connection conn, String sql, Charset charset, String caminhoSaida) throws IOException, SQLException, ToysException {
         try (FileOutputStream out = new FileOutputStream(caminhoSaida)) {
-            return extrair(conn, sql, out, charset, separator);
+            try (OutputStreamWriter outWriter = new OutputStreamWriter(out, charset.name())) {
+                try (BufferedWriter writer = new BufferedWriter(outWriter)) {
+                    var queryOutput = new CSVQueryOutput(writer, ';');
+                    extrair(conn, sql, true, queryOutput);
+                    return queryOutput.getRowCount();
+                }
+            }
         }
     }
 
