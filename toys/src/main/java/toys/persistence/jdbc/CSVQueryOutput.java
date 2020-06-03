@@ -44,7 +44,7 @@ public class CSVQueryOutput extends AbstractQueryOutput {
                     writer.write(separator);
             }
             writer.newLine();
-
+            rowCount++;
         } catch (SQLException | IOException e) {
             throw new ToysException(e);
         }

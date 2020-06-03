@@ -36,6 +36,7 @@ public class ListQueryOutput extends AbstractQueryOutput {
             for (int i = 1; i <= columnCount; i++)
                 row[i - 1] = rs.getObject(i);
             list.add(row);
+            rowCount++;
         } catch (SQLException e) {
             throw new ToysException(e);
         }
