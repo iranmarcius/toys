@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @since 03/2019
  */
 public class JWTAuthenticationManager implements AuthenticationManager {
-    private SecretKey key;
+    private final SecretKey key;
 
     public JWTAuthenticationManager(SecretKey key) {
         super();
