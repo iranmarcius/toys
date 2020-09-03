@@ -88,6 +88,11 @@
             <artifactId>javax.annotation-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.sourceforge.jtds</groupId>
+            <artifactId>jtds</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Dependências de teste -->
 
@@ -95,6 +100,12 @@
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -107,8 +118,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.jtds</groupId>
-            <artifactId>jtds</artifactId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
