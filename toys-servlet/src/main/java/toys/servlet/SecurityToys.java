@@ -15,7 +15,6 @@ import java.security.Key;
 public class SecurityToys {
 
     private SecurityToys() {
-        super();
     }
 
     /**
