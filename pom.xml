@@ -38,6 +38,13 @@
         </repository>
     </repositories>
 
+    <distributionManagement>
+        <repository>
+            <id>unitoledo-maven-ssh</id>
+            <url>scpexe://sparring.redeinterna.unitoledo.br/var/www/html/maven</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <extensions>
             <extension>
