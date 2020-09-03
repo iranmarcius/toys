@@ -5,12 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>br.unitoledo</groupId>
-        <artifactId>parent-pom</artifactId>
+        <groupId>toys</groupId>
+        <artifactId>parent</artifactId>
         <version>1.0</version>
     </parent>
 
-    <groupId>toys</groupId>
     <artifactId>toys-servlet</artifactId>
     <version>1.6.0-2</version>
 

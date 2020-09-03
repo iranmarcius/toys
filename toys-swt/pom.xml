@@ -5,21 +5,19 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>br.unitoledo</groupId>
-        <artifactId>parent-pom</artifactId>
-        <version>1.0</version>
-    </parent>
-
-    <groupId>toys</groupId>
     <artifactId>toys-swt</artifactId>
     <version>1.6.0</version>
 
-	<dependencies>
+    <parent>
+        <groupId>toys</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <dependencies>
 		<dependency>
 			<groupId>toys</groupId>
 			<artifactId>toys</artifactId>
-            <version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse</groupId>

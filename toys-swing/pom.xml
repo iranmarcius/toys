@@ -6,14 +6,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>br.unitoledo</groupId>
-        <artifactId>parent-pom</artifactId>
-        <version>1.0</version>
-    </parent>
-	<groupId>toys</groupId>
 	<artifactId>toys-swing</artifactId>
 	<version>1.6.0</version>
+
+    <parent>
+        <groupId>toys</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0</version>
+    </parent>
 
     <build>
         <plugins>
@@ -27,7 +27,6 @@
 		<dependency>
 			<groupId>toys</groupId>
 			<artifactId>toys</artifactId>
-            <version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.jgoodies</groupId>
