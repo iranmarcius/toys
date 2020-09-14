@@ -34,8 +34,8 @@ import static toys.ToysConsts.*;
  * @since 09/10/2018
  */
 public class LDAPAuthenticationProvider extends ToysAuthenticationProvider {
-    private LDAPUtils ldapUtils;
-    private boolean errorOnCredentialsExpired;
+    private final LDAPUtils ldapUtils;
+    private final boolean errorOnCredentialsExpired;
 
     /**
      * Construtor.
