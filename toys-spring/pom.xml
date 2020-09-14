@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>toys-spring</artifactId>
-    <version>1.6.0-7</version>
+    <version>1.6.1</version>
 
     <parent>
         <groupId>toys</groupId>
@@ -38,6 +38,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.unboundid</groupId>
+            <artifactId>unboundid-ldapsdk</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
