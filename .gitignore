@@ -5,3 +5,7 @@ target/
 /.settings/
 *.iml
 logs/
+.settings/
+.project
+.classpath
+.factorypath
