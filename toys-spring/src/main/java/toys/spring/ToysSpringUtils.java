@@ -29,7 +29,6 @@ import java.util.Set;
 public class ToysSpringUtils {
 
     private ToysSpringUtils() {
-        super();
     }
 
     /**
