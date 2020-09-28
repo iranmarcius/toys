@@ -74,7 +74,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
                     localLogger.debug("Relacao de privilegios: %s", CollectionToys.asString(authorities, ";"));
                 var encodedAuthoritiesExpr = ToysSpringUtils.encodeAuthorities(authorities, key);
                 localLogger.debug("Privilegios codificados: %s", encodedAuthoritiesExpr);
-                builder.claim(SECURITY_AUTHORITIES, encodedAuthoritiesExpr);
+                builder.claim(JWT_CLAIM_AUTHORITIES, encodedAuthoritiesExpr);
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
                 localLogger.fatal("Erro codificando privilegios.", e);
                 throw new IOException(e);

@@ -39,7 +39,7 @@ public class JWTAuthenticationManager implements AuthenticationManager {
             String token = (String) authentication.getCredentials();
             Claims claims = SecurityToys.getClaims(token, key);
             if (claims != null) {
-                String encodedAuthoritiesExpr = (String) claims.get(ToysConsts.SECURITY_AUTHORITIES);
+                String encodedAuthoritiesExpr = (String) claims.get(ToysConsts.JWT_CLAIM_AUTHORITIES);
                 String decodedAuthorities = Crypt.decode(encodedAuthoritiesExpr, key);
                 String[] authorities = decodedAuthorities.split(";");
                 List<GrantedAuthority> springAuthorities = Arrays.stream(authorities)
