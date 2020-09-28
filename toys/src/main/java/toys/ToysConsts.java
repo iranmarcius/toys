@@ -11,6 +11,10 @@ public class ToysConsts {
     public static final String SECURITY_CREDENTIAL_MINLENGTH = "security.password.minLength";
     public static final String SECURITY_AUTHORITIES = "security.authorities";
 
+    // Claims utilizadas em tokens JWT
+    public static final String JWT_CLAIM_AUTHORITIES = "aut";
+    public static final String JWT_CONTEXT = "ctx";
+
     // Constantes relacionadas a configurações de e-mail
     public static final String EMAIL_SMTP_ADDRESS = "email.smtp.address";
     public static final String EMAIL_STORE_ADDRESS = "email.store.address";
