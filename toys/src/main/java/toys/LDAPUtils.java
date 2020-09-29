@@ -4,8 +4,8 @@ import com.unboundid.ldap.sdk.*;
 import com.unboundid.util.ssl.SSLUtil;
 import com.unboundid.util.ssl.TrustAllTrustManager;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import toys.exceptions.ToysLDAPException;
 import toys.exceptions.ToysLDAPNotFoundException;
 import toys.exceptions.ToysRuntimeException;
@@ -37,7 +37,7 @@ public class LDAPUtils implements Serializable {
     public static final String CFG_BASEDN = "baseDN";
     public static final String CFG_SEARCH_EXPR = "searchExpr";
     private static final long serialVersionUID = -7100346347048600852L;
-    private final transient Logger logger = LogManager.getFormatterLogger(getClass());
+    private final transient Logger logger = LoggerFactory.getLogger(getClass());
     private final String host;
     private final String bindDN;
     private final String baseDN;
@@ -159,7 +159,7 @@ public class LDAPUtils implements Serializable {
      */
     public synchronized Entry query(LDAPConnection conn, String value, String searchExpr) throws LDAPSearchException, ToysLDAPException {
         String searchPattern = String.format(searchExpr, value);
-        logger.debug("Pesquisando conta %s. host=%s, baseDN=%s, searchPattern=%s", value, host, baseDN, searchPattern);
+        logger.debug("Pesquisando conta {}. host={}, baseDN={}, searchPattern={}", value, host, baseDN, searchPattern);
         SearchResult result = conn.search(baseDN, SearchScope.SUB, searchPattern);
         if (result.getEntryCount() == 1)
             return result.getSearchEntries().get(0);
@@ -177,7 +177,7 @@ public class LDAPUtils implements Serializable {
      * @return Retorna o código de erro da autenticação ou null caso tenha ocorrido com sucesso.
      */
     public synchronized String authenticate(String bindDN, String password) throws LDAPException {
-        logger.debug("Tentando autenticacao: host=%s, bindDN=%s", host, bindDN);
+        logger.debug("Tentando autenticacao: host={}, bindDN={}", host, bindDN);
         try (var conn = new LDAPConnection(host, LDAP_PORT, bindDN, password)) {
             return null;
         } catch (LDAPException e) {
@@ -185,7 +185,7 @@ public class LDAPUtils implements Serializable {
                 String[] ss = e.getDiagnosticMessage().split(" *, *");
                 if (ss.length > 2 && ss[2].matches("^data .+$")) {
                     String errorCode = ss[2].substring(5);
-                    logger.error("Autenticacao no servidor ldap retornou o erro %s. bindDN=%s", errorCode, bindDN);
+                    logger.error("Autenticacao no servidor ldap retornou o erro {}. bindDN={}", errorCode, bindDN);
                     return errorCode;
                 }
             }

@@ -4,8 +4,7 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -35,7 +34,6 @@ import static toys.ToysConsts.*;
  * @since 11/2018
  */
 public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    protected final Logger localLogger = LogManager.getFormatterLogger(getClass());
     private RequestCache requestCache = new HttpSessionRequestCache();
     private String issuer;
     private long ttl;
@@ -61,7 +59,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
 
         String principal = ToysSpringUtils.getPrincipalName();
         if (principal != null) {
-            localLogger.debug("Gerando token JWT para o principal autenticado.");
+            logger.debug("Gerando token JWT para o principal autenticado.");
 
             JwtBuilder builder = Jwts.builder()
                 .setId(String.format("%d", System.currentTimeMillis()))
@@ -70,23 +68,23 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
 
             try {
                 var authorities = ToysSpringUtils.getAuthorities();
-                if (localLogger.isDebugEnabled())
-                    localLogger.debug("Relacao de privilegios: %s", CollectionToys.asString(authorities, ";"));
+                if (logger.isDebugEnabled())
+                    logger.debug(String.format("Relacao de privilegios: %s", CollectionToys.asString(authorities, ";")));
                 var encodedAuthoritiesExpr = ToysSpringUtils.encodeAuthorities(authorities, key);
-                localLogger.debug("Privilegios codificados: %s", encodedAuthoritiesExpr);
+                logger.debug(String.format("Privilegios codificados: %s", encodedAuthoritiesExpr));
                 builder.claim(JWT_CLAIM_AUTHORITIES, encodedAuthoritiesExpr);
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-                localLogger.fatal("Erro codificando privilegios.", e);
+                logger.fatal("Erro codificando privilegios.", e);
                 throw new IOException(e);
             }
 
             if (StringUtils.isNotBlank(issuer)) {
-                localLogger.debug("Issuer: " + issuer);
+                logger.debug("Issuer: " + issuer);
                 builder.setIssuer(issuer);
             }
 
             if (ttl > 0) {
-                localLogger.debug("Tempo de vida em milissegundos: " + ttl);
+                logger.debug("Tempo de vida em milissegundos: " + ttl);
                 builder.setExpiration(new Date(System.currentTimeMillis() + ttl));
             }
 
@@ -96,7 +94,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
                 builder.signWith(SignatureAlgorithm.HS256, key);
 
             String token = builder.compact();
-            localLogger.debug("Token gerado: " + token);
+            logger.debug("Token gerado: " + token);
 
             response.setHeader(HTTP_HEADER_ACCESS_TOKEN, token);
 
@@ -113,10 +111,10 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
             String xForwardedFor = request.getHeader(HTTP_HEADER_X_FORWARDED_FOR);
             if (xForwardedFor != null)
                 sb.append(" - ").append(HTTP_HEADER_X_FORWARDED_FOR).append("=").append(xForwardedFor);
-            LogManager.getLogger("auth").info(sb);
+            LoggerFactory.getLogger("auth").info(sb.toString());
 
         } else {
-            localLogger.error("Nenhum nome de usuario encontrado no contexto para gerar o token.");
+            logger.error("Nenhum nome de usuario encontrado no contexto para gerar o token.");
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Nenhum usuario autenticado no contexto.");
         }
 

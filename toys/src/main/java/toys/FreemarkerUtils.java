@@ -5,8 +5,8 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import toys.pojos.FreemarkerTemplatePojo;
 
 import java.io.BufferedReader;
@@ -18,31 +18,31 @@ import java.util.Map;
 
 /**
  * Classe utilitária para gerenciamento de templates.
+ *
  * @author Iran
  */
 public final class FreemarkerUtils {
-    private static final Logger logger = LogManager.getFormatterLogger(FreemarkerUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(FreemarkerUtils.class);
     private static Configuration cfg;
 
     private FreemarkerUtils() {
-        super();
     }
 
     /**
      * Retorna um template. Caso a configuração do Freemarker não esteja inicializada, ela será criada como um {@link ClassTemplateLoader}
      * configurado para buscar os templates no pacote /freemarker.
+     *
      * @param name Nome do template sem a extensão.
      */
     public static synchronized Template getTemplate(String name) throws IOException {
         if (name == null)
             throw new NullPointerException("Nome do template nao foi informado.");
         if (cfg == null) {
-            logger.debug("Inicializando configuracao do Freemarker.");
-            cfg =  new Configuration(Configuration.VERSION_2_3_22);
+            cfg = new Configuration(Configuration.VERSION_2_3_22);
             cfg.setDefaultEncoding("utf-8");
             cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
             cfg.setTemplateLoader(new ClassTemplateLoader(FreemarkerUtils.class, "/freemarker"));
-            logger.debug("Freemarker inicializado.");
+            logger.debug("Configuracao do Freemarker inicializada.");
         }
         return cfg.getTemplate(name + ".ftl");
     }
@@ -53,15 +53,16 @@ public final class FreemarkerUtils {
      * retornado pelo método. Para isso basta fornecer os cabeçalhos na forma de comentários do Freemarker <b>a partir da primeira
      * linha do template</b>. Segue abaixo um exemplo:
      * <blockquote>
-     *  <code>
-     *          &lt;#--<br>
-     *          From: <i>Nome e e-mail do remetente no formado padrão</i><br>
-     *          Subject: <i>Assunto da mensagem</i><br>
-     *          --&gt;<br>
-     *          <i>Corpo da mensagem...</i>
-     *  </code>
+     * <code>
+     * &lt;#--<br>
+     * From: <i>Nome e e-mail do remetente no formado padrão</i><br>
+     * Subject: <i>Assunto da mensagem</i><br>
+     * --&gt;<br>
+     * <i>Corpo da mensagem...</i>
+     * </code>
      * </blockquote>
-     * @param name Nome do template sem a extensão.
+     *
+     * @param name          Nome do template sem a extensão.
      * @param subjectParams Parâmetros opcionais que serão utilizados na formatação do assunto.
      * @return {@link FreemarkerTemplatePojo}
      * @throws IOException Caso não seja possível obter o template.
@@ -130,27 +131,28 @@ public final class FreemarkerUtils {
 
     /**
      * Envia um email HTML utilizando o template e os dados informados.
-     * @param hostname Nome do host de SMTP para envio do e-mail.
-     * @param templateId Identificador do template. O template será obtido através da função {@link #getEmailTemplate(String, Object...)}.
-     * @param data dados que serão utilizados na criação do conteúdo do e-mail.
+     *
+     * @param hostname          Nome do host de SMTP para envio do e-mail.
+     * @param templateId        Identificador do template. O template será obtido através da função {@link #getEmailTemplate(String, Object...)}.
+     * @param data              dados que serão utilizados na criação do conteúdo do e-mail.
      * @param emailDestinatario Email do destinatário. Pode ser uma série de endereços separados por vírgula.
-     * @param nomeDestinatario Nome do destinatário. Este parâmetro é opcional e será ignorado caso o endereço de e-mail fornecido seja uma lista.
-     * @param subjectParams Parâmetros do assunto do email caso haja necessidade. Este parâmetro é utilizado na chamada do método
-     * {@link #getEmailTemplate(String, Object...)}.
+     * @param nomeDestinatario  Nome do destinatário. Este parâmetro é opcional e será ignorado caso o endereço de e-mail fornecido seja uma lista.
+     * @param subjectParams     Parâmetros do assunto do email caso haja necessidade. Este parâmetro é utilizado na chamada do método
+     *                          {@link #getEmailTemplate(String, Object...)}.
      */
     public static synchronized void enviarEmailHtml(String hostname, String templateId, Map<String, Object> data, String emailDestinatario, String nomeDestinatario, Object... subjectParams)
-            throws TemplateException, IOException {
+        throws TemplateException, IOException {
 
         FreemarkerTemplatePojo t = getEmailTemplate(templateId, subjectParams);
         StringWriter sw = new StringWriter();
         t.getTemplate().process(data, sw);
         EmailUtils.enviarEmailHtml(
-                hostname,
-                t.getHeaders().get("From"),
-                emailDestinatario,
-                nomeDestinatario,
-                t.getHeaders().get("Subject"),
-                sw.toString());
+            hostname,
+            t.getHeaders().get("From"),
+            emailDestinatario,
+            nomeDestinatario,
+            t.getHeaders().get("Subject"),
+            sw.toString());
     }
 
 }

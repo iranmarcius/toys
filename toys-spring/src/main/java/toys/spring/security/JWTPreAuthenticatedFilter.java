@@ -2,8 +2,6 @@ package toys.spring.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import toys.servlet.SecurityToys;
@@ -19,7 +17,6 @@ import java.security.Key;
  * @since 12/10/2018
  */
 public class JWTPreAuthenticatedFilter extends AbstractPreAuthenticatedProcessingFilter {
-    private final Logger localLogger = LogManager.getFormatterLogger(getClass());
     private Key key;
 
     /**
@@ -43,11 +40,11 @@ public class JWTPreAuthenticatedFilter extends AbstractPreAuthenticatedProcessin
             Claims claims = SecurityToys.getClaims(request, key);
             if (claims != null) {
                 String subject = claims.getSubject();
-                localLogger.debug("Principal armazenado no token: " + subject);
+                logger.debug("Principal armazenado no token: " + subject);
                 return subject;
             }
         } catch (ExpiredJwtException e) {
-            localLogger.error("Token expirado.");
+            logger.error("Token expirado.");
         }
         return null;
     }
@@ -58,7 +55,7 @@ public class JWTPreAuthenticatedFilter extends AbstractPreAuthenticatedProcessin
      */
     @Override
     protected Object getPreAuthenticatedCredentials(HttpServletRequest request) {
-        localLogger.debug("Extraindo credenciais.");
+        logger.debug("Extraindo credenciais.");
         return SecurityToys.getJWT(request);
     }
 

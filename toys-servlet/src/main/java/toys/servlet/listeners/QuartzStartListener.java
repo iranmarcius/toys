@@ -1,10 +1,10 @@
 package toys.servlet.listeners;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import toys.LocaleToys;
 import toys.ToysConfig;
 
@@ -36,7 +36,7 @@ public class QuartzStartListener implements ServletContextListener {
      */
     private static final String CFG_DELAY = "delay";
 
-    protected final Logger logger = LogManager.getFormatterLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
     private Scheduler scheduler;
 
     @Override
@@ -53,7 +53,7 @@ public class QuartzStartListener implements ServletContextListener {
         // Cria um mapa agrupando os jobs e supas propriedades específicas
         logger.debug("Processando configuracoes de tarefas.");
         Map<String, Properties> jobsProps = new HashMap<>();
-        for (Map.Entry<Object, Object> entry: quartzProps.entrySet()) {
+        for (Map.Entry<Object, Object> entry : quartzProps.entrySet()) {
             String propName = (String) entry.getKey();
             int i = propName.indexOf('.');
             String jobName = propName.substring(0, i);
@@ -63,21 +63,21 @@ public class QuartzStartListener implements ServletContextListener {
 
         // Registra as informações do log
         logger.debug("Configuracoes das tarefas:");
-        for (Map.Entry<String, Properties> jobEntry: jobsProps.entrySet()) {
-            logger.debug("Job %s", jobEntry.getKey());
-            for (Map.Entry<Object, Object> entry: jobEntry.getValue().entrySet())
-                logger.debug("\t%s=%s", entry.getKey(), entry.getValue());
+        for (Map.Entry<String, Properties> jobEntry : jobsProps.entrySet()) {
+            logger.debug("Job {}", jobEntry.getKey());
+            for (Map.Entry<Object, Object> entry : jobEntry.getValue().entrySet())
+                logger.debug("\t{}={}", entry.getKey(), entry.getValue());
         }
 
         // Instancia e configura os jobs
         try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
-            for (Map.Entry<String, Properties> entry: jobsProps.entrySet())
+            for (Map.Entry<String, Properties> entry : jobsProps.entrySet())
                 agendarTarefa(scheduler, entry.getKey(), entry.getValue(), sce.getServletContext());
             scheduler.start();
             logger.info("Agendador de tarefas iniciado com sucesso.");
         } catch (SchedulerException e) {
-            logger.fatal("Erro geral agendando tarefas.", e);
+            logger.error("Erro geral agendando tarefas.", e);
         }
 
     }
@@ -92,7 +92,7 @@ public class QuartzStartListener implements ServletContextListener {
      */
     @SuppressWarnings("unchecked")
     private void agendarTarefa(Scheduler scheduler, String jobName, Properties props, ServletContext sc) {
-        logger.info("Agendando tarefa %s.", jobName);
+        logger.info("Agendando tarefa {}.", jobName);
         try {
 
             // Obtém as configurações do job
@@ -100,32 +100,32 @@ public class QuartzStartListener implements ServletContextListener {
             String schedule = null;
             Integer delay = null;
             JobDataMap jobData = new JobDataMap();
-            for (Map.Entry<Object, Object> entry: props.entrySet()) {
+            for (Map.Entry<Object, Object> entry : props.entrySet()) {
                 String cfg = entry.getKey().toString();
-                String valor = (String)entry.getValue();
+                String valor = (String) entry.getValue();
                 switch (cfg) {
                     case CFG_JOB_CLASS:
                         jobClass = valor;
-                        logger.info("\tclass=%s", jobClass);
+                        logger.info("\tclass={}", jobClass);
                         break;
                     case CFG_DELAY:
                         if (StringUtils.isNotEmpty(valor)) {
                             delay = StringUtils.isNotBlank(valor) ? Integer.parseInt(valor) : 0;
                             if (delay > 0)
-                                logger.info("\tatraso na execucao=%ds", delay);
+                                logger.info("\tatraso na execucao={}s", delay);
                         }
                         break;
                     case CFG_SCHEDULE:
                         if (StringUtils.isNotBlank(valor)) {
                             schedule = valor;
-                            logger.info("\tagenda=%s", schedule);
+                            logger.info("\tagenda={}", schedule);
                         }
                         break;
                     default:
                         if (StringUtils.isNotBlank(valor)) {
                             Object value = processarSubstituicoes(valor, sc);
                             jobData.put(cfg, value);
-                            logger.info("\t%s=%s", cfg, value);
+                            logger.info("\t{}={}", cfg, value);
                         }
                         break;
                 }
@@ -133,7 +133,7 @@ public class QuartzStartListener implements ServletContextListener {
 
             // Configura as informações do job
             if (StringUtils.isBlank(jobClass)) {
-                logger.error("Nome da classe nao foi especificado para o job %s.", jobName);
+                logger.error("Nome da classe nao foi especificado para o job {}.", jobName);
                 return;
             }
             Class<? extends Job> jobClazz = (Class<Job>) Class.forName(jobClass);
@@ -146,7 +146,7 @@ public class QuartzStartListener implements ServletContextListener {
             if (schedule == null && delay != null) {
                 schedule = execucaoUnica(delay);
                 delay = null;
-                logger.info("\tagenda de execucao unica=%s", schedule);
+                logger.info("\tagenda de execucao unica={}", schedule);
             }
             Trigger trigger = null;
             if (schedule != null) {
@@ -160,14 +160,14 @@ public class QuartzStartListener implements ServletContextListener {
             if (trigger != null)
                 scheduler.scheduleJob(jobDetail, trigger);
             else
-                logger.warn("Tarefa %s nao iniciada pois nao possui agenda definida.", jobName);
+                logger.warn("Tarefa {} nao iniciada pois nao possui agenda definida.", jobName);
 
         } catch (ClassNotFoundException e) {
-            logger.fatal("Erro instanciando a tarefa %s.", jobName, e);
+            logger.error("Erro instanciando a tarefa {}.", jobName, e);
         } catch (SchedulerException e) {
-            logger.fatal("Ocorreu um erro no agendamento da tarefa %s.", jobName, e);
+            logger.error("Ocorreu um erro no agendamento da tarefa {}.", jobName, e);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            logger.fatal("Ocorreu um erro no processamento dos parametros", e);
+            logger.error("Ocorreu um erro no processamento dos parametros", e);
         }
     }
 
@@ -178,7 +178,7 @@ public class QuartzStartListener implements ServletContextListener {
                 scheduler.shutdown();
                 logger.info("Quartz foi encerrado.");
             } catch (SchedulerException e) {
-                logger.fatal("Erro finalizando Quartz.", e);
+                logger.error("Erro finalizando Quartz.", e);
             }
         }
     }

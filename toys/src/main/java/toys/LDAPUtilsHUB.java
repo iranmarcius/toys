@@ -2,8 +2,8 @@ package toys;
 
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import toys.exceptions.ToysLDAPException;
 import toys.exceptions.ToysLDAPNotFoundException;
 
@@ -24,8 +24,8 @@ import static toys.ToysConsts.IC_USER_NOT_FOUND;
  */
 public class LDAPUtilsHUB implements Serializable {
     private static final long serialVersionUID = 6586525207515328523L;
-    private final transient Logger logger = LogManager.getFormatterLogger(getClass());
-    private transient List<LDAPUtils> luList;
+    private final transient Logger logger = LoggerFactory.getLogger(getClass());
+    private final transient List<LDAPUtils> luList;
 
     /**
      * Construtor padrão.
@@ -41,7 +41,7 @@ public class LDAPUtilsHUB implements Serializable {
      */
     public void add(LDAPUtils lu) {
         luList.add(lu);
-        logger.debug("Configuracao de servidor LDAP adicionada ao HUB: %s", lu);
+        logger.debug("Configuracao de servidor LDAP adicionada ao HUB: {}", lu);
     }
 
     /**
@@ -52,7 +52,7 @@ public class LDAPUtilsHUB implements Serializable {
      */
     public void addFromJNDI(String basePath) throws NamingException {
         var props = JNDIToys.toProperties(basePath);
-        logger.debug("configuracoes de servidor LDAP lidas de %s no JNDI.", basePath);
+        logger.debug("configuracoes de servidor LDAP lidas de {} no JNDI.", basePath);
         add(new LDAPUtils(props));
     }
 

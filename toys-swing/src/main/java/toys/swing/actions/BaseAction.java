@@ -1,18 +1,18 @@
 package toys.swing.actions;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
 /**
  * Esta classe implementa uma ação básica com alguns métodos utilitários.
+ *
  * @author Iran Marcius
  */
 public abstract class BaseAction extends AbstractAction {
     private static final long serialVersionUID = 7506031976549858989L;
-
-    protected transient final Logger logger = LogManager.getFormatterLogger();
+    protected final transient Logger logger = LoggerFactory.getLogger(getClass());
 
 
     /**
@@ -22,6 +22,7 @@ public abstract class BaseAction extends AbstractAction {
 
     /**
      * Cria uma instância da classe setando suas propriedades.
+     *
      * @param target Referência para o objeto sobre o qual a ação irá funcionar.
      */
     public BaseAction(Object target) {
@@ -31,10 +32,11 @@ public abstract class BaseAction extends AbstractAction {
 
     /**
      * Cria uma instância da classe setando suas propriedades.
+     *
      * @param target Referência para o objeto sobre o qual a ação irá funcionar.
      * @param button Referência para um {@link AbstractButton} que irá disparar a ação. Consulte
-     * o método {@link #setButton(AbstractButton)} para obter maiores detalhes sobre os processos
-     * executados quando essa referência é fornecida.
+     *               o método {@link #setButton(AbstractButton)} para obter maiores detalhes sobre os processos
+     *               executados quando essa referência é fornecida.
      */
     public BaseAction(Object target, AbstractButton button) {
         this(target);
@@ -54,6 +56,7 @@ public abstract class BaseAction extends AbstractAction {
      * é invocado, mas quando isso acontece, propriedades do botão como texto, ícones e aceleradores,
      * são modificadas com as propriedades da ação. Por esse motivo, este método copia para a ação
      * essas propriedades do botão.
+     *
      * @param button Referência para o botão que irá disparar a ação.
      */
     public void setButton(AbstractButton button) {

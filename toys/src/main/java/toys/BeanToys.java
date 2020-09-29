@@ -1,7 +1,7 @@
 package toys;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -16,7 +16,6 @@ import java.lang.reflect.Modifier;
 public final class BeanToys {
 
     private BeanToys() {
-        super();
     }
 
     /**
@@ -234,6 +233,7 @@ public final class BeanToys {
      * Converte a caixa de todas as propriedades informadas considerando que elas sejam do tipo String.
      */
     public static void toUpperCase(Object o, String... props) {
+        var logger = LoggerFactory.getLogger(BeanToys.class);
         if (o == null || props == null)
             return;
         for (String prop : props) {
@@ -243,7 +243,7 @@ public final class BeanToys {
                 String s = (String) o.getClass().getMethod(getterName).invoke(o);
                 o.getClass().getMethod(setterName, String.class).invoke(o, s.toUpperCase());
             } catch (Exception e) {
-                LogManager.getFormatterLogger(BeanToys.class).warn("Erro setando valor para a propriedade %s do objeto.", prop, e);
+                logger.warn("Erro setando valor para a propriedade {} do objeto.", prop, e);
             }
 
         }

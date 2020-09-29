@@ -1,6 +1,6 @@
 package toys.persistence;
 
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import javax.transaction.Status;
 import javax.transaction.SystemException;
@@ -31,7 +31,7 @@ public class JPAUtils {
             if (status == Status.STATUS_ACTIVE || status == Status.STATUS_MARKED_ROLLBACK)
                 transaction.rollback();
         } catch (SystemException e) {
-            logger.fatal("Erro realizando rollback na transacao.", e);
+            logger.error("Erro realizando rollback na transacao.", e);
         }
     }
 

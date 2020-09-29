@@ -1,7 +1,7 @@
 package toys.application.runnables;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementação básica para suporte a runnables.
@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
  * @author Iran Marcius
  */
 public abstract class ToysRunnable implements Runnable {
-    protected final Logger logger = LogManager.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Flag indicando se a execução da thread deve ser finalizada. Enquanto
@@ -41,7 +41,7 @@ public abstract class ToysRunnable implements Runnable {
                 Thread.sleep(intervalo);
             }
         } catch (InterruptedException e) {
-            logger.error(e);
+            logger.error("Erro inesperado.", e);
             Thread.currentThread().interrupt();
         }
     }

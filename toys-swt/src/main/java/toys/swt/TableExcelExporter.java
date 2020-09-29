@@ -5,7 +5,6 @@
 package toys.swt;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
 import org.apache.poi.xssf.usermodel.*;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellLabelProvider;
@@ -15,6 +14,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,17 +24,16 @@ import java.util.List;
 
 /**
  * Classe utilitária para exportar conteúdos de tabelas para uma planilha do excel.
+ *
  * @author Iran
  */
 public class TableExcelExporter {
-
-    public TableExcelExporter() {
-        super();
-    }
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Método de conveniência para invocar o método de exportação passando a tabela relacionada ao viewer.
-     * @param viewer Viewer contendo a referência para a tabela.
+     *
+     * @param viewer     Viewer contendo a referência para a tabela.
      * @param sheetTitle Título da folha que será criada dentro do arquivo de planilha.
      */
     public void export(TableViewer viewer, String sheetTitle) {
@@ -42,7 +42,8 @@ public class TableExcelExporter {
 
     /**
      * Exporta a tabela para o arquivo informado.
-     * @param table Referência para a tabela.
+     *
+     * @param table      Referência para a tabela.
      * @param sheetTitle Título da folha que será criada dentro do arquivo de planilha.
      */
     public void export(Table table, String sheetTitle) {
@@ -64,14 +65,14 @@ public class TableExcelExporter {
         XSSFSheet sheet = wb.createSheet(sheetTitle);
         int r = 0;
         int c = 0;
-        XSSFRow row = null;
-        XSSFCell cell = null;
+        XSSFRow row;
+        XSSFCell cell;
 
         XSSFCellStyle headerStyle = getHeaderStyle(wb);
 
         // Cria o cabeçalho
-        row  = sheet.createRow(r++);
-        for (TableColumn tc: cols) {
+        row = sheet.createRow(r++);
+        for (TableColumn tc : cols) {
             cell = row.createCell(c++);
             cell.setCellValue(tc.getText());
             if (headerStyle != null)
@@ -80,12 +81,12 @@ public class TableExcelExporter {
 
         // Cria as linhas
         TableItem[] items = table.getItems();
-        for (TableItem item: items) {
+        for (TableItem item : items) {
             row = sheet.createRow(r++);
             for (c = 0; c < cols.length; c++) {
                 cell = row.createCell(c);
-                setCellValue(item, cell, c, (String)cols[c].getData("fieldId"));
-                configureCell(item, cell, c, (String)cols[c].getData("fieldId"));
+                setCellValue(item, cell, c, (String) cols[c].getData("fieldId"));
+                configureCell(item, cell, c, (String) cols[c].getData("fieldId"));
             }
         }
 
@@ -93,9 +94,9 @@ public class TableExcelExporter {
         try (FileOutputStream out = new FileOutputStream(new File(arquivoSaida))) {
             wb.write(out);
             MessageDialog.openInformation(table.getShell(), "Sucesso", String.format(
-                    "Planilha exportada com sucesso para o arquivo %s.", arquivoSaida));
+                "Planilha exportada com sucesso para o arquivo %s.", arquivoSaida));
         } catch (IOException e) {
-            LogManager.getLogger(getClass()).error(String.format("Erro exportando a planilha para o arquivo %s.", arquivoSaida), e);
+            logger.error("Erro exportando a planilha para o arquivo {}.", arquivoSaida, e);
             MessageDialog.openError(table.getShell(), "Erro", "Ocorreu um erro exportando a planilha. Consulte o log.");
         }
 
@@ -116,6 +117,7 @@ public class TableExcelExporter {
 
     /**
      * Método de conveniência para inicializar fontes e estilos caso necessário.
+     *
      * @param wb Referência para a planilha.
      */
     protected void configure(XSSFWorkbook wb) {
@@ -124,11 +126,12 @@ public class TableExcelExporter {
 
     /**
      * Seta o valor da célula. Este método poderá ser sobrecarregado para casos específicos.
-     * @param item Item da tabela.
-     * @param cell Célula.
-     * @param index Índice da coluna.
+     *
+     * @param item    Item da tabela.
+     * @param cell    Célula.
+     * @param index   Índice da coluna.
      * @param fieldId Identificador do campo caso tabela tenha sido configurada utilizando o
-     * {@link SWTUtils#configureColumns(TableViewer, List, CellLabelProvider) SWTUtils.configureColumns}
+     *                {@link SWTUtils#configureColumns(TableViewer, List, CellLabelProvider) SWTUtils.configureColumns}
      */
     protected void setCellValue(TableItem item, XSSFCell cell, int index, String fieldId) {
         cell.setCellValue(item.getText(index));
@@ -136,11 +139,12 @@ public class TableExcelExporter {
 
     /**
      * Configura tipo e estilo da célula. Por padrão nada acontece neste método.
-     * @param item Referência para item da tabela.
-     * @param cell Referência para a célula.
-     * @param index Índice da coluna.
+     *
+     * @param item    Referência para item da tabela.
+     * @param cell    Referência para a célula.
+     * @param index   Índice da coluna.
      * @param fieldId Identificador do campo caso tabela tenha sido configurada utilizando o
-     * {@link SWTUtils#configureColumns(TableViewer, List, CellLabelProvider) SWTUtils.configureColumns}
+     *                {@link SWTUtils#configureColumns(TableViewer, List, CellLabelProvider) SWTUtils.configureColumns}
      */
     protected void configureCell(TableItem item, XSSFCell cell, int index, String fieldId) {
         // Implementação deve ser feita pela classe que herda.

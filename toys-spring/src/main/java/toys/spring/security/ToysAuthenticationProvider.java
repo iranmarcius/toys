@@ -1,8 +1,8 @@
 package toys.spring.security;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -40,7 +40,7 @@ import java.util.List;
  * @since 09/10/2018
  */
 public abstract class ToysAuthenticationProvider implements AuthenticationProvider {
-    protected final Logger logger = LogManager.getFormatterLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
     private String masterKey;
 
     /**
@@ -122,12 +122,12 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
         List<GrantedAuthority> roles = new ArrayList<>();
         String[] rolenames = getRoles(username);
         for (String rolename : rolenames) {
-            logger.debug("Atribuindo role: %s", rolename);
+            logger.debug("Atribuindo role: {}", rolename);
             roles.add(new SimpleGrantedAuthority("ROLE_" + rolename));
         }
 
         UserDetails principal = new User(username, password, true, true, credentialsNonExpired, true, roles);
-        logger.debug("Criando principal: %s", principal);
+        logger.debug("Criando principal: {}", principal);
 
         return new UsernamePasswordAuthenticationToken(principal, password, roles);
     }

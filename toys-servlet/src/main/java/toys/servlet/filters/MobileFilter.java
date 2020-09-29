@@ -1,16 +1,14 @@
 package toys.servlet.filters;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import toys.ToysConsts;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-
-import static toys.ToysConsts.ATTR_MOBILE;
 
 /**
  * Este filtro analisa o cabeçalho User-Agent da requisição para determinar se o dispositivo de origem é
@@ -19,7 +17,7 @@ import static toys.ToysConsts.ATTR_MOBILE;
  * @author Iran
  */
 public class MobileFilter implements Filter {
-    private final Logger logger = LogManager.getFormatterLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -34,7 +32,7 @@ public class MobileFilter implements Filter {
             Object o = session.getAttribute(ToysConsts.ATTR_MOBILE);
             if (!(o instanceof Boolean)) {
                 String userAgent = request.getHeader("User-Agent");
-                logger.debug("Dispositivo detectado: %s", userAgent);
+                logger.debug("Dispositivo detectado: {}", userAgent);
                 session.setAttribute(ToysConsts.ATTR_MOBILE, StringUtils.containsIgnoreCase(userAgent, "Mobile"));
             }
         }

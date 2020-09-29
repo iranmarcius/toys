@@ -3,7 +3,7 @@ package toys;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
-import org.apache.logging.log4j.LogManager;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 
@@ -21,7 +21,6 @@ public final class EmailUtils {
     public static final String AUTH_SMTP = "mail.smtp.auth.login.disable";
 
     private EmailUtils() {
-        super();
     }
 
 	/**
@@ -72,13 +71,14 @@ public final class EmailUtils {
 	 * @see #criarEmailHtml(String, String, String, String, String, String, String)
      */
     public static synchronized boolean enviarEmailHtml(String hostname, String from, String replyTo, String to, String toName, String subject, String content) {
+        var logger = LoggerFactory.getLogger(EmailUtils.class);
         try {
             HtmlEmail email = criarEmailHtml(hostname, from, replyTo, to, toName, subject, content);
             email.send();
-            LogManager.getFormatterLogger(EmailUtils.class).debug("Email enviado para %s (%s).", to, toName);
+            logger.debug("Email enviado para {} ({}).", to, toName);
             return true;
         } catch (Exception e) {
-            LogManager.getFormatterLogger(EmailUtils.class).fatal("Erro enviando email para %s, (%s).", to, toName, e);
+            logger.error("Erro enviando email para {}, ({}).", to, toName, e);
             return false;
         }
     }
