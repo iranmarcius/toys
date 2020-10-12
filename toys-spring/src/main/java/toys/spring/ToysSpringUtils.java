@@ -72,7 +72,7 @@ public class ToysSpringUtils {
             if (auth != null) {
                 var authorities = new HashSet<String>();
                 for (GrantedAuthority ga : auth.getAuthorities())
-                    authorities.add(ga.getAuthority().substring(5));
+                    authorities.add(ga.getAuthority());
                 return authorities;
             }
         }
