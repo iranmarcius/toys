@@ -19,6 +19,7 @@
         <slf4j.version>1.7.30</slf4j.version>
         <hibernate.version>5.3.7.Final</hibernate.version>
         <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
+        <jjwt.version>0.11.2</jjwt.version>
     </properties>
 
     <parent>
@@ -426,8 +427,13 @@
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
-                <version>0.9.0</version>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.quartz-scheduler</groupId>
