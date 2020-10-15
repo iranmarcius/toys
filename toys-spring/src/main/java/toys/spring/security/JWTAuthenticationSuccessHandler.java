@@ -2,7 +2,6 @@ package toys.spring.security;
 
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -11,6 +10,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import toys.CollectionToys;
+import toys.ToysSecretKey;
 import toys.spring.ToysSpringUtils;
 
 import javax.crypto.BadPaddingException;
@@ -70,7 +70,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
                 var authorities = ToysSpringUtils.getAuthorities();
                 if (logger.isDebugEnabled())
                     logger.debug(String.format("Relacao de privilegios: %s", CollectionToys.asString(authorities, ";")));
-                var encodedAuthoritiesExpr = ToysSpringUtils.encodeAuthorities(authorities, key);
+                var encodedAuthoritiesExpr = ToysSpringUtils.encodeAuthorities(authorities, ToysSecretKey.getInstance());
                 logger.debug(String.format("Privilegios codificados: %s", encodedAuthoritiesExpr));
                 builder.claim(JWT_CLAIM_AUTHORITIES, encodedAuthoritiesExpr);
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
@@ -91,7 +91,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
             setExtraTokenData(builder, authentication);
 
             if (key != null)
-                builder.signWith(SignatureAlgorithm.HS256, key);
+                builder.signWith(key);
 
             String token = builder.compact();
             logger.debug("Token gerado: " + token);

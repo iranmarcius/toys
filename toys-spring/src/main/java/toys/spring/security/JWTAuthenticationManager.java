@@ -9,6 +9,7 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
 import toys.Crypt;
 import toys.ToysConsts;
+import toys.ToysSecretKey;
 import toys.exceptions.ToysException;
 import toys.servlet.SecurityToys;
 
@@ -40,7 +41,7 @@ public class JWTAuthenticationManager implements AuthenticationManager {
             Claims claims = SecurityToys.getClaims(token, key);
             if (claims != null) {
                 String encodedAuthoritiesExpr = (String) claims.get(ToysConsts.JWT_CLAIM_AUTHORITIES);
-                String decodedAuthorities = Crypt.decode(encodedAuthoritiesExpr, key);
+                String decodedAuthorities = Crypt.decode(encodedAuthoritiesExpr, ToysSecretKey.getInstance());
                 String[] authorities = decodedAuthorities.split(";");
                 List<GrantedAuthority> springAuthorities = Arrays.stream(authorities)
                     .map(a -> new SimpleGrantedAuthority("ROLE_" + a))

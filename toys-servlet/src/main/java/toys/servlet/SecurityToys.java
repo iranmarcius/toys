@@ -51,7 +51,11 @@ public class SecurityToys {
      */
     public static Claims getClaims(String token, Key key) {
         if (token != null)
-            return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+            return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
         else
             return null;
     }
