@@ -7,15 +7,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
-import toys.Crypt;
-import toys.ToysConsts;
-import toys.ToysSecretKey;
 import toys.exceptions.ToysException;
 import toys.servlet.SecurityToys;
 
 import javax.crypto.SecretKey;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -39,16 +36,14 @@ public class JWTAuthenticationManager implements AuthenticationManager {
         try {
             String token = (String) authentication.getCredentials();
             Claims claims = SecurityToys.getClaims(token, key);
-            if (claims != null) {
-                String encodedAuthoritiesExpr = (String) claims.get(ToysConsts.JWT_CLAIM_AUTHORITIES);
-                String decodedAuthorities = Crypt.decode(encodedAuthoritiesExpr, ToysSecretKey.getInstance());
-                String[] authorities = decodedAuthorities.split(";");
-                List<GrantedAuthority> springAuthorities = Arrays.stream(authorities)
+            Set<String> authorities = SecurityToys.extractAuthorities(claims);
+            if (authorities != null) {
+                List<GrantedAuthority> springAuthorities = authorities.stream()
                     .map(a -> new SimpleGrantedAuthority("ROLE_" + a))
                     .collect(Collectors.toList());
                 return new PreAuthenticatedAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), springAuthorities);
             } else {
-                throw new ToysException("Nenhuma claim do token.");
+                throw new ToysException("Autoridades nao foram encontradas no token.");
             }
         } catch (Exception e) {
             throw new PreAuthenticatedCredentialsNotFoundException("Erro extraindo informacoes de pre-autenticacao do token.", e);

@@ -1,10 +1,25 @@
 package toys.servlet;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
+import toys.CollectionToys;
+import toys.Crypt;
+import toys.ToysSecretKey;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static toys.ToysConsts.JWT_CLAIM_AUTHORITIES;
 
 /**
  * Métodos utilitários para implementações de segurança.
@@ -70,6 +85,46 @@ public class SecurityToys {
      */
     public static Claims getClaims(HttpServletRequest request, Key key) {
         return getClaims(getJWT(request), key);
+    }
+
+    /**
+     * Converte a relação de privilégios em uma string e a criptografa com a chave fornecida.
+     *
+     * @param authorities Coleção de privilégios.
+     * @return String
+     */
+    public static String encodeAuthorities(Set<String> authorities) throws
+        IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+        var expr = CollectionToys.asString(authorities, ";");
+        return Crypt.encode(expr, ToysSecretKey.getInstance());
+    }
+
+    /**
+     * Método de conveniência para padronização do armazenamento da claim de autoridades no token.
+     *
+     * @param builder     Referência para o builder utilizado na construção do token.
+     * @param authorities Relação de autoridades.
+     */
+    public static void setAuthorities(JwtBuilder builder, Set<String> authorities) throws
+        InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException {
+        builder.claim(JWT_CLAIM_AUTHORITIES, encodeAuthorities(authorities));
+    }
+
+    /**
+     * Decodifica e extrai as autoridades armazenadas em um token.
+     *
+     * @param claims Claims do token.
+     * @return Retorna uma coleção de autoridades de um usuário.
+     */
+    public static Set<String> extractAuthorities(Claims claims) throws
+        IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+
+        if (claims == null || !claims.containsKey(JWT_CLAIM_AUTHORITIES))
+            return Collections.emptySet();
+
+        String encodedAuthorities = (String) claims.get(JWT_CLAIM_AUTHORITIES);
+        String decodedAuthorities = Crypt.decode(encodedAuthorities, ToysSecretKey.getInstance());
+        return Arrays.stream(decodedAuthorities.split(";")).collect(Collectors.toSet());
     }
 
 }

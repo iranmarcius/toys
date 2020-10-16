@@ -5,17 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import toys.CollectionToys;
-import toys.Crypt;
 import toys.servlet.WebAppUtils;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -65,7 +57,7 @@ public class ToysSpringUtils {
      *
      * @return <code>List&lt;String&gt;</code>
      */
-    public static synchronized Set<String> getAuthorities() {
+    public static Set<String> getAuthorities() {
         SecurityContext sc = SecurityContextHolder.getContext();
         if (sc != null) {
             Authentication auth = sc.getAuthentication();
@@ -77,18 +69,6 @@ public class ToysSpringUtils {
             }
         }
         return Collections.emptySet();
-    }
-
-    /**
-     * Converte a relação de privilégios em uma string e a criptografa com a chave fornecida.
-     *
-     * @param authorities Coleção de privilégios.
-     * @param key         Chave de codificação.
-     * @return String
-     */
-    public static synchronized String encodeAuthorities(Set<String> authorities, Key key) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
-        var expr = CollectionToys.asString(authorities, ";");
-        return Crypt.encode(expr, key);
     }
 
     /**

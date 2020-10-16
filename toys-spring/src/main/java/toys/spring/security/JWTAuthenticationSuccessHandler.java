@@ -10,7 +10,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import toys.CollectionToys;
-import toys.ToysSecretKey;
+import toys.servlet.SecurityToys;
 import toys.spring.ToysSpringUtils;
 
 import javax.crypto.BadPaddingException;
@@ -70,9 +70,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
                 var authorities = ToysSpringUtils.getAuthorities();
                 if (logger.isDebugEnabled())
                     logger.debug(String.format("Relacao de privilegios: %s", CollectionToys.asString(authorities, ";")));
-                var encodedAuthoritiesExpr = ToysSpringUtils.encodeAuthorities(authorities, ToysSecretKey.getInstance());
-                logger.debug(String.format("Privilegios codificados: %s", encodedAuthoritiesExpr));
-                builder.claim(JWT_CLAIM_AUTHORITIES, encodedAuthoritiesExpr);
+                SecurityToys.setAuthorities(builder, authorities);
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
                 logger.fatal("Erro codificando privilegios.", e);
                 throw new IOException(e);
@@ -88,6 +86,7 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
                 builder.setExpiration(new Date(System.currentTimeMillis() + ttl));
             }
 
+            // Insere eventuais dados adicionais ao token.
             setExtraTokenData(builder, authentication);
 
             if (key != null)
