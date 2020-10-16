@@ -107,7 +107,7 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
      * @return <code>String[]</code>
      */
     protected String[] getRoles(String username) {
-        return new String[] {"ROLE_AUTHENTICADED_USER"};
+        return new String[] {"AUTHENTICADED_USER"};
     }
 
     /**
@@ -123,7 +123,7 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
         String[] rolenames = getRoles(username);
         for (String rolename : rolenames) {
             logger.debug("Atribuindo role: {}", rolename);
-            roles.add(new SimpleGrantedAuthority("ROLE_" + rolename));
+            roles.add(new SimpleGrantedAuthority(rolename));
         }
 
         UserDetails principal = new User(username, password, true, true, credentialsNonExpired, true, roles);

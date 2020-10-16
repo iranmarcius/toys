@@ -39,7 +39,7 @@ public class JWTAuthenticationManager implements AuthenticationManager {
             Set<String> authorities = SecurityToys.extractAuthorities(claims);
             if (authorities != null) {
                 List<GrantedAuthority> springAuthorities = authorities.stream()
-                    .map(a -> new SimpleGrantedAuthority("ROLE_" + a))
+                    .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
                 return new PreAuthenticatedAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(), springAuthorities);
             } else {
