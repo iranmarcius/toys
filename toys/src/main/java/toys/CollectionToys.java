@@ -93,10 +93,10 @@ public class CollectionToys {
      * @param l Lista com elementos dupicados.
      * @return Lista com elementos distintos.
      */
-    public static List distinctList(List<?> l) {
-        List<Object> result = new ArrayList<>(l.size());
+    public static <T> List<T> distinctList(List<T> l) {
+        List<T> result = new ArrayList<>(l.size());
         Set<Identity> distinct = new HashSet<>();
-        for (Object entity : l) {
+        for (T entity : l) {
             if (distinct.add(new Identity(entity)))
                 result.add(entity);
         }
