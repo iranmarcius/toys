@@ -1,24 +1,23 @@
 package toys.tests.junit;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import toys.ArrayToys;
 
-import static org.junit.Assert.assertEquals;
+class ArrayToysTest {
+    private static Integer[] array;
 
-public class ArrayToysTest {
-    private Integer[] array;
-
-    @Before
-    public void setUp() throws Exception {
+    @BeforeAll
+    public static void setUp() {
         array = new Integer[] {0, 1, 2, 3, 4, 5};
     }
 
     @Test
-    public void testToString() {
-        assertEquals(ArrayToys.toString(array), "0, 1, 2, 3, 4, 5");
-        assertEquals(ArrayToys.toString(array, "-"), "0-1-2-3-4-5");
-        assertEquals(ArrayToys.toString(array, "-", "'"), "'0'-'1'-'2'-'3'-'4'-'5'");
+    void testToString() {
+        Assertions.assertEquals("0, 1, 2, 3, 4, 5", ArrayToys.toString(array));
+        Assertions.assertEquals("0-1-2-3-4-5", ArrayToys.toString(array, "-"));
+        Assertions.assertEquals("'0'-'1'-'2'-'3'-'4'-'5'", ArrayToys.toString(array, "-", "'"));
     }
 
 }

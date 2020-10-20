@@ -8,10 +8,10 @@ import static toys.ToysConsts.RE_EMAIL;
 import static toys.ToysConsts.RE_ZIP;
 
 
-public class RegExprsTest {
+class RegExprsTest {
 
 	@Test
-	public void testCep() {
+	void testCep() {
 		assertTrue("16035-460".matches(RE_ZIP));
 		assertTrue("16035460".matches(RE_ZIP));
 		assertFalse("82713".matches(RE_ZIP));
@@ -20,7 +20,7 @@ public class RegExprsTest {
 	}
 
 	@Test
-	public void testEmail() {
+	void testEmail() {
 		assertTrue("alguem@dominio.com.br".matches(RE_EMAIL));
 		assertTrue("alguem@dominio.br".matches(RE_EMAIL));
 		assertTrue("alguem.comsobrenome@dominio.com.br".matches(RE_EMAIL));

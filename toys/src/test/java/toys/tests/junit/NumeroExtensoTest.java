@@ -1,20 +1,21 @@
 package toys.tests.junit;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import toys.NumeroExtenso;
 
 import java.math.BigDecimal;
 
-public class NumeroExtensoTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class NumeroExtensoTest {
 
     @Test
-    public void testNumeroExtenso() {
+    void testNumeroExtenso() {
         NumeroExtenso ne = new NumeroExtenso();
-        Assert.assertEquals("dez reais", ne.toString(new BigDecimal(10)));
-        Assert.assertEquals("oitenta reais", ne.toString(new BigDecimal(80)));
-        Assert.assertEquals("um mil, duzentos e trinta e cinco reais", ne.toString(new BigDecimal(1235)));
-        Assert.assertEquals("sessenta e cinco mil, quatrocentos e sessenta e cinco reais e sessenta e cinco centavos", ne.toString(new BigDecimal(65465.65)));
+        assertEquals("dez reais", ne.toString(new BigDecimal(10)));
+        assertEquals("oitenta reais", ne.toString(new BigDecimal(80)));
+        assertEquals("um mil, duzentos e trinta e cinco reais", ne.toString(new BigDecimal(1235)));
+        assertEquals("sessenta e cinco mil, quatrocentos e sessenta e cinco reais e sessenta e cinco centavos", ne.toString(BigDecimal.valueOf(65465.65)));
     }
 
 }

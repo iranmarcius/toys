@@ -1,8 +1,8 @@
 package toys.tests.junit;
 
 import org.apache.commons.lang3.time.DateUtils;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import toys.DateToys;
 import toys.LocaleToys;
 
@@ -12,17 +12,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class DateToysTest {
+class DateToysTest {
 
-    @BeforeClass
+    @BeforeAll
     public static void before() {
         Locale.setDefault(LocaleToys.BRAZIL);
     }
 
     @Test
-    public void testCreateTime() {
+    void testCreateTime() {
         assertEquals("10:15:15", DateToys.createTime("10:15:15").toString());
         assertEquals("10:15:00", DateToys.createTime("10:15").toString());
         assertNull(DateToys.createTime("238:00:00"));
@@ -30,13 +30,13 @@ public class DateToysTest {
     }
 
     @Test
-    public void testTime2Ms() {
+    void testTime2Ms() {
         assertEquals(36000000L, DateToys.time2ms("10:00:00"));
         assertEquals(36000000L, DateToys.time2ms("10:00"));
     }
 
     @Test
-    public void testSetTimeFields() {
+    void testSetTimeFields() {
         Timestamp d = Timestamp.valueOf("1972-07-07 00:00:00.0");
         Time t = Time.valueOf("10:13:00");
         DateToys.setTimeFields(d, t);
@@ -44,7 +44,7 @@ public class DateToysTest {
     }
 
     @Test
-    public void testDeltaDays() {
+    void testDeltaDays() {
         Date d1 = java.sql.Timestamp.valueOf("1972-07-07 00:00:00.000");
         Date d2 = java.sql.Timestamp.valueOf("1972-07-27 12:00:00.000");
         assertEquals(20, DateToys.deltaDays(d1, d2, true));
@@ -63,28 +63,28 @@ public class DateToysTest {
     }
 
     @Test
-    public void testToDays() {
+    void testToDays() {
         assertEquals(0, DateToys.toDays(10000));
         assertEquals(1, DateToys.toDays(DateUtils.MILLIS_PER_DAY));
         assertEquals(1, DateToys.toDays(DateUtils.MILLIS_PER_DAY + 10000));
     }
 
     @Test
-    public void testToHours() {
+    void testToHours() {
         assertEquals(0, DateToys.toHours(10000));
         assertEquals(1, DateToys.toHours(DateUtils.MILLIS_PER_HOUR));
         assertEquals(1, DateToys.toHours(DateUtils.MILLIS_PER_HOUR + 10000));
     }
 
     @Test
-    public void testToMinutes() {
+    void testToMinutes() {
         assertEquals(0, DateToys.toMinutes(1000));
         assertEquals(1, DateToys.toMinutes(DateUtils.MILLIS_PER_MINUTE));
         assertEquals(1, DateToys.toMinutes(DateUtils.MILLIS_PER_MINUTE + 1000));
     }
 
     @Test
-    public void testFormatPlainTime() {
+    void testFormatPlainTime() {
         assertEquals("", DateToys.formatPlainTime("1111111111", 0));
         assertEquals("12:30", DateToys.formatPlainTime("123023987", 0));
         assertEquals("12:30:23", DateToys.formatPlainTime("123023987", 1));
@@ -93,7 +93,7 @@ public class DateToysTest {
     }
 
     @Test
-    public void testInterseccao() {
+    void testInterseccao() {
         Date f1d1 = java.sql.Date.valueOf("1972-07-07");
         Date f1d2 = java.sql.Date.valueOf("1972-07-31");
         assertFalse(DateToys.interseccao(f1d1, f1d2, java.sql.Date.valueOf("1972-07-01"), java.sql.Date.valueOf("1972-07-05")));
@@ -104,7 +104,7 @@ public class DateToysTest {
     }
 
     @Test
-    public void testContido() {
+    void testContido() {
         Date f1d1 = java.sql.Date.valueOf("1972-07-07");
         Date f1d2 = java.sql.Date.valueOf("1972-07-31");
         assertFalse(DateToys.contido(java.sql.Date.valueOf("1972-07-01"), java.sql.Date.valueOf("1972-07-05"), f1d1, f1d2));
@@ -115,19 +115,19 @@ public class DateToysTest {
     }
 
     @Test
-    public void testDiaSemana() {
+    void testDiaSemana() {
         assertEquals(Calendar.FRIDAY, DateToys.diaSemana(java.sql.Date.valueOf("1972-07-07")));
     }
 
     @Test
-    public void tetSetTo() {
+    void tetSetTo() {
         Date d = java.sql.Date.valueOf("1972-07-07");
         assertEquals("1972-07-07 00:00:00", String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", DateToys.inicioDia(d, LocaleToys.BRAZIL)));
         assertEquals("1972-07-07 23:59:59", String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", DateToys.finalDia(d, LocaleToys.BRAZIL)));
     }
 
     @Test
-    public void testExpirado() {
+    void testExpirado() {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, -2);
         assertTrue(DateToys.expirado(c.getTime(), DateUtils.MILLIS_PER_DAY)); // um dia
