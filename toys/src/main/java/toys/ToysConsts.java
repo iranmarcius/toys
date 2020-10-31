@@ -151,6 +151,10 @@ public class ToysConsts {
     public static final String HTTP_HEADER_AUTH_OPTIONS = "Auth-Options";
     public static final String HTTP_HEADER_USER_AGENT = "User-Agent";
 
+    // Nomes de loggers
+    public static final String LOGGER_AUTH = "auth";
+    public static final String LOGGER_USERS = "users";
+
     private ToysConsts() {
     }
 
