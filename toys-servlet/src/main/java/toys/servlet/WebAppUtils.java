@@ -22,7 +22,10 @@ public class WebAppUtils {
      * @param incluirUri     Flag indicando se a URI invocada deve ser incluída.
      * @param incluirReferer Flag indicando se o referer deve ser incluído.
      * @return <code>String</code>
+     * @deprecated A classe {@link RequestDetailsBuilder} oferece uma maneira mais fluente de se construir uma string
+     * com os detalhes de uma requisição.
      */
+    @Deprecated
     public static synchronized String requestDetails(HttpServletRequest request, String principal, boolean incluirUri, boolean incluirReferer) {
         StringBuilder sb = new StringBuilder("Requisicao [")
             .append(request.getRemoteAddr()).append(", ");
