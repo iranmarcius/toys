@@ -10,6 +10,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import toys.CollectionToys;
+import toys.servlet.RequestDetailsBuilder;
 import toys.servlet.SecurityToys;
 import toys.spring.ToysSpringUtils;
 
@@ -24,7 +25,8 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
-import static toys.ToysConsts.*;
+import static toys.ToysConsts.HTTP_HEADER_ACCESS_TOKEN;
+import static toys.ToysConsts.LOGGER_AUTH;
 
 /**
  * Este handler é responsável por gerar um JWT e retorná-lo através do cabeçalho <code>Authorization</code>.
@@ -97,20 +99,8 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
 
             response.setHeader(HTTP_HEADER_ACCESS_TOKEN, token);
 
-            // Registra a autenticação no log
-            StringBuilder sb = new StringBuilder()
-                .append(principal).append(" - ")
-                .append("ip=").append(request.getRemoteAddr());
-            String referer = request.getHeader(HTTP_HEADER_REFERER);
-            if (referer != null)
-                sb.append(" - ").append(HTTP_HEADER_REFERER).append("=").append(referer);
-            String userAgent = request.getHeader(HTTP_HEADER_USER_AGENT);
-            if (userAgent != null)
-                sb.append(" - ").append(HTTP_HEADER_USER_AGENT).append("=").append(userAgent);
-            String xForwardedFor = request.getHeader(HTTP_HEADER_X_FORWARDED_FOR);
-            if (xForwardedFor != null)
-                sb.append(" - ").append(HTTP_HEADER_X_FORWARDED_FOR).append("=").append(xForwardedFor);
-            LoggerFactory.getLogger("auth").info(sb.toString());
+            LoggerFactory.getLogger(LOGGER_AUTH).info("Autenticacao bem sucedida - {}",
+                RequestDetailsBuilder.builder(request).withAll(principal).build());
 
         } else {
             logger.error("Nenhum nome de usuario encontrado no contexto para gerar o token.");
