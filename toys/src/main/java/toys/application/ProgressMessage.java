@@ -72,4 +72,24 @@ public class ProgressMessage {
         return pid;
     }
 
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public void setCurrent(int current) {
+        this.current = current;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
+    }
+
 }
