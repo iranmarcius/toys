@@ -1,45 +1,42 @@
 /*
- * Criado em 22/02/2012 17:42:45 
+ * Criado em 22/02/2012 17:42:45
  */
 
 package toys.application;
 
+import toys.enums.Level;
+
 /**
- * Esta interface define as implementações necessárias para classes de processos
- * com monitoramento de progresso externo.
+ * Esta interface define as implementações comuns para monitoramente.
+ *
  * @author Iran
  */
 public interface ProgressNotifier {
-	
-	/**
-	 * Inicializa o monitor de progresso com o texto e o total de passos.
-	 * @param texto Texto para ser apresentado.
-	 * @param total total de passos que serão executados no processo.
-	 */
-	void start(String texto, int total);
-	
-	/**
-	 * Notifica a execução de um passo.
-	 * @param quantidade Quantidade de passos.
-	 * @param texto Texto opcional para ser exibido.
-	 */
-	void step(int quantidade, String texto);
-	
-	/**
-	 * Envia um texto a ser exibido pelo monitor de progresso. 
-	 * @param texto Texto.
-	 */
-	void text(String texto);
-	
-	/**
-	 * Envia uma notificação de cancelamento para o monitor de progresso.
-	 */
-	void cancel();
-	
-	/**
-	 * Retorna se o processo foi cancelado.
-	 * @return <code>boolean</code>
-	 */
-	boolean isCancelled();
-	
+    void start(String text, Object... params);
+
+    void step(int ammount, String text, Level level, Object... params);
+
+    void step(int ammount, String text, Object... params);
+
+    void text(String text, Level level, Object... params);
+
+    void text(String text, Object... params);
+
+    void cancel();
+
+    boolean isCancelled();
+
+    int getTotal();
+
+    int getCurrent();
+
+    int getPercent();
+
+    String getText();
+
+    Level getLevel();
+
+    String getPid();
+
+    void onEvent(ProgressNotifier notifier);
 }
