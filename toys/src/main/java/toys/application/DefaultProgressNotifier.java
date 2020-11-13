@@ -10,7 +10,7 @@ import toys.enums.Level;
  */
 public class DefaultProgressNotifier implements ProgressNotifier {
     private final String pid;
-    private final int total;
+    private int total;
     private int current;
     private String text;
     private Level level;
@@ -25,6 +25,12 @@ public class DefaultProgressNotifier implements ProgressNotifier {
     public void start(String text, Object... params) {
         current = 0;
         text(text, params);
+    }
+
+    @Override
+    public void start(int total, String text, Object... params) {
+        this.total = total;
+        start(text, params);
     }
 
     @Override
