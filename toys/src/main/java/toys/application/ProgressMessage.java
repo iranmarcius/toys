@@ -32,6 +32,18 @@ public class ProgressMessage {
         this(pid, 0, 0, text, null);
     }
 
+    public ProgressMessage(int total, int current, String text) {
+        this(null, total, current, text);
+    }
+
+    public ProgressMessage(int total, int current) {
+        this(null, total, current);
+    }
+
+    public ProgressMessage(String text) {
+        this(null, text);
+    }
+
     public ProgressMessage(ProgressNotifier notifier) {
         this(
             notifier.getPid(),

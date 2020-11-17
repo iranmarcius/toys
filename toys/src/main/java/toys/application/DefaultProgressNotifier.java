@@ -21,6 +21,10 @@ public class DefaultProgressNotifier implements ProgressNotifier {
         this.total = total;
     }
 
+    public DefaultProgressNotifier(int total) {
+        this(null, total);
+    }
+
     @Override
     public void start(String text, Object... params) {
         current = 0;
