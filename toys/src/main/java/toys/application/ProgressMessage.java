@@ -28,8 +28,12 @@ public class ProgressMessage {
         this(pid, total, current, null);
     }
 
+    public ProgressMessage(String pid, String text, Level level) {
+        this(pid, -1, -1, text, level);
+    }
+
     public ProgressMessage(String pid, String text) {
-        this(pid, 0, 0, text, null);
+        this(pid, text, null);
     }
 
     public ProgressMessage(int total, int current, String text) {
