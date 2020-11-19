@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class HttpToys {
 
+    private HttpToys() {
+    }
+
 	/**
 	 * Retorna o valor do cabeçalho <code>User-Agent</code> enviado na requisição.
 	 * @param request Referência para a requisição.
