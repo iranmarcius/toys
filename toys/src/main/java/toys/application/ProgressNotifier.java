@@ -12,9 +12,11 @@ import toys.enums.Level;
  * @author Iran
  */
 public interface ProgressNotifier {
+    void start(int total, String text, Object... params);
+
     void start(String text, Object... params);
 
-    void start(int total, String text, Object... params);
+    void start(int total);
 
     void step(int ammount, String text, Level level, Object... params);
 
