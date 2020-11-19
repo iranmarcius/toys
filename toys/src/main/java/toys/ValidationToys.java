@@ -43,7 +43,7 @@ public class ValidationToys {
 
         // converte a string para um array de bytes para fazer os cálculos de validação
         int[] b = StringToys.toIntArray(cpfLimpo);
-        if (b == null || b.length < 11)
+        if (b.length < 11)
             return false;
 
         // calcula o primeiro dígito verificador

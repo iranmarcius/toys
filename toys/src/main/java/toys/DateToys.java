@@ -5,11 +5,13 @@
 
 package toys;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -164,107 +166,6 @@ public final class DateToys {
     }
 
     /**
-     * Seta a hora do calendário informado para o início do dia.
-     */
-    public static void inicioDia(Calendar c) {
-        c.set(Calendar.MILLISECOND, c.getMinimum(Calendar.MILLISECOND));
-        c.set(Calendar.SECOND, c.getMinimum(Calendar.SECOND));
-        c.set(Calendar.MINUTE, c.getMinimum(Calendar.MINUTE));
-        c.set(Calendar.HOUR_OF_DAY, c.getMinimum(Calendar.HOUR_OF_DAY));
-    }
-
-    /**
-     * Seta a hora da data para o início do dia.
-     *
-     * @param data   Data que será alterada.
-     * @param locale Locale que será utilizado.
-     */
-    public static Date inicioDia(Date data, Locale locale) {
-        Calendar c = Calendar.getInstance(locale);
-        c.setTime(data);
-        inicioDia(c);
-        return c.getTime();
-    }
-
-    /**
-     * Seta a hora do calendário informado para o início do dia.
-     */
-    public static void finalDia(Calendar c) {
-        c.set(Calendar.HOUR_OF_DAY, c.getMaximum(Calendar.HOUR_OF_DAY));
-        c.set(Calendar.MINUTE, c.getMaximum(Calendar.MINUTE));
-        c.set(Calendar.SECOND, c.getMaximum(Calendar.SECOND));
-        c.set(Calendar.MILLISECOND, c.getMaximum(Calendar.MILLISECOND));
-    }
-
-    /**
-     * Seta a hora da data para o final do dia.
-     *
-     * @param data   Data que será modificada.
-     * @param locale Locale que será utilizado.
-     */
-    public static Date finalDia(Date data, Locale locale) {
-        Calendar c = Calendar.getInstance(locale);
-        c.setTime(data);
-        finalDia(c);
-        return c.getTime();
-    }
-
-    /**
-     * Seta o calendário para o primeiro dia do mês.
-     */
-    public static void inicioMes(Calendar c) {
-        c.set(Calendar.DAY_OF_MONTH, c.getMinimum(Calendar.DAY_OF_MONTH));
-    }
-
-    /**
-     * Seta o calendário para o último dia do mês corrente;
-     */
-    public static void finalMes(Calendar c) {
-        c.set(Calendar.DAY_OF_MONTH, c.getMaximum(Calendar.DAY_OF_MONTH));
-    }
-
-    /**
-     * Seta o calendário para o primeiro dia do ano.
-     */
-    public static void inicioAno(Calendar c) {
-        inicioMes(c);
-        c.set(Calendar.MONTH, c.getMinimum(Calendar.MONTH));
-    }
-
-    /**
-     * Seta o calendário para o último dia do ano.
-     */
-    public static void finalAno(Calendar c) {
-        inicioMes(c);
-        c.set(Calendar.MONTH, c.getMaximum(Calendar.MONTH));
-        finalMes(c);
-    }
-
-    /**
-     * Seta a data do calendário para o primeiro dia da semana anterior ou igual ao
-     * início do mês.
-     *
-     * @param c Calendário que será modificado
-     */
-    public static void inicioSemana(Calendar c) {
-        inicioMes(c);
-        int d = c.get(Calendar.DAY_OF_WEEK);
-        c.add(Calendar.DAY_OF_MONTH, -d + 1);
-    }
-
-    /**
-     * Seta a data de um calendário para o último dia da semana posterior ou igual ao
-     * final do mês.
-     *
-     * @param c Calendário que será modificado
-     */
-    public static void finalSemana(Calendar c) {
-        c.set(Calendar.DAY_OF_MONTH, c.getMaximum(Calendar.DAY_OF_MONTH));
-        int d = c.get(Calendar.DAY_OF_WEEK);
-        c.add(Calendar.DAY_OF_MONTH, 7 - d);
-    }
-
-    /**
      * Retorna o valor de um campo de data.
      *
      * @param date  Data de onde a informação será obtida
@@ -353,7 +254,7 @@ public final class DateToys {
 
         int d =
             ((c2.get(Calendar.YEAR) - c1.get(Calendar.YEAR)) * 12) +
-                (c2.get(Calendar.MONTH) - c1.get(Calendar.MONTH));
+            (c2.get(Calendar.MONTH) - c1.get(Calendar.MONTH));
         if (c2.get(Calendar.DAY_OF_MONTH) < c1.get(Calendar.DAY_OF_MONTH)) {
             d--;
         }
@@ -532,16 +433,12 @@ public final class DateToys {
         ms = ms % DateUtils.MILLIS_PER_MINUTE;
         int s = (int) (ms / DateUtils.MILLIS_PER_SECOND);
         ms = ms % DateUtils.MILLIS_PER_SECOND;
-        switch (pattern) {
-            case 0:
-                return String.format("%02d:%02d", h, m);
-            case 1:
-                return String.format("%02d:%02d:%02d", h, m, s);
-            case 3:
-                return String.format("%02d:%02d:%02d.%03d", h, m, s, ms);
-            default:
-                return "";
-        }
+        return switch (pattern) {
+            case 0 -> String.format("%02d:%02d", h, m);
+            case 1 -> String.format("%02d:%02d:%02d", h, m, s);
+            case 3 -> String.format("%02d:%02d:%02d.%03d", h, m, s, ms);
+            default -> "";
+        };
     }
 
     /**
@@ -551,15 +448,15 @@ public final class DateToys {
      * @param d2 Data 2
      * @return <code>boolean</code>
      */
-    public static boolean mesmoDia(Date d1, Date d2) {
+    public static boolean sameDay(Date d1, Date d2) {
         Calendar c1 = Calendar.getInstance();
         c1.setTime(d1);
         Calendar c2 = Calendar.getInstance();
         c2.setTime(d2);
         return
             (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)) &&
-                (c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH)) &&
-                (c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH));
+            (c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH)) &&
+            (c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH));
     }
 
     /**
@@ -570,7 +467,7 @@ public final class DateToys {
      * @return <code>String</code>
      */
     public static String toString(Date d, Locale locale) {
-        String format = null;
+        String format;
         if (locale.equals(LocaleToys.BRAZIL)) format = "%1$td/%1$tm/%1$tY";
         else if (locale.equals(Locale.ENGLISH)) format = "%1$tm/%1$td/%1$tY";
         else format = "%1$tY-%1$tm-%1$td";
@@ -595,13 +492,13 @@ public final class DateToys {
      * @param d2 Data final da faixa
      * @return <code>boolean</code>
      */
-    public static boolean estaEntre(Date d, Date d1, Date d2) {
+    public static boolean between(Date d, Date d1, Date d2) {
         return
             d != null &&
-                d1 != null &&
-                d1.getTime() <= d.getTime() &&
-                d2 != null &&
-                d2.getTime() >= d.getTime();
+            d1 != null &&
+            d1.getTime() <= d.getTime() &&
+            d2 != null &&
+            d2.getTime() >= d.getTime();
     }
 
     /**
@@ -612,13 +509,13 @@ public final class DateToys {
      * @return Retorna TRUE se o valor retornado por {@link System#currentTimeMillis()} estiver contido
      * entre as duas datas.
      */
-    public static boolean estaEntre(Date d1, Date d2) {
+    public static boolean between(Date d1, Date d2) {
         long agora = System.currentTimeMillis();
         return
             d1 != null &&
-                d1.getTime() <= agora &&
-                d2 != null &&
-                d2.getTime() >= agora;
+            d1.getTime() <= agora &&
+            d2 != null &&
+            d2.getTime() >= agora;
     }
 
     /**
@@ -723,12 +620,12 @@ public final class DateToys {
      * @param f2d2 Data 2 da segunda faixa.
      * @return <code>boolean</code>
      */
-    public static boolean interseccao(Date f1d1, Date f1d2, Date f2d1, Date f2d2) {
+    public static boolean intersects(Date f1d1, Date f1d2, Date f2d1, Date f2d2) {
         return
             NumberToys.inRange(f1d1.getTime(), f2d1.getTime(), f2d2.getTime()) ||
-                NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime()) ||
-                NumberToys.inRange(f2d1.getTime(), f1d1.getTime(), f1d2.getTime()) ||
-                NumberToys.inRange(f2d2.getTime(), f1d1.getTime(), f1d2.getTime());
+            NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime()) ||
+            NumberToys.inRange(f2d1.getTime(), f1d1.getTime(), f1d2.getTime()) ||
+            NumberToys.inRange(f2d2.getTime(), f1d1.getTime(), f1d2.getTime());
     }
 
     /**
@@ -740,7 +637,7 @@ public final class DateToys {
      * @param f2d2 Segunda data da segunda faixa.
      * @return <code>boolean</code>
      */
-    public static boolean contido(Date f1d1, Date f1d2, Date f2d1, Date f2d2) {
+    public static boolean contains(Date f1d1, Date f1d2, Date f2d1, Date f2d2) {
         return
             NumberToys.inRange(f1d1.getTime(), f2d1.getTime(), f2d2.getTime()) &&
                 NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime());
@@ -754,7 +651,7 @@ public final class DateToys {
      * @param f Data final da faixa. Caso o valor seja nulo a verificação não será realizada para este parâmetro.
      * @return <code>boolean</code>
      */
-    public static boolean contido(Date d, Date i, Date f) {
+    public static boolean contains(Date d, Date i, Date f) {
         boolean contido = true;
         if (i != null)
             contido = d.getTime() >= i.getTime();
@@ -779,12 +676,26 @@ public final class DateToys {
     }
 
     /**
+     * Converte uma string em data utilizando o {@link DateUtils#parseDate(String, String...)} mas não emitindo
+     * nenhum erro caso a string não corresponda a uma data válida.
+     *
+     * @return <code>Date</code>
+     */
+    public static Date parseDate(String str, String... patterns) {
+        try {
+            return StringUtils.isNotBlank(str) ? DateUtils.parseDate(str, patterns) : null;
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    /**
      * Retorna o doa da semana à partir da data informada.
      *
      * @param d Data.
      * @return Dia da semana.
      */
-    public static int diaSemana(Date d) {
+    public static int weekday(Date d) {
         Calendar c = Calendar.getInstance(LocaleToys.BRAZIL);
         c.setTime(d);
         return c.get(Calendar.DAY_OF_WEEK);
@@ -797,7 +708,7 @@ public final class DateToys {
      * @param validade Validade.
      * @return <code>boolean</code>
      */
-    public static boolean expirado(Date d, long validade) {
+    public static boolean expired(Date d, long validade) {
         return d.getTime() + validade < System.currentTimeMillis();
     }
 

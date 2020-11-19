@@ -96,42 +96,35 @@ class DateToysTest {
     void testInterseccao() {
         Date f1d1 = java.sql.Date.valueOf("1972-07-07");
         Date f1d2 = java.sql.Date.valueOf("1972-07-31");
-        assertFalse(DateToys.interseccao(f1d1, f1d2, java.sql.Date.valueOf("1972-07-01"), java.sql.Date.valueOf("1972-07-05")));
-        assertTrue(DateToys.interseccao(f1d1, f1d2, java.sql.Date.valueOf("1972-07-01"), java.sql.Date.valueOf("1972-07-07")));
-        assertTrue(DateToys.interseccao(f1d1, f1d2, java.sql.Date.valueOf("1972-07-07"), java.sql.Date.valueOf("1972-07-09")));
-        assertTrue(DateToys.interseccao(f1d1, f1d2, java.sql.Date.valueOf("1972-07-20"), java.sql.Date.valueOf("1972-08-25")));
-        assertFalse(DateToys.interseccao(f1d1, f1d2, java.sql.Date.valueOf("1972-08-01"), java.sql.Date.valueOf("1972-08-25")));
+        assertFalse(DateToys.intersects(f1d1, f1d2, java.sql.Date.valueOf("1972-07-01"), java.sql.Date.valueOf("1972-07-05")));
+        assertTrue(DateToys.intersects(f1d1, f1d2, java.sql.Date.valueOf("1972-07-01"), java.sql.Date.valueOf("1972-07-07")));
+        assertTrue(DateToys.intersects(f1d1, f1d2, java.sql.Date.valueOf("1972-07-07"), java.sql.Date.valueOf("1972-07-09")));
+        assertTrue(DateToys.intersects(f1d1, f1d2, java.sql.Date.valueOf("1972-07-20"), java.sql.Date.valueOf("1972-08-25")));
+        assertFalse(DateToys.intersects(f1d1, f1d2, java.sql.Date.valueOf("1972-08-01"), java.sql.Date.valueOf("1972-08-25")));
     }
 
     @Test
     void testContido() {
         Date f1d1 = java.sql.Date.valueOf("1972-07-07");
         Date f1d2 = java.sql.Date.valueOf("1972-07-31");
-        assertFalse(DateToys.contido(java.sql.Date.valueOf("1972-07-01"), java.sql.Date.valueOf("1972-07-05"), f1d1, f1d2));
-        assertFalse(DateToys.contido(java.sql.Date.valueOf("1972-07-01"), java.sql.Date.valueOf("1972-07-07"), f1d1, f1d2));
-        assertTrue(DateToys.contido(java.sql.Date.valueOf("1972-07-07"), java.sql.Date.valueOf("1972-07-09"), f1d1, f1d2));
-        assertFalse(DateToys.contido(java.sql.Date.valueOf("1972-07-20"), java.sql.Date.valueOf("1972-08-25"), f1d1, f1d2));
-        assertFalse(DateToys.contido(java.sql.Date.valueOf("1972-08-01"), java.sql.Date.valueOf("1972-08-25"), f1d1, f1d2));
+        assertFalse(DateToys.contains(java.sql.Date.valueOf("1972-07-01"), java.sql.Date.valueOf("1972-07-05"), f1d1, f1d2));
+        assertFalse(DateToys.contains(java.sql.Date.valueOf("1972-07-01"), java.sql.Date.valueOf("1972-07-07"), f1d1, f1d2));
+        assertTrue(DateToys.contains(java.sql.Date.valueOf("1972-07-07"), java.sql.Date.valueOf("1972-07-09"), f1d1, f1d2));
+        assertFalse(DateToys.contains(java.sql.Date.valueOf("1972-07-20"), java.sql.Date.valueOf("1972-08-25"), f1d1, f1d2));
+        assertFalse(DateToys.contains(java.sql.Date.valueOf("1972-08-01"), java.sql.Date.valueOf("1972-08-25"), f1d1, f1d2));
     }
 
     @Test
     void testDiaSemana() {
-        assertEquals(Calendar.FRIDAY, DateToys.diaSemana(java.sql.Date.valueOf("1972-07-07")));
-    }
-
-    @Test
-    void tetSetTo() {
-        Date d = java.sql.Date.valueOf("1972-07-07");
-        assertEquals("1972-07-07 00:00:00", String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", DateToys.inicioDia(d, LocaleToys.BRAZIL)));
-        assertEquals("1972-07-07 23:59:59", String.format("%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS", DateToys.finalDia(d, LocaleToys.BRAZIL)));
+        assertEquals(Calendar.FRIDAY, DateToys.weekday(java.sql.Date.valueOf("1972-07-07")));
     }
 
     @Test
     void testExpirado() {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DAY_OF_MONTH, -2);
-        assertTrue(DateToys.expirado(c.getTime(), DateUtils.MILLIS_PER_DAY)); // um dia
-        assertFalse(DateToys.expirado(c.getTime(), DateUtils.MILLIS_PER_DAY * 3)); // três dias
+        assertTrue(DateToys.expired(c.getTime(), DateUtils.MILLIS_PER_DAY)); // um dia
+        assertFalse(DateToys.expired(c.getTime(), DateUtils.MILLIS_PER_DAY * 3)); // três dias
     }
 
 }
