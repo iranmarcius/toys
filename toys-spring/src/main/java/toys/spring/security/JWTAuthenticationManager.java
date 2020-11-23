@@ -25,10 +25,12 @@ import java.util.stream.Collectors;
  */
 public class JWTAuthenticationManager implements AuthenticationManager {
     private final SecretKey key;
+    private final String issuer;
 
-    public JWTAuthenticationManager(SecretKey key) {
+    public JWTAuthenticationManager(SecretKey key, String issuer) {
         super();
         this.key = key;
+        this.issuer = issuer;
     }
 
     @Override
@@ -36,6 +38,9 @@ public class JWTAuthenticationManager implements AuthenticationManager {
         try {
             String token = (String) authentication.getCredentials();
             Claims claims = SecurityToys.getClaims(token, key);
+            String tokenIssuer = claims.getIssuer();
+            if (!tokenIssuer.equals(issuer))
+                throw new SecurityException(String.format("O emissor do token nao e valido: %s", tokenIssuer));
             Set<String> authorities = SecurityToys.extractAuthorities(claims);
             if (authorities != null) {
                 List<GrantedAuthority> springAuthorities = authorities.stream()
