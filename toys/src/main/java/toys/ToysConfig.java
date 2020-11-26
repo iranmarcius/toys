@@ -20,10 +20,9 @@ import java.util.Properties;
 public class ToysConfig {
     public static final String CONFIG_FILENAME = "toys-config.properties";
     private static ToysConfig instance;
-    private Properties props;
+    private final Properties props;
 
     protected ToysConfig() {
-        super();
 
         // Verifica a existência do arquivo de configuração.
         URL propsURL = getClass().getClassLoader().getResource(CONFIG_FILENAME);
