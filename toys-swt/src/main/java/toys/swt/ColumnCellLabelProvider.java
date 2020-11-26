@@ -48,7 +48,7 @@ public class ColumnCellLabelProvider<T> extends CellLabelProvider {
 	protected String getText(T element, String fieldId, int index) {
 		try {
 			if (element != null) {
-				Object o = BeanToys.getValor(element, fieldId);
+				Object o = BeanToys.getValue(element, fieldId);
 				return o != null ? o.toString() : "";
 			} else {
 				return "";

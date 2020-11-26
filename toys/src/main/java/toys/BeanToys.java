@@ -27,7 +27,7 @@ public final class BeanToys {
      * @return Retorna uma referência para o método procurado ou <code>null</code> caso nenhum
      * método seja encontrado ou não seja possível acessá-lo.
      */
-    public static Method pesquisarMetodo(Method[] methods, String regex) {
+    public static Method findMethod(Method[] methods, String regex) {
         for (Method m : methods)
             if (m.getName().matches(regex) && Modifier.isPublic(m.getModifiers()))
                 return m;
@@ -43,7 +43,7 @@ public final class BeanToys {
      * @return Retorna o campo cujo nome corresponda ao informado ou <code>null</code> caso
      * não exista nenhum ou não seja possível ler seu valor.
      */
-    public static Field pesquisarCampo(Field[] fields, String nome) {
+    public static Field findField(Field[] fields, String nome) {
         for (Field f : fields)
             if (f.getName().equals(nome) && Modifier.isPublic(f.getModifiers()))
                 return f;
@@ -57,13 +57,13 @@ public final class BeanToys {
      * @param prop Nome da propriedade
      * @return Retorna o tipo da propriedade
      */
-    public static Class<?> getTipoPropriedade(Object obj, String prop) {
+    public static Class<?> getPropType(Object obj, String prop) {
         String regex = getGetterRegExpr(prop);
-        Method m = pesquisarMetodo(obj.getClass().getMethods(), regex);
+        Method m = findMethod(obj.getClass().getMethods(), regex);
         if (m != null) {
             return m.getReturnType();
         } else {
-            Field f = pesquisarCampo(obj.getClass().getFields(), prop);
+            Field f = findField(obj.getClass().getFields(), prop);
             if (f != null)
                 return f.getType();
             else
@@ -85,7 +85,7 @@ public final class BeanToys {
      * @return Retorna o valor da propriedade desejada ou <code>null</code> caso não seja possível
      * acessar o valor ou caso não exista nenhum método ou campo com o nome informado no objeto.
      */
-    public static Object getValor(Object obj, String prop) throws IllegalAccessException, InvocationTargetException {
+    public static Object getValue(Object obj, String prop) throws IllegalAccessException, InvocationTargetException {
 
         String restante = null;
         int i = prop.indexOf('.');
@@ -96,24 +96,24 @@ public final class BeanToys {
 
         // Tenta obter o valor pelo método
         String reGetter = getGetterRegExpr(prop);
-        Method m = pesquisarMetodo(obj.getClass().getMethods(), reGetter);
+        Method m = findMethod(obj.getClass().getMethods(), reGetter);
         if (m != null) {
             Object o = m.invoke(obj);
             if (restante == null)
                 return o;
             else
-                return getValor(o, restante);
+                return getValue(o, restante);
         }
 
         // Caso não tenha conseguido obter o valor através do método, tenta obter diretamente
         // do campo
-        Field f = pesquisarCampo(obj.getClass().getFields(), prop);
+        Field f = findField(obj.getClass().getFields(), prop);
         if (f != null) {
             Object o = f.get(obj);
             if (restante == null)
                 return o;
             else
-                return getValor(o, restante);
+                return getValue(o, restante);
         }
 
         // Caso nenhum dos dois métodos tenha funcionado, retorna um valor nulo
@@ -126,48 +126,45 @@ public final class BeanToys {
      * através do método setter. Caso não exista ou não seja acessível, tentará setar o valor diretamente
      * no campo declarado.
      *
-     * @param obj   Objeto com a propriedade que será modificada.
-     * @param prop  Nome da propriedade que será modificada.
-     * @param valor Valor que será atribuído
+     * @param obj      Objeto com a propriedade que será modificada.
+     * @param propName Nome da propriedade que será modificada.
+     * @param value    Valor que será atribuído
      */
-    public static void setValor(Object obj, String prop, Object valor) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
+    public static void setValue(Object obj, String propName, Object value) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
 
         String restante = null;
-        int i = prop.indexOf('.');
+        int i = propName.indexOf('.');
         if (i > -1) {
-            restante = prop.substring(i + 1);
-            prop = prop.substring(0, i);
+            restante = propName.substring(i + 1);
+            propName = propName.substring(0, i);
         }
 
         // tenta setar o valor através do setter
-        String setter = getSetterName(prop);
-        Method m = pesquisarMetodo(obj.getClass().getMethods(), "^" + setter + "$");
-        if (m != null) {
+        String setter = getSetterName(propName);
+        Method m = findMethod(obj.getClass().getMethods(), "^" + setter + "$");
+        if (m != null && m.getParameterCount() == 1) {
             if (restante == null) {
-                m.invoke(obj, valor);
-            } else {
-                Class<?> clazz = getTipoPropriedade(obj, prop);
-                if (clazz != null) {
-                    Object o = clazz.getConstructor().newInstance();
-                    setValor(o, restante, valor);
-                    m.invoke(obj, o);
+                Object valueToSet;
+                Class<?> paramType = m.getParameterTypes()[0];
+                if (value.getClass().equals(paramType)) {
+                    valueToSet = value;
+                } else {
+                    if (value instanceof String) {
+                        if (paramType.equals(Integer.class))
+                            valueToSet = Integer.parseInt(value.toString());
+                        else
+                            throw new ClassCastException();
+                    } else {
+                        throw new ClassCastException();
+                    }
                 }
-            }
-            return;
-        }
-
-        // caso não tenha sido possível setar o valor através do setter, tenta setar diretamente
-        // no campo
-        Field f = pesquisarCampo(obj.getClass().getFields(), prop);
-        if (f != null) {
-            if (restante == null) {
-                f.set(obj, valor);
+                m.invoke(obj, valueToSet);
             } else {
-                Class<?> clazz = getTipoPropriedade(obj, prop);
+                Class<?> clazz = getPropType(obj, propName);
                 if (clazz != null) {
                     Object o = clazz.getConstructor().newInstance();
-                    setValor(o, restante, valor);
-                    f.set(obj, o);
+                    setValue(o, restante, value);
+                    m.invoke(obj, o);
                 }
             }
         }
@@ -184,7 +181,7 @@ public final class BeanToys {
      */
     public static void populate(Object bean, String[] properties, Object[] values, int startIndex) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException {
         for (int i = 0; i < properties.length; i++)
-            setValor(bean, properties[i], values[startIndex + i]);
+            setValue(bean, properties[i], values[startIndex + i]);
     }
 
     /**
@@ -198,7 +195,7 @@ public final class BeanToys {
     public static String format(Object obj, String formato, String... props) throws IllegalAccessException, InvocationTargetException {
         Object[] valores = new Object[props.length];
         for (int i = 0; i < props.length; i++)
-            valores[i] = getValor(obj, props[i]);
+            valores[i] = getValue(obj, props[i]);
         return String.format(formato, valores);
     }
 

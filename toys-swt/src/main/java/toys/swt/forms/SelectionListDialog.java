@@ -14,11 +14,11 @@ import toys.swt.SWTUtils;
 import java.util.ArrayList;
 
 public class SelectionListDialog<E> extends Dialog implements SelectionListener {
-	private Shell dialogShell;
-	private List list;
-	private Button cancelarButton;
+	private final Shell dialogShell;
+	private final List list;
+	private final Button cancelarButton;
 	private Button selecionarButton;
-	private Composite composite1;
+	private final Composite composite1;
 	private java.util.List<E> selecao;
 	private java.util.List<E> items;
 	private boolean confirmado;
@@ -97,9 +97,9 @@ public class SelectionListDialog<E> extends Dialog implements SelectionListener 
 		list.removeAll();
 		for (Object o: items) {
 			if (field != null) {
-				String valor = null;
+				String valor;
 				try {
-					valor = (String)BeanToys.getValor(o, field);
+					valor = (String)BeanToys.getValue(o, field);
 				} catch (Exception e) {
 					valor = "<erro>";
 				}

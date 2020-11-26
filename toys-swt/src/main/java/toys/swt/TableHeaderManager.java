@@ -95,8 +95,8 @@ public class TableHeaderManager extends ViewerComparator implements SelectionLis
             return 0;
 
         try {
-            Object o1 = BeanToys.getValor(e1, id);
-            Object o2 = BeanToys.getValor(e2, id);
+            Object o1 = BeanToys.getValue(e1, id);
+            Object o2 = BeanToys.getValue(e2, id);
             if (!(o1 instanceof Comparable) || !(o2 instanceof Comparable))
                 return 0;
 
