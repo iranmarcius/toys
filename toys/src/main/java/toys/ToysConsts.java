@@ -87,6 +87,7 @@ public class ToysConsts {
     public static final String RE_TIMESTAMP = "^\\d{4}\\-\\d{2}\\-\\d{2} \\d{2}:\\d{2}:{2}\\.\\d{3}$";
     public static final String RE_CPF = "^\\d{3}(\\.?\\d{3}){2}-?\\d{2}$";
     public static final String RE_CNPJ = "^\\d{2}(\\.?\\d{3}){2}/\\d{4}\\-?\\d{2}$";
+    public static final String RE_PHONE_NUMBER = "^\\(?\\d{2}?\\)? *\\d{4,5}-?\\d{4}$";
 
     // Postas de servidor LDAP
     public static final int LDAP_PORT = 389;

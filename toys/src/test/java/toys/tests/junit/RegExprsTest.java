@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static toys.ToysConsts.RE_EMAIL;
-import static toys.ToysConsts.RE_ZIP;
+import static toys.ToysConsts.*;
 
 
 class RegExprsTest {
@@ -35,5 +34,14 @@ class RegExprsTest {
 		assertFalse("alguem@dominio.com.".matches(RE_EMAIL));
 		assertFalse("alguem com sobrenome@dominio.com.br".matches(RE_EMAIL));
 	}
+
+	@Test
+	void testPhoneNumber() {
+	    assertTrue("18981191920".matches(RE_PHONE_NUMBER));
+        assertTrue("1836367000".matches(RE_PHONE_NUMBER));
+        assertTrue("18 36367000".matches(RE_PHONE_NUMBER));
+        assertTrue("18 3636-7000".matches(RE_PHONE_NUMBER));
+        assertTrue("(18) 3636-7000".matches(RE_PHONE_NUMBER));
+    }
 
 }
