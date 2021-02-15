@@ -18,7 +18,7 @@ public class JPAUtils {
     }
 
     /**
-     * Realiza rollback na transação informada prevenindo a propagação de erros.
+     * Realiza rollback na transação informada prevenindo a propagação de erros e logando-os caso necessário.
      *
      * @param transaction Objeto do tipo {@link UserTransaction} com a transação na qual será realizado o rollback.
      * @param logger      Caso informado, este logger será utilizado para registrar eventuais erros na operação de rollback.
