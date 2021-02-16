@@ -45,7 +45,7 @@ public final class DateToys {
      * milissegundos do intervalo informado, que será obtido pela soma do número de
      * milissegundos de cada componente do intervalo informado.
      */
-    public static long timeStr2ms(String time) {
+    public static long durationStr2ms(String time) {
         long t = 0;
         int i;
 

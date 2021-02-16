@@ -36,6 +36,14 @@ class DateToysTest {
     }
 
     @Test
+    void testDurationStr2ms() {
+        assertEquals(10000L, DateToys.durationStr2ms("10s"));
+        assertEquals(2170000L, DateToys.durationStr2ms("36m10s"));
+        assertEquals(9370000L, DateToys.durationStr2ms("2h36m10s"));
+        assertEquals(268570000L, DateToys.durationStr2ms("3d2h36m10s"));
+    }
+
+    @Test
     void testSetTimeFields() {
         Timestamp d = Timestamp.valueOf("1972-07-07 00:00:00.0");
         Time t = Time.valueOf("10:13:00");
