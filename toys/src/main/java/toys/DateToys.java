@@ -1,8 +1,3 @@
-/*
- * Departamento de Desenvolvimento - ISIC Brasil
- * Todos os direitos reservados
- */
-
 package toys;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +8,9 @@ import java.sql.Timestamp;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.util.*;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 /**
  * Provê diversos métodos para manipulação e conversão datas e horas.
@@ -265,14 +263,14 @@ public final class DateToys {
     /**
      * Calcula a diferença em dias entre duas datas. A ordem cronológica das datas não importa.
      *
-     * @param d1           Primeira data.
-     * @param d2           Segunda data.
-     * @param diasInteiros Caso esta flag seja verdadeira serão considerados somente dias inteiros, ou seja, cujos campos de hora tenham os valores
-     *                     do final do dia (23h59m59s.999ms). Uma data cujos campos de hora sejam anteriores, por exemplo, 07/07/1972 12:00, não será contada
-     *                     como dia completo.
+     * @param d1       Primeira data.
+     * @param d2       Segunda data.
+     * @param wholeDay Caso esta flag seja verdadeira serão considerados somente dias inteiros, ou seja, cujos campos de hora tenham os valores
+     *                 do final do dia (23h59m59s.999ms). Uma data cujos campos de hora sejam anteriores, por exemplo, 07/07/1972 12:00, não será contada
+     *                 como dia completo.
      * @return <code>int</code>
      */
-    public static int deltaDays(Date d1, Date d2, boolean diasInteiros) {
+    public static int deltaDays(Date d1, Date d2, boolean wholeDay) {
         long t1 = d1.getTime();
         long t2 = d2.getTime();
         long delta;
@@ -281,9 +279,23 @@ public final class DateToys {
         else
             delta = t2 - t1;
         long r = delta / DateUtils.MILLIS_PER_DAY;
-        if (!diasInteiros && delta % DateUtils.MILLIS_PER_DAY > 0)
+        if (!wholeDay && delta % DateUtils.MILLIS_PER_DAY > 0)
             r++;
         return (int) r;
+    }
+
+    /**
+     * Retorna a diferença em dias entre a data final e a inicial.
+     *
+     * @param start Data inicial.
+     * @param end   Data final.
+     * @return int
+     */
+    public static int daysBetween(Date start, Date end) {
+        return Days.daysBetween(
+            new DateTime(start).withTimeAtStartOfDay(),
+            new DateTime(end).withTimeAtStartOfDay()
+        ).getDays();
     }
 
     /**
@@ -640,7 +652,7 @@ public final class DateToys {
     public static boolean contains(Date f1d1, Date f1d2, Date f2d1, Date f2d2) {
         return
             NumberToys.inRange(f1d1.getTime(), f2d1.getTime(), f2d2.getTime()) &&
-                NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime());
+            NumberToys.inRange(f1d2.getTime(), f2d1.getTime(), f2d2.getTime());
     }
 
     /**

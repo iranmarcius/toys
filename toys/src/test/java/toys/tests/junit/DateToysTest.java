@@ -71,6 +71,14 @@ class DateToysTest {
     }
 
     @Test
+    void testDaysBetween() {
+        var d1 = java.sql.Timestamp.valueOf("1972-07-07 12:00:00.000");
+        var d2 = java.sql.Timestamp.valueOf("1972-07-08 23:00:00.000");
+        assertEquals(1, DateToys.daysBetween(d1, d2));
+        assertEquals(-1, DateToys.daysBetween(d2, d1));
+    }
+
+    @Test
     void testToDays() {
         assertEquals(0, DateToys.toDays(10000));
         assertEquals(1, DateToys.toDays(DateUtils.MILLIS_PER_DAY));
