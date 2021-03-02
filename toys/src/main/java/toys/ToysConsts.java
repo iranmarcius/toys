@@ -156,6 +156,9 @@ public class ToysConsts {
     public static final String LOGGER_AUTH = "auth";
     public static final String LOGGER_USERS = "users";
 
+    // Content-types
+    public static final String XLSX_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
     private ToysConsts() {
     }
 
