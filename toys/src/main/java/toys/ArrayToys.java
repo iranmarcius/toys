@@ -7,7 +7,6 @@ package toys;
 public class ArrayToys {
 
     private ArrayToys() {
-        super();
     }
 
     /**
@@ -52,6 +51,21 @@ public class ArrayToys {
      */
     public static String toString(Object[] a) {
         return toString(a, ", ", null);
+    }
+
+    /**
+     * Cria um array de inteiros a partir de um array de strings.
+     *
+     * @param strings Array de strings onde cada strings deve representar um número.
+     * @return <code>int[]</code>
+     */
+    public static int[] toIntArray(String[] strings) {
+        if (strings == null)
+            return null;
+        var ints = new int[strings.length];
+        for (int i = 0; i < strings.length; i++)
+            ints[i] = Integer.parseInt(strings[i]);
+        return ints;
     }
 
 }
