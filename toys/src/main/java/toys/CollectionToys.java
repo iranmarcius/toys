@@ -15,7 +15,6 @@ import java.util.*;
 public class CollectionToys {
 
     private CollectionToys() {
-        super();
     }
 
     /**
