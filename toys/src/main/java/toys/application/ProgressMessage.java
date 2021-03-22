@@ -80,10 +80,6 @@ public class ProgressMessage {
         return level;
     }
 
-    public int getPercent() {
-        return (int) (((double) current / (double) total) * 100);
-    }
-
     public String getPid() {
         return pid;
     }
