@@ -25,7 +25,6 @@
         <dependency>
             <groupId>toys</groupId>
             <artifactId>toys-servlet</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>

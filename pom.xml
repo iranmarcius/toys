@@ -33,20 +33,19 @@
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
         <repository>
-            <id>unitoledo</id>
-            <url>http://sparring.redeinterna.toledo.br/maven</url>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.com/api/v4/packages/maven</url>
         </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
-            <id>unitoledo-maven-ssh</id>
-            <url>scpexe://sparring.redeinterna.unitoledo.br/var/www/html/maven</url>
+            <id>gitlab-maven</id>
+            <url>https://gitlab.com/api/v4/projects/25086072/packages/maven</url>
         </repository>
     </distributionManagement>
 
     <build>
-
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
@@ -54,7 +53,6 @@
                 <version>3.3.3</version>
             </extension>
         </extensions>
-
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -74,7 +72,6 @@
                 </plugin>
             </plugins>
         </pluginManagement>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -90,7 +87,6 @@
                 </executions>
             </plugin>
         </plugins>
-
     </build>
 
     <dependencyManagement>
