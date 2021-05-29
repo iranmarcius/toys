@@ -8,3 +8,4 @@ logs/
 .project
 .classpath
 .factorypath
+settings.json
