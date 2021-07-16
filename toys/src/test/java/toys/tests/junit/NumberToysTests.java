@@ -3,6 +3,7 @@ package toys.tests.junit;
 import org.junit.jupiter.api.Test;
 import toys.NumberToys;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class NumberToysTests {
@@ -26,6 +27,12 @@ class NumberToysTests {
     assertEquals(10d, NumberToys.sum(10d, null));
     assertEquals(10d, NumberToys.sum(null, 10d));
     assertEquals(0d, NumberToys.sum((Double) null, null));
+  }
+
+  @Test
+  void testToIntArray() {
+    assertArrayEquals(new int[] {1, 2, 3, 4, 5}, NumberToys.toIntArray("1,2,3,4,5"));
+    assertArrayEquals(new int[] {4, 5, 6, 7}, NumberToys.toIntArray("4, 5,   6,     7"));
   }
 
 }

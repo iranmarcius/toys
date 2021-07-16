@@ -191,6 +191,21 @@ public class NumberToys {
   }
 
   /**
+   * Retorna uma string onde haja números inteiros separados por vírgula e converte num
+   * array de inteiros.
+   *
+   * @param s String on formato <code>inteiro, inteiro, inteiro... inteiro</code>.
+   * @return <code>int[]</code>
+   */
+  public static int[] toIntArray(String s) {
+    var ss = s.split(" *, *");
+    var ints = new int[ss.length];
+    for (int i = 0; i < ss.length; i++)
+      ints[i] = Integer.parseInt(ss[i]);
+    return ints;
+  }
+
+  /**
    * Converte uma string para um long retornando o valor default caso ocorra algum
    * erro na conversão.
    *
