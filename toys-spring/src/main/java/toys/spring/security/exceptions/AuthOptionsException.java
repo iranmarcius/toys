@@ -2,7 +2,11 @@ package toys.spring.security.exceptions;
 
 import org.springframework.security.core.AuthenticationException;
 
+import java.io.Serial;
+
 public class AuthOptionsException extends AuthenticationException {
+
+  @Serial
     private static final long serialVersionUID = -5921899723988669302L;
 
     public AuthOptionsException(String msg, Object... params) {
