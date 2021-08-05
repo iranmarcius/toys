@@ -43,14 +43,14 @@ public class DefaultProgressNotifier implements ProgressNotifier {
     }
 
     @Override
-    public void step(int ammount, String text, Level level, Object... params) {
-        current += ammount;
+    public void step(int amount, String text, Level level, Object... params) {
+        current += amount;
         text(text, level, params);
     }
 
     @Override
-    public void step(int ammount, String text, Object... params) {
-        step(ammount, text, null, params);
+    public void step(int amount, String text, Object... params) {
+        step(amount, text, null, params);
     }
 
     @Override
