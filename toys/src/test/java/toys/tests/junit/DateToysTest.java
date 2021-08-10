@@ -143,4 +143,16 @@ class DateToysTest {
         assertFalse(DateToys.expired(c.getTime(), DateUtils.MILLIS_PER_DAY * 3)); // três dias
     }
 
+    @Test
+    void testCompare() {
+      var d1 = java.sql.Date.valueOf("2020-07-07");
+      var d2 = java.sql.Date.valueOf("2021-07-07");
+      assertEquals(0, DateToys.compare(null, null));
+      assertEquals(-1, DateToys.compare(d1, null));
+      assertEquals(1, DateToys.compare(null, d2));
+      assertEquals(0, DateToys.compare(d1, d1));
+      assertEquals(-1, DateToys.compare(d1, d2));
+      assertEquals(1, DateToys.compare(d2, d1));
+    }
+
 }
