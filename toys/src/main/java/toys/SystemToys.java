@@ -12,7 +12,6 @@ package toys;
 public class SystemToys {
 
     private SystemToys() {
-        super();
     }
 
     /**
