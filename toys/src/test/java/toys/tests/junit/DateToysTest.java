@@ -131,6 +131,21 @@ class DateToysTest {
     }
 
     @Test
+    void testIsBetween() {
+      var i = java.sql.Date.valueOf("1972-07-07");
+      var f = java.sql.Date.valueOf("1972-07-10");
+      assertTrue(DateToys.isBetween(java.sql.Date.valueOf("1972-07-08"), i, f));
+      assertTrue(DateToys.isBetween(java.sql.Date.valueOf("1972-07-07"), i, f));
+      assertTrue(DateToys.isBetween(java.sql.Date.valueOf("1972-07-10"), i, f));
+      assertFalse(DateToys.isBetween(java.sql.Date.valueOf("1972-07-15"), i, f));
+      assertTrue(DateToys.isBetween(java.sql.Date.valueOf("1972-07-01"), null, f));
+      assertTrue(DateToys.isBetween(java.sql.Date.valueOf("1972-07-13"), i, null));
+      assertTrue(DateToys.isBetween(java.sql.Date.valueOf("1972-07-13"), null, null));
+      assertFalse(DateToys.isBetween(java.sql.Date.valueOf("1972-07-01"), i, null));
+      assertFalse(DateToys.isBetween(java.sql.Date.valueOf("1972-07-15"), null, f));
+    }
+
+    @Test
     void testDiaSemana() {
         assertEquals(Calendar.FRIDAY, DateToys.weekday(java.sql.Date.valueOf("1972-07-07")));
     }

@@ -662,13 +662,8 @@ public final class DateToys {
    * @param f Data final da faixa. Caso o valor seja nulo a verificação não será realizada para este parâmetro.
    * @return <code>boolean</code>
    */
-  public static boolean contains(Date d, Date i, Date f) {
-    boolean contido = true;
-    if (i != null)
-      contido = d.getTime() >= i.getTime();
-    if (f != null)
-      contido &= d.getTime() <= f.getTime();
-    return contido;
+  public static boolean isBetween(Date d, Date i, Date f) {
+    return (i == null || d.compareTo(i) >= 0) && (f == null || d.compareTo(f) <= 0);
   }
 
   /**
