@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>toys</groupId>
     <artifactId>parent</artifactId>
-    <version>0.0.9</version>
+    <version>0.0.10</version>
     <name>Toys Parent</name>
     <packaging>pom</packaging>
 
@@ -312,7 +312,7 @@
             <dependency>
                 <groupId>toys</groupId>
                 <artifactId>toys-spring</artifactId>
-                <version>1.6.2</version>
+                <version>1.6.3</version>
             </dependency>
             <dependency>
                 <groupId>toys</groupId>
