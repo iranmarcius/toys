@@ -20,74 +20,64 @@ import java.util.Set;
  */
 public class ToysSpringUtils {
 
-    private ToysSpringUtils() {
-    }
+  private ToysSpringUtils() {
+  }
 
-    /**
-     * Retorna o usuário autenticado.
-     *
-     * @return {@link User}
-     */
-    public static synchronized User getPrincipal() {
-        SecurityContext sc = SecurityContextHolder.getContext();
-        if (sc != null) {
-            Object principal = sc.getAuthentication().getPrincipal();
-            return principal instanceof User ? (User) principal : null;
-        }
-        return null;
+  /**
+   * Retorna o usuário autenticado.
+   *
+   * @return {@link User}
+   */
+  public static synchronized User getPrincipal() {
+    SecurityContext sc = SecurityContextHolder.getContext();
+    if (sc != null) {
+      Object principal = sc.getAuthentication().getPrincipal();
+      return principal instanceof User user ? user : null;
     }
+    return null;
+  }
 
-    /**
-     * Retorna o nome do usuário autenticado se houver algum, do contrário retorna nulo.
-     *
-     * @return <code>String</code>
-     */
-    public static synchronized String getPrincipalName() {
-        SecurityContext sc = SecurityContextHolder.getContext();
-        if (sc != null) {
-            Authentication auth = sc.getAuthentication();
-            if (auth != null)
-                return auth.getName();
-        }
-        return null;
+  /**
+   * Retorna o nome do usuário autenticado se houver algum, do contrário retorna nulo.
+   *
+   * @return <code>String</code>
+   */
+  public static synchronized String getPrincipalName() {
+    SecurityContext sc = SecurityContextHolder.getContext();
+    if (sc != null) {
+      Authentication auth = sc.getAuthentication();
+      if (auth != null)
+        return auth.getName();
     }
+    return null;
+  }
 
-    /**
-     * Retorna uma relação das autorizações do usuário logado no contexto.
-     *
-     * @return <code>List&lt;String&gt;</code>
-     */
-    public static Set<String> getAuthorities() {
-        SecurityContext sc = SecurityContextHolder.getContext();
-        if (sc != null) {
-            Authentication auth = sc.getAuthentication();
-            if (auth != null) {
-                var authorities = new HashSet<String>();
-                for (GrantedAuthority ga : auth.getAuthorities())
-                    authorities.add(ga.getAuthority());
-                return authorities;
-            }
-        }
-        return Collections.emptySet();
+  /**
+   * Retorna uma relação das autorizações do usuário logado no contexto.
+   *
+   * @return <code>List&lt;String&gt;</code>
+   */
+  public static Set<String> getAuthorities() {
+    SecurityContext sc = SecurityContextHolder.getContext();
+    if (sc != null) {
+      Authentication auth = sc.getAuthentication();
+      if (auth != null) {
+        var authorities = new HashSet<String>();
+        for (GrantedAuthority ga : auth.getAuthorities())
+          authorities.add(ga.getAuthority());
+        return authorities;
+      }
     }
+    return Collections.emptySet();
+  }
 
-    /**
-     * Método de conveniência para gerar uma string de detalhes da requisição utilizando o principal do contexto
-     * de securança do Spring Security.
-     *
-     * @see WebAppUtils#requestDetails(HttpServletRequest, String, boolean, boolean)
-     */
-    public static synchronized String requestDetails(HttpServletRequest request, boolean incluirUri, boolean incluirReferer) {
-        return WebAppUtils.requestDetails(request, getPrincipalName(), incluirUri, incluirReferer);
-    }
-
-    /**
-     * Método de conveniência para gerar uma string de log utilizando o principal do contexto se segurança do Spring Security.
-     *
-     * @see WebAppUtils#logMsg(HttpServletRequest, String, boolean, String, Object...)
-     */
-    public static synchronized String logMsg(HttpServletRequest request, boolean detalhes, String msg, Object... params) {
-        return WebAppUtils.logMsg(request, getPrincipalName(), detalhes, msg, params);
-    }
+  /**
+   * Método de conveniência para gerar uma string de log utilizando o principal do contexto se segurança do Spring Security.
+   *
+   * @see WebAppUtils#logMsg(HttpServletRequest, String, boolean, String, Object...)
+   */
+  public static synchronized String logMsg(HttpServletRequest request, boolean detalhes, String msg, Object... params) {
+    return WebAppUtils.logMsg(request, getPrincipalName(), detalhes, msg, params);
+  }
 
 }
