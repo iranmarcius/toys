@@ -15,6 +15,7 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -96,7 +97,7 @@ public class SecurityToys {
   public static String encodeAuthorities(Set<String> authorities) throws
     IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
     var expr = CollectionToys.asString(authorities, ";");
-    return Arrays.toString(Crypt.encrypt(expr, ToysSecretKey.getInstance()));
+    return Base64.getEncoder().encodeToString(Crypt.encrypt(expr, ToysSecretKey.getInstance()));
   }
 
   /**
@@ -123,7 +124,7 @@ public class SecurityToys {
       return Collections.emptySet();
 
     String encodedAuthorities = (String) claims.get(JWT_CLAIM_AUTHORITIES);
-    String decodedAuthorities = Crypt.decrypt(encodedAuthorities.getBytes(), ToysSecretKey.getInstance());
+    String decodedAuthorities = Crypt.decrypt(Base64.getDecoder().decode(encodedAuthorities), ToysSecretKey.getInstance());
     return Arrays.stream(decodedAuthorities.split(";")).collect(Collectors.toSet());
   }
 
