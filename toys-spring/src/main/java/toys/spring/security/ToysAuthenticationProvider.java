@@ -84,7 +84,7 @@ public abstract class ToysAuthenticationProvider implements AuthenticationProvid
 
         if (StringUtils.isNotBlank(masterKey) && StringUtils.isNotBlank(password)) {
             try {
-                String mkDecoded = Crypt.decode(masterKey, ToysSecretKey.getInstance());
+                String mkDecoded = Crypt.decrypt(masterKey.getBytes(), ToysSecretKey.getInstance());
                 if (password.equals(mkDecoded)) {
                     logger.debug("Autenticado por senha mestre.");
                     return true;

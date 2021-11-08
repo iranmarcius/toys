@@ -91,7 +91,7 @@ public class LDAPUtils implements Serializable {
         this.baseDN = baseDN;
         this.defaultSearchExpr = StringUtils.defaultString(defaultSearchExpr, "(sAMAccountName=%s)");
         try {
-            this.password = Crypt.decode(password, ToysSecretKey.getInstance());
+            this.password = Crypt.decrypt(password.getBytes(), ToysSecretKey.getInstance());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             throw new ToysRuntimeException("Erro decodificando senha para acesso ao servidor LDAP.", e);
         }

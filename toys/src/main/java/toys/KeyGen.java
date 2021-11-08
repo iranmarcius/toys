@@ -45,7 +45,7 @@ public class KeyGen {
         }
 
         String algotithm = cmd.getOptionValue("a");
-        Integer size = Integer.valueOf(cmd.getOptionValue("s"));
+        int size = Integer.parseInt(cmd.getOptionValue("s"));
         boolean encode = cmd.hasOption("e");
         String output = cmd.getOptionValue("o");
 

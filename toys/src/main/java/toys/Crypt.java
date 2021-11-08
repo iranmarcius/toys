@@ -9,7 +9,6 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Random;
 
 /**
@@ -155,19 +154,6 @@ public final class Crypt {
   }
 
   /**
-   * Criotograma uma string utilizando a chave informada e retorna o resultado codificado em Base64.
-   *
-   * @param valor Valor a ser codificado.
-   * @param key   Chave que será utilizada na codificação.
-   * @return <code>String</code>
-   * @deprecated Será removido em detrimento do método {@link #encrypt(String, Key)}
-   */
-  @Deprecated
-  public static String encode(String valor, Key key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-    return Base64.getEncoder().encodeToString(encrypt(valor, key));
-  }
-
-  /**
    * Desencruipta um valor criptografado utilizando a chave informada.
    *
    * @param encrypted Valor criptografado.
@@ -178,21 +164,6 @@ public final class Crypt {
     Cipher cipher = Cipher.getInstance(key.getAlgorithm());
     cipher.init(Cipher.DECRYPT_MODE, key);
     return new String(cipher.doFinal(encrypted), StandardCharsets.UTF_8);
-  }
-
-  /**
-   * Descriptograva um valor codificado em Base64 utilizando a chave informada.
-   *
-   * @param base64 Valor codificado em base64.
-   * @param key    Chave que será utilizada na decodificação.
-   * @return <code>String</code>
-   * @deprecated Será removido em detrimento do método {@link #decrypt(byte[], Key)}
-   */
-  @Deprecated
-  public static String decode(String base64, Key key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-    Cipher cipher = Cipher.getInstance(key.getAlgorithm());
-    cipher.init(Cipher.DECRYPT_MODE, key);
-    return new String(cipher.doFinal(Base64.getDecoder().decode(base64)), StandardCharsets.UTF_8);
   }
 
 }

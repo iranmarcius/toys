@@ -29,102 +29,102 @@ import static toys.ToysConsts.JWT_CLAIM_AUTHORITIES;
  */
 public class SecurityToys {
 
-    private SecurityToys() {
-    }
+  private SecurityToys() {
+  }
 
-    /**
-     * Extrai o token JWT do cabeçalho informado. O método retorna o valor logo após a palavra <b>Bearer</b>.
-     * Caso a palavra não seja encontrada será retornado um valor nulo.
-     *
-     * @param header Valor do cabeçalho.
-     * @return Retorna uma string representando o token JWT ou nulo caso não haja um token.
-     */
-    public static String getJWTFromHeader(String header) {
-        if (header != null && header.startsWith("Bearer") && header.length() > 7)
-            return header.substring(7);
-        else
-            return null;
-    }
+  /**
+   * Extrai o token JWT do cabeçalho informado. O método retorna o valor logo após a palavra <b>Bearer</b>.
+   * Caso a palavra não seja encontrada será retornado um valor nulo.
+   *
+   * @param header Valor do cabeçalho.
+   * @return Retorna uma string representando o token JWT ou nulo caso não haja um token.
+   */
+  public static String getJWTFromHeader(String header) {
+    if (header != null && header.startsWith("Bearer") && header.length() > 7)
+      return header.substring(7);
+    else
+      return null;
+  }
 
-    /**
-     * Método de conveniência para invocar o {@link #getJWTFromHeader(String)} passando o valor obtido do cabeçalho
-     * <b>Authorization</b>.
-     *
-     * @param request Objeto contendo as informações da requisição.
-     * @return Retorna o token encontrado ou nulo.
-     */
-    public static String getJWT(HttpServletRequest request) {
-        return getJWTFromHeader(request.getHeader("Authorization"));
-    }
+  /**
+   * Método de conveniência para invocar o {@link #getJWTFromHeader(String)} passando o valor obtido do cabeçalho
+   * <b>Authorization</b>.
+   *
+   * @param request Objeto contendo as informações da requisição.
+   * @return Retorna o token encontrado ou nulo.
+   */
+  public static String getJWT(HttpServletRequest request) {
+    return getJWTFromHeader(request.getHeader("Authorization"));
+  }
 
-    /**
-     * Decodifica e retorna as claims contidas no token informado.
-     *
-     * @param token Token JWT a ser processado.
-     * @param key   Chave utilizada na decodificação do token.
-     * @return Retorna uma relação de claims ou nulo.
-     */
-    public static Claims getClaims(String token, Key key) {
-        if (token != null)
-            return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        else
-            return null;
-    }
+  /**
+   * Decodifica e retorna as claims contidas no token informado.
+   *
+   * @param token Token JWT a ser processado.
+   * @param key   Chave utilizada na decodificação do token.
+   * @return Retorna uma relação de claims ou nulo.
+   */
+  public static Claims getClaims(String token, Key key) {
+    if (token != null)
+      return Jwts.parserBuilder()
+        .setSigningKey(key)
+        .build()
+        .parseClaimsJws(token)
+        .getBody();
+    else
+      return null;
+  }
 
-    /**
-     * Método de conveniência para invocar o {@link #getClaims(String, Key)} extraindo o token da requisição
-     * utilizando o método {@link #getJWT(HttpServletRequest)}.
-     *
-     * @param request Objeto contendo as informações da requisição.
-     * @param key     Chave utilizada para assinatura do token.
-     * @return Retorna as claims do token ou nulo.
-     */
-    public static Claims getClaims(HttpServletRequest request, Key key) {
-        return getClaims(getJWT(request), key);
-    }
+  /**
+   * Método de conveniência para invocar o {@link #getClaims(String, Key)} extraindo o token da requisição
+   * utilizando o método {@link #getJWT(HttpServletRequest)}.
+   *
+   * @param request Objeto contendo as informações da requisição.
+   * @param key     Chave utilizada para assinatura do token.
+   * @return Retorna as claims do token ou nulo.
+   */
+  public static Claims getClaims(HttpServletRequest request, Key key) {
+    return getClaims(getJWT(request), key);
+  }
 
-    /**
-     * Converte a relação de privilégios em uma string e a criptografa com a chave fornecida.
-     *
-     * @param authorities Coleção de privilégios.
-     * @return String
-     */
-    public static String encodeAuthorities(Set<String> authorities) throws
-        IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
-        var expr = CollectionToys.asString(authorities, ";");
-        return Crypt.encode(expr, ToysSecretKey.getInstance());
-    }
+  /**
+   * Converte a relação de privilégios em uma string e a criptografa com a chave fornecida.
+   *
+   * @param authorities Coleção de privilégios.
+   * @return String
+   */
+  public static String encodeAuthorities(Set<String> authorities) throws
+    IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+    var expr = CollectionToys.asString(authorities, ";");
+    return Arrays.toString(Crypt.encrypt(expr, ToysSecretKey.getInstance()));
+  }
 
-    /**
-     * Método de conveniência para padronização do armazenamento da claim de autoridades no token.
-     *
-     * @param builder     Referência para o builder utilizado na construção do token.
-     * @param authorities Relação de autoridades.
-     */
-    public static void setAuthorities(JwtBuilder builder, Set<String> authorities) throws
-        InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException {
-        builder.claim(JWT_CLAIM_AUTHORITIES, encodeAuthorities(authorities));
-    }
+  /**
+   * Método de conveniência para padronização do armazenamento da claim de autoridades no token.
+   *
+   * @param builder     Referência para o builder utilizado na construção do token.
+   * @param authorities Relação de autoridades.
+   */
+  public static void setAuthorities(JwtBuilder builder, Set<String> authorities) throws
+    InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException {
+    builder.claim(JWT_CLAIM_AUTHORITIES, encodeAuthorities(authorities));
+  }
 
-    /**
-     * Decodifica e extrai as autoridades armazenadas em um token.
-     *
-     * @param claims Claims do token.
-     * @return Retorna uma coleção de autoridades de um usuário.
-     */
-    public static Set<String> extractAuthorities(Claims claims) throws
-        IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+  /**
+   * Decodifica e extrai as autoridades armazenadas em um token.
+   *
+   * @param claims Claims do token.
+   * @return Retorna uma coleção de autoridades de um usuário.
+   */
+  public static Set<String> extractAuthorities(Claims claims) throws
+    IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
 
-        if (claims == null || !claims.containsKey(JWT_CLAIM_AUTHORITIES))
-            return Collections.emptySet();
+    if (claims == null || !claims.containsKey(JWT_CLAIM_AUTHORITIES))
+      return Collections.emptySet();
 
-        String encodedAuthorities = (String) claims.get(JWT_CLAIM_AUTHORITIES);
-        String decodedAuthorities = Crypt.decode(encodedAuthorities, ToysSecretKey.getInstance());
-        return Arrays.stream(decodedAuthorities.split(";")).collect(Collectors.toSet());
-    }
+    String encodedAuthorities = (String) claims.get(JWT_CLAIM_AUTHORITIES);
+    String decodedAuthorities = Crypt.decrypt(encodedAuthorities.getBytes(), ToysSecretKey.getInstance());
+    return Arrays.stream(decodedAuthorities.split(";")).collect(Collectors.toSet());
+  }
 
 }

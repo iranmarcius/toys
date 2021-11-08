@@ -5,9 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import toys.servlet.WebAppUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -69,15 +67,6 @@ public class ToysSpringUtils {
       }
     }
     return Collections.emptySet();
-  }
-
-  /**
-   * Método de conveniência para gerar uma string de log utilizando o principal do contexto se segurança do Spring Security.
-   *
-   * @see WebAppUtils#logMsg(HttpServletRequest, String, boolean, String, Object...)
-   */
-  public static synchronized String logMsg(HttpServletRequest request, boolean detalhes, String msg, Object... params) {
-    return WebAppUtils.logMsg(request, getPrincipalName(), detalhes, msg, params);
   }
 
 }
