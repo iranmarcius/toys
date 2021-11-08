@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>toys-servlet</artifactId>
-    <version>1.6.1</version>
+    <version>1.6.2</version>
 
     <properties>
         <jsonwebtoken.version>0.11.2</jsonwebtoken.version>
@@ -36,7 +36,6 @@
         <dependency>
             <groupId>toys</groupId>
             <artifactId>toys</artifactId>
-            <version>1.6.8</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
