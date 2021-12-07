@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>toys</artifactId>
-    <version>1.6.8</version>
+    <version>1.6.9</version>
 
     <properties>
         <slf4j.version>1.7.32</slf4j.version>
@@ -96,7 +96,7 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.0.0</version>
+            <version>5.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
