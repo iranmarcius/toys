@@ -36,128 +36,132 @@ import static toys.ToysConsts.LOGGER_AUTH;
  * @since 11/2018
  */
 public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    private RequestCache requestCache = new HttpSessionRequestCache();
-    private String issuer;
-    private long ttl;
-    private Key key;
+  private RequestCache requestCache = new HttpSessionRequestCache();
+  private final String issuer;
+  private final long ttl;
+  private final Key key;
+  private final boolean forbidOnNoAuthorities;
 
-    /**
-     * Construtor padrão.
-     *
-     * @param issuer Emissor do token.
-     * @param ttl    Tempo de vida em milissegundos.
-     * @param key    Chave utilizada na assinatura.
-     */
-    public JWTAuthenticationSuccessHandler(String issuer, long ttl, Key key) {
-        super();
-        this.issuer = issuer;
-        this.ttl = ttl;
-        this.key = key;
-    }
+  /**
+   * Construtor padrão.
+   *
+   * @param issuer                Emissor do token.
+   * @param ttl                   Tempo de vida em milissegundos.
+   * @param key                   Chave utilizada na assinatura.
+   * @param forbidOnNoAuthorities Proíbe o acesso se o usuário autenticado não possuir nenhuma autoridade.
+   */
+  public JWTAuthenticationSuccessHandler(String issuer, long ttl, Key key, boolean forbidOnNoAuthorities) {
+    super();
+    this.issuer = issuer;
+    this.ttl = ttl;
+    this.key = key;
+    this.forbidOnNoAuthorities = forbidOnNoAuthorities;
+  }
 
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        SavedRequest savedRequest = requestCache.getRequest(request, response);
+  /**
+   * Construtor de conveniência para invocar o construtor default informando o parâmetro
+   * {@link #forbidOnNoAuthorities} com o valor <code>FALSE</code>.
+   */
+  public JWTAuthenticationSuccessHandler(String issuer, long ttl, Key key) {
+    this(issuer, ttl, key, false);
+  }
 
-        String principal = ToysSpringUtils.getPrincipalName();
-        if (principal != null) {
-            logger.debug("Gerando token JWT para o principal autenticado.");
+  @Override
+  public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    SavedRequest savedRequest = requestCache.getRequest(request, response);
 
-            JwtBuilder builder = Jwts.builder()
-                .setId(String.format("%d", System.currentTimeMillis()))
-                .setIssuedAt(new Date())
-                .setSubject(principal);
+    String principal = ToysSpringUtils.getPrincipalName();
+    if (principal != null) {
+      logger.debug("Gerando token JWT para o principal autenticado.");
 
-            try {
-                var authorities = ToysSpringUtils.getAuthorities();
-                if (logger.isDebugEnabled())
-                    logger.debug(String.format("Relacao de privilegios: %s", CollectionToys.asString(authorities, ";")));
-                SecurityToys.setAuthorities(builder, authorities);
-            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-                logger.fatal("Erro codificando privilegios.", e);
-                throw new IOException(e);
-            }
+      JwtBuilder builder = Jwts.builder()
+        .setId(String.format("%d", System.currentTimeMillis()))
+        .setIssuedAt(new Date())
+        .setSubject(principal);
 
-            if (StringUtils.isNotBlank(issuer)) {
-                logger.debug("Issuer: " + issuer);
-                builder.setIssuer(issuer);
-            }
-
-            if (ttl > 0) {
-                logger.debug("Tempo de vida em milissegundos: " + ttl);
-                builder.setExpiration(new Date(System.currentTimeMillis() + ttl));
-            }
-
-            // Insere eventuais dados adicionais ao token.
-            setExtraTokenData(builder, authentication);
-
-            if (key != null)
-                builder.signWith(key);
-
-            String token = builder.compact();
-            logger.debug("Token gerado: " + token);
-
-            response.setHeader(HTTP_HEADER_ACCESS_TOKEN, token);
-
-            LoggerFactory.getLogger(LOGGER_AUTH).info("Autenticacao bem sucedida - {}",
-                RequestDetailsBuilder.builder(request).withAll(principal).build());
-
-        } else {
-            logger.error("Nenhum nome de usuario encontrado no contexto para gerar o token.");
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Nenhum usuario autenticado no contexto.");
+      try {
+        var authorities = ToysSpringUtils.getAuthorities();
+        if (authorities.isEmpty() && forbidOnNoAuthorities) {
+          response.sendError(HttpServletResponse.SC_FORBIDDEN, "Usuário não possui nenhuma autoridade.");
+          return;
         }
 
-        if (savedRequest == null) {
-            clearAuthenticationAttributes(request);
-            return;
-        }
+        if (logger.isDebugEnabled())
+          logger.debug(String.format("Relacao de privilegios: %s", CollectionToys.asString(authorities, ";")));
+        SecurityToys.setAuthorities(builder, authorities);
+      } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+        logger.fatal("Erro codificando privilegios.", e);
+        throw new IOException(e);
+      }
 
-        String targetUrlParam = getTargetUrlParameter();
-        if (isAlwaysUseDefaultTargetUrl() || (targetUrlParam != null && StringUtils.isNotBlank(request.getParameter(targetUrlParam)))) {
-            requestCache.removeRequest(request, response);
-            return;
-        }
+      if (StringUtils.isNotBlank(issuer)) {
+        logger.debug("Issuer: " + issuer);
+        builder.setIssuer(issuer);
+      }
 
-        clearAuthenticationAttributes(request);
+      if (ttl > 0) {
+        logger.debug("Tempo de vida em milissegundos: " + ttl);
+        builder.setExpiration(new Date(System.currentTimeMillis() + ttl));
+      }
+
+      // Insere eventuais dados adicionais ao token.
+      setExtraTokenData(builder, authentication);
+
+      if (key != null)
+        builder.signWith(key);
+
+      String token = builder.compact();
+      logger.debug("Token gerado: " + token);
+
+      response.setHeader(HTTP_HEADER_ACCESS_TOKEN, token);
+
+      LoggerFactory.getLogger(LOGGER_AUTH).info("Autenticacao bem sucedida - {}",
+        RequestDetailsBuilder.builder(request).withAll(principal).build());
+
+    } else {
+      logger.error("Nenhum nome de usuario encontrado no contexto para gerar o token.");
+      response.sendError(HttpServletResponse.SC_FORBIDDEN, "Nenhum usuario autenticado no contexto.");
     }
 
-    /**
-     * Seta dados extras para o token. Por padrão nenhuma informação é adicionada, mas este método pode
-     * ser redefinido em outras implementações.
-     *
-     * @param builder        Builder do token
-     * @param authentication Dados da autenticação.
-     */
-    protected void setExtraTokenData(JwtBuilder builder, Authentication authentication) {
-        // Nenhuma operação
+    if (savedRequest == null) {
+      clearAuthenticationAttributes(request);
+      return;
     }
 
-    public void setRequestCache(RequestCache requestCache) {
-        this.requestCache = requestCache;
+    String targetUrlParam = getTargetUrlParameter();
+    if (isAlwaysUseDefaultTargetUrl() || (targetUrlParam != null && StringUtils.isNotBlank(request.getParameter(targetUrlParam)))) {
+      requestCache.removeRequest(request, response);
+      return;
     }
 
-    public String getIssuer() {
-        return issuer;
-    }
+    clearAuthenticationAttributes(request);
+  }
 
-    public void setIssuer(String issuer) {
-        this.issuer = issuer;
-    }
+  /**
+   * Seta dados extras para o token. Por padrão nenhuma informação é adicionada, mas este método pode
+   * ser redefinido em outras implementações.
+   *
+   * @param builder        Builder do token
+   * @param authentication Dados da autenticação.
+   */
+  protected void setExtraTokenData(JwtBuilder builder, Authentication authentication) {
+    // Nenhuma operação
+  }
 
-    public long getTtl() {
-        return ttl;
-    }
+  public void setRequestCache(RequestCache requestCache) {
+    this.requestCache = requestCache;
+  }
 
-    public void setTtl(long ttl) {
-        this.ttl = ttl;
-    }
+  public String getIssuer() {
+    return issuer;
+  }
 
-    public Key getKey() {
-        return key;
-    }
+  public long getTtl() {
+    return ttl;
+  }
 
-    public void setKey(Key key) {
-        this.key = key;
-    }
+  public Key getKey() {
+    return key;
+  }
 
 }
