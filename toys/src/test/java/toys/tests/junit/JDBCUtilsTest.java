@@ -31,13 +31,13 @@ class JDBCUtilsTest {
 
     @Test
     void extrairListTest() throws ToysException, SQLException {
-        var list = jdbcUtils.extrairLista(conn, "select * from spletivo", true);
+        var list = jdbcUtils.list(conn, "select * from spletivo", true);
         assertFalse(list.isEmpty());
     }
 
     @Test
     void extrairCSVTest() throws IOException, SQLException, ToysException {
-        jdbcUtils.extrairCSV(conn, "select * from sdocumento", StandardCharsets.ISO_8859_1, "c:/temp/saida.csv");
+        jdbcUtils.outputToCSV(conn, "select * from sdocumento", StandardCharsets.ISO_8859_1, "c:/temp/saida.csv");
         assertTrue(true);
     }
 
