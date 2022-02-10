@@ -1,5 +1,7 @@
 package toys.persistence.jdbc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import toys.exceptions.ToysException;
 
 import java.io.BufferedWriter;
@@ -18,6 +20,7 @@ import java.util.List;
  * @since 02/2020
  */
 public class JDBCUtils {
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
   /**
    * Executa a consulta extraindo os dados utilizando a saída informada para salvar os dados.
@@ -33,15 +36,19 @@ public class JDBCUtils {
   @SuppressWarnings("ThrowableNotThrown")
   public void outputTo(Connection conn, String sql, boolean columnHeaders, QueryOutput queryOutput, Object... params)
     throws SQLException, ToysException {
+    logger.debug("Executando consulta. Incluir cabecalhos={}, output={}",
+      columnHeaders, queryOutput.getClass().getName());
     queryOutput.resetRowCount();
     Statement st = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
     try {
       if (params == null || params.length == 0) {
+        logger.debug("createStatement: {}", sql);
         st = conn.createStatement();
         rs = st.executeQuery(sql);
       } else {
+        logger.debug("prepareStatement: {} - {}", sql, params);
         ps = conn.prepareStatement(sql);
         for (int i = 0; i < params.length; i++)
           ps.setObject(i + 1, params[i]);
@@ -49,8 +56,13 @@ public class JDBCUtils {
       }
       if (columnHeaders)
         queryOutput.writeHeader(rs);
-      while (rs.next())
+      long c = 0;
+      logger.debug("Extraido resultados...");
+      while (rs.next()) {
         queryOutput.writeRow(rs);
+        c++;
+      }
+      logger.debug("{} linha(s) extraida(s).", c);
     } finally {
       close(rs);
       close(st);
@@ -107,6 +119,7 @@ public class JDBCUtils {
    */
   public long outputToCSV(Connection conn, String sql, Charset charset, String caminhoSaida)
     throws IOException, SQLException, ToysException {
+    logger.debug("Extraindo resultados para CSV. caminhoSaida={}", caminhoSaida);
     try (FileOutputStream out = new FileOutputStream(caminhoSaida)) {
       try (OutputStreamWriter outWriter = new OutputStreamWriter(out, charset.name())) {
         try (BufferedWriter writer = new BufferedWriter(outWriter)) {
@@ -128,7 +141,9 @@ public class JDBCUtils {
     if (rs != null) {
       try {
         rs.close();
+        logger.debug("Conexao com o banco de dados fechada.");
       } catch (SQLException e) {
+        logger.warn("Erro fechando conexao com o banco de dados.", e);
         return e;
       }
     }
@@ -145,7 +160,9 @@ public class JDBCUtils {
     if (st != null) {
       try {
         st.close();
+        logger.debug("Statement fechado.");
       } catch (SQLException e) {
+        logger.warn("Erro fechando statement.", e);
         return e;
       }
     }
@@ -162,7 +179,9 @@ public class JDBCUtils {
     if (ps != null) {
       try {
         ps.close();
+        logger.debug("PreparedStatement fechado.");
       } catch (SQLException e) {
+        logger.warn("Erro fechando preparedStatement.", e);
         return e;
       }
     }
