@@ -1,7 +1,7 @@
 package toys.pojos;
 
 public class Identity {
-    private Object entity;
+    private final Object entity;
 
     public Identity(Object entity) {
         this.entity = entity;
@@ -9,7 +9,7 @@ public class Identity {
 
     @Override
     public boolean equals(Object other) {
-        return other instanceof Identity && this.entity == ((Identity) other).entity;
+        return (other instanceof Identity id) && this.entity == id.entity;
     }
 
     @Override
