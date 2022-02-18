@@ -2,106 +2,110 @@ package toys.application;
 
 import toys.enums.Level;
 
+/**
+ * @deprecated Utilizar {@link toys.pojos.ProgressMessagePojo}.
+ */
+@Deprecated(forRemoval = true)
 public class ProgressMessage {
-    private String pid;
-    private int total;
-    private int current;
-    private String text;
-    private Level level;
+  private String pid;
+  private int total;
+  private int current;
+  private String text;
+  private Level level;
 
-    public ProgressMessage() {
-    }
+  public ProgressMessage() {
+  }
 
-    public ProgressMessage(String pid, int total, int current, String text, Level level) {
-        this.pid = pid;
-        this.total = total;
-        this.current = current;
-        this.text = text;
-        this.level = level;
-    }
+  public ProgressMessage(String pid, int total, int current, String text, Level level) {
+    this.pid = pid;
+    this.total = total;
+    this.current = current;
+    this.text = text;
+    this.level = level;
+  }
 
-    public ProgressMessage(String pid, int total, int current, String text) {
-        this(pid, total, current, text, null);
-    }
+  public ProgressMessage(String pid, int total, int current, String text) {
+    this(pid, total, current, text, null);
+  }
 
-    public ProgressMessage(String pid, int total, int current) {
-        this(pid, total, current, null);
-    }
+  public ProgressMessage(String pid, int total, int current) {
+    this(pid, total, current, null);
+  }
 
-    public ProgressMessage(String pid, String text, Level level) {
-        this(pid, -1, -1, text, level);
-    }
+  public ProgressMessage(String pid, String text, Level level) {
+    this(pid, -1, -1, text, level);
+  }
 
-    public ProgressMessage(String pid, String text) {
-        this(pid, text, null);
-    }
+  public ProgressMessage(String pid, String text) {
+    this(pid, text, null);
+  }
 
-    public ProgressMessage(int total, int current, String text) {
-        this(null, total, current, text);
-    }
+  public ProgressMessage(int total, int current, String text) {
+    this(null, total, current, text);
+  }
 
-    public ProgressMessage(int total, int current) {
-        this(null, total, current);
-    }
+  public ProgressMessage(int total, int current) {
+    this(null, total, current);
+  }
 
-    public ProgressMessage(String text) {
-        this(null, text);
-    }
+  public ProgressMessage(String text) {
+    this(null, text);
+  }
 
-    public ProgressMessage(ProgressNotifier notifier) {
-        this(
-            notifier.getPid(),
-            notifier.getTotal(),
-            notifier.getCurrent(),
-            notifier.getText(),
-            notifier.getLevel()
-        );
-    }
+  public ProgressMessage(ProgressNotifier notifier) {
+    this(
+      notifier.getPid(),
+      notifier.getTotal(),
+      notifier.getCurrent(),
+      notifier.getText(),
+      notifier.getLevel()
+    );
+  }
 
-    @Override
-    public String toString() {
-        return String.format("ProgressMessage [pid=%s, total=%s, current=%s, text=%s, level=%s]",
-            pid, total, current, text, level);
-    }
+  @Override
+  public String toString() {
+    return String.format("ProgressMessage [pid=%s, total=%s, current=%s, text=%s, level=%s]",
+      pid, total, current, text, level);
+  }
 
-    public int getTotal() {
-        return total;
-    }
+  public int getTotal() {
+    return total;
+  }
 
-    public int getCurrent() {
-        return current;
-    }
+  public int getCurrent() {
+    return current;
+  }
 
-    public String getText() {
-        return text;
-    }
+  public String getText() {
+    return text;
+  }
 
-    public Level getLevel() {
-        return level;
-    }
+  public Level getLevel() {
+    return level;
+  }
 
-    public String getPid() {
-        return pid;
-    }
+  public String getPid() {
+    return pid;
+  }
 
-    public void setPid(String pid) {
-        this.pid = pid;
-    }
+  public void setPid(String pid) {
+    this.pid = pid;
+  }
 
-    public void setTotal(int total) {
-        this.total = total;
-    }
+  public void setTotal(int total) {
+    this.total = total;
+  }
 
-    public void setCurrent(int current) {
-        this.current = current;
-    }
+  public void setCurrent(int current) {
+    this.current = current;
+  }
 
-    public void setText(String text) {
-        this.text = text;
-    }
+  public void setText(String text) {
+    this.text = text;
+  }
 
-    public void setLevel(Level level) {
-        this.level = level;
-    }
+  public void setLevel(Level level) {
+    this.level = level;
+  }
 
 }
