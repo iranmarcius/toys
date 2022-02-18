@@ -5,9 +5,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -67,6 +71,16 @@ public class ToysSpringUtils {
       }
     }
     return Collections.emptySet();
+  }
+
+  /**
+   * Método de conveniência para obter o objeto de requisição a partir do {@link RequestContextHolder}.
+   *
+   * @return <code>{@link HttpServletRequest}</code>
+   */
+  public static HttpServletRequest getRequest() {
+    return ((ServletRequestAttributes) Objects.requireNonNull(
+      RequestContextHolder.getRequestAttributes())).getRequest();
   }
 
 }
