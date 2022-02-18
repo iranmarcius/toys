@@ -1,0 +1,147 @@
+package toys.spring.web;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MarkerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
+import toys.pojos.TextMessagePojo;
+import toys.servlet.RequestDetailsBuilder;
+import toys.spring.ToysSpringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
+import java.util.Collections;
+
+/**
+ * Implementação básica para construção de serviços REST.
+ *
+ * @author Iran Marcius
+ * @since 02/2022
+ */
+public abstract class ToysAbstractRestService {
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
+
+  /**
+   * Retorna uma exception de HTTP status 500 logando a mensagem de erro.
+   *
+   * @param msg       mensagem de erro.
+   * @param arguments Parâmetros da mensagem.
+   * @return ResponseStatusException
+   */
+  protected ResponseStatusException internalServerError(String msg, Object... arguments) {
+    logger.error(MarkerFactory.getMarker("FATAL"), msg, arguments);
+    return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  /**
+   * Retorna uma resposta com o status informado e uma lista de mensagens no corpo.
+   *
+   * @param status Status da resposta.
+   * @param msgs   Lista de objetos do tipo {@link TextMessagePojo} com as mensagens que serão retornadas no corpo
+   *               da resposta.
+   * @return {@link ResponseEntity}&lt;List&lt;{@link TextMessagePojo}&gt;&gt;
+   */
+  protected ResponseEntity<Collection<TextMessagePojo>> messagesResponse(
+    HttpStatus status,
+    Collection<TextMessagePojo> msgs
+  ) {
+    return ResponseEntity.status(status).body(msgs);
+  }
+
+  /**
+   * Método de conveniência para retornar uma resposta com status {@link HttpStatus#PRECONDITION_FAILED PRECONDITION_FAILED (412)}
+   * contendo uma lista de mensagens no corpo.
+   *
+   * @param msgs Coleção de objetos do tipo {@link TextMessagePojo} com as mensagens.
+   * @see #messagesResponse(HttpStatus, Collection)
+   */
+  protected ResponseEntity<Collection<TextMessagePojo>> preconditionFailedResponse(Collection<TextMessagePojo> msgs) {
+    return messagesResponse(HttpStatus.PRECONDITION_FAILED, msgs);
+  }
+
+  /**
+   * Método de conveniência para retornar uma resposta com status {@link HttpStatus#PRECONDITION_FAILED PRECONDITION_FAILED (412)}
+   * contendo apenas uma mensagem.
+   *
+   * @param msg Objeto do tipo {@link TextMessagePojo} com as informações da mensagem.
+   * @see #messagesResponse(HttpStatus, Collection)
+   */
+  protected ResponseEntity<Collection<TextMessagePojo>> preconditionFailedResponse(TextMessagePojo msg) {
+    return preconditionFailedResponse(Collections.singleton(msg));
+  }
+
+  /**
+   * Método de conveniência para retornar uma resposta com status {@link HttpStatus#EXPECTATION_FAILED EXPECTATION_FAILED (417)}
+   * contendo uma lista de mensagens no corpo.
+   *
+   * @param msgs Coleção de objetos do tipo {@link TextMessagePojo} com as mensagens.
+   * @see #messagesResponse(HttpStatus, Collection)
+   */
+  protected ResponseEntity<Collection<TextMessagePojo>> expectationFailedResponse(Collection<TextMessagePojo> msgs) {
+    return messagesResponse(HttpStatus.EXPECTATION_FAILED, msgs);
+  }
+
+  /**
+   * Método de conveniência para retornar uma resposta com status {@link HttpStatus#EXPECTATION_FAILED EXPECTATION_FAILED (417)}
+   * contendo apenas uma mensagem.
+   *
+   * @param msg Objeto do tipo {@link TextMessagePojo} com as informações da mensagem.
+   * @see #messagesResponse(HttpStatus, Collection)
+   */
+  protected ResponseEntity<Collection<TextMessagePojo>> expectationFailedResponse(TextMessagePojo msg) {
+    return expectationFailedResponse(Collections.singleton(msg));
+  }
+
+  /**
+   * Método de conveniência para retornar uma resposta com status {@link HttpStatus#EXPECTATION_FAILED EXPECTATION_FAILED (417)}
+   * contendo apenas a mensagem informada.
+   *
+   * @param text Texto da mensagem.
+   * @see #messagesResponse(HttpStatus, Collection)
+   */
+  protected ResponseEntity<Collection<TextMessagePojo>> expectationFailedResponse(String text) {
+    return expectationFailedResponse(new TextMessagePojo(text));
+  }
+
+  /**
+   * Cria e adiciona uma mensagem à coleção.
+   *
+   * @param msgs Coleção de objetos do tipo {@link TextMessagePojo} na qual a nova mensagem será adicionada.
+   * @param id   Identificador.
+   * @param text Texto da mensagem.
+   */
+  protected void addMessage(Collection<TextMessagePojo> msgs, String id, String text) {
+    if (msgs != null)
+      msgs.add(new TextMessagePojo(id, text));
+  }
+
+  /**
+   * Cria um texto padrão para logs de operações de usuários.
+   *
+   * @param text    Texto da mensagem.
+   * @param request Informações da requisição.
+   * @return Retorna uma string contendo o texto original, o usuário autenticado e as informações da requisição.
+   */
+  protected String usersLogText(String text, HttpServletRequest request) {
+    return String.format("%s - %s", text, RequestDetailsBuilder.builder(request)
+      .withPrincipal()
+      .withURI()
+      .withXForwardedFor()
+      .withUserAgent()
+      .build()
+    );
+  }
+
+  /**
+   * Método de conveniência para gerar o texto de log de usuário sem o objeto da requisição, que será obtida através do
+   * método {@link ToysSpringUtils#getRequest()}.
+   *
+   * @see #usersLogText(String, HttpServletRequest) 
+   */
+  protected String userLogText(String text) {
+    return usersLogText(text, ToysSpringUtils.getRequest());
+  }
+
+}
