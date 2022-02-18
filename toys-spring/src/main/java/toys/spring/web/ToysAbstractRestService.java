@@ -138,7 +138,7 @@ public abstract class ToysAbstractRestService {
    * Método de conveniência para gerar o texto de log de usuário sem o objeto da requisição, que será obtida através do
    * método {@link ToysSpringUtils#getRequest()}.
    *
-   * @see #usersLogText(String, HttpServletRequest) 
+   * @see #usersLogText(String, HttpServletRequest)
    */
   protected String userLogText(String text) {
     return usersLogText(text, ToysSpringUtils.getRequest());
