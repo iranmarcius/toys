@@ -11,7 +11,7 @@ import toys.enums.Level;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class ProgressMessagePojo extends MessagePojo {
+public class ProgressMessagePojo extends TextMessagePojo {
   private int total;
   private int current;
 

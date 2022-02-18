@@ -8,16 +8,16 @@ import toys.enums.Level;
 @Getter
 @Setter
 @ToString
-public class MessagePojo {
+public class TextMessagePojo {
   private String id;
   private String text;
   private Level level;
 
-  public MessagePojo(String text, Level level) {
+  public TextMessagePojo(String text, Level level) {
     this(null, text, level);
   }
 
-  public MessagePojo(String text) {
+  public TextMessagePojo(String text) {
     this(null, text, null);
   }
 
