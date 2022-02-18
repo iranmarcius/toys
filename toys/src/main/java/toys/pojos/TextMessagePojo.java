@@ -17,6 +17,10 @@ public class TextMessagePojo {
     this(null, text, level);
   }
 
+  public TextMessagePojo(String id, String text) {
+    this(id, text, null);
+  }
+
   public TextMessagePojo(String text) {
     this(null, text, null);
   }
