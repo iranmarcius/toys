@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>toys-spring</artifactId>
-    <version>1.6.7</version>
+    <version>1.6.8</version>
 
     <parent>
         <groupId>toys</groupId>
@@ -36,7 +36,6 @@
         <dependency>
             <groupId>toys</groupId>
             <artifactId>toys</artifactId>
-            <version>1.6.8</version>
         </dependency>
         <dependency>
             <groupId>toys</groupId>
