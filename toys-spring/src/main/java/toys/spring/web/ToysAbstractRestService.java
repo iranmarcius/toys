@@ -140,7 +140,7 @@ public abstract class ToysAbstractRestService {
    *
    * @see #usersLogText(String, HttpServletRequest)
    */
-  protected String userLogText(String text) {
+  protected String usersLogText(String text) {
     return usersLogText(text, ToysSpringUtils.getRequest());
   }
 
