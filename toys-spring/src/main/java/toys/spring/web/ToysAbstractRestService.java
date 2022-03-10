@@ -106,6 +106,14 @@ public abstract class ToysAbstractRestService {
   }
 
   /**
+   * Método de conveniência para retornar uma resposta com o status {@link HttpStatus#NO_CONTENT NO_CONTENT (204)}
+   */
+  @SuppressWarnings("rawtypes")
+  protected ResponseEntity noContentResponse() {
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
+  /**
    * Cria e adiciona uma mensagem à coleção.
    *
    * @param msgs Coleção de objetos do tipo {@link TextMessagePojo} na qual a nova mensagem será adicionada.
