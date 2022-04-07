@@ -67,20 +67,23 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
   }
 
   @Override
-  public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+  public void onAuthenticationSuccess(
+    HttpServletRequest request,
+    HttpServletResponse response,
+    Authentication authentication
+  ) throws IOException {
     SavedRequest savedRequest = requestCache.getRequest(request, response);
 
-    String principal = ToysSpringUtils.getPrincipalName();
-    if (principal != null) {
+    if (authentication != null) {
       logger.debug("Gerando token JWT para o principal autenticado.");
 
       JwtBuilder builder = Jwts.builder()
         .setId(String.format("%d", System.currentTimeMillis()))
         .setIssuedAt(new Date())
-        .setSubject(principal);
+        .setSubject(authentication.getName());
 
       try {
-        var authorities = ToysSpringUtils.getAuthorities();
+        var authorities = ToysSpringUtils.getAuthorities(authentication);
         if (authorities.isEmpty() && forbidOnNoAuthorities) {
           response.sendError(HttpServletResponse.SC_FORBIDDEN, "Usuário não possui nenhuma autoridade.");
           return;
@@ -115,8 +118,8 @@ public class JWTAuthenticationSuccessHandler extends SimpleUrlAuthenticationSucc
 
       response.setHeader(HTTP_HEADER_ACCESS_TOKEN, token);
 
-      LoggerFactory.getLogger(LOGGER_AUTH).info("Autenticacao bem sucedida - {}",
-        RequestDetailsBuilder.builder(request).withAll(principal).build());
+      LoggerFactory.getLogger(LOGGER_AUTH).info("Autenticação bem sucedida - {}",
+        RequestDetailsBuilder.builder(request).withAll(authentication.getName()).build());
 
     } else {
       logger.error("Nenhum nome de usuario encontrado no contexto para gerar o token.");
