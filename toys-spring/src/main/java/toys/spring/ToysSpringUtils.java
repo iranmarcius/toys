@@ -26,61 +26,20 @@ public class ToysSpringUtils {
   }
 
   /**
-   * Retorna o usuário autenticado.
+   * Retorna uma relação das autoridades à partir da autenticação informada.
    *
-   * @return {@link User}
-   */
-  public static synchronized User getPrincipal() {
-    SecurityContext sc = SecurityContextHolder.getContext();
-    if (sc != null) {
-      Object principal = sc.getAuthentication().getPrincipal();
-      return principal instanceof User user ? user : null;
-    }
-    return null;
-  }
-
-  /**
-   * Retorna o nome do usuário autenticado se houver algum, do contrário retorna nulo.
-   *
-   * @return <code>String</code>
-   */
-  public static synchronized String getPrincipalName() {
-    SecurityContext sc = SecurityContextHolder.getContext();
-    if (sc != null) {
-      Authentication auth = sc.getAuthentication();
-      if (auth != null)
-        return auth.getName();
-    }
-    return null;
-  }
-
-  /**
-   * Retorna uma relação das autorizações do usuário logado no contexto.
-   *
+   * @param authentication Objeto com os dados da autnticação.
    * @return <code>List&lt;String&gt;</code>
    */
-  public static Set<String> getAuthorities() {
-    SecurityContext sc = SecurityContextHolder.getContext();
-    if (sc != null) {
-      Authentication auth = sc.getAuthentication();
-      if (auth != null) {
-        var authorities = new HashSet<String>();
-        for (GrantedAuthority ga : auth.getAuthorities())
-          authorities.add(ga.getAuthority());
-        return authorities;
-      }
+  public static Set<String> getAuthorities(Authentication authentication) {
+    if (authentication != null) {
+      var authorities = new HashSet<String>();
+      for (GrantedAuthority ga : authentication.getAuthorities())
+        authorities.add(ga.getAuthority());
+      return authorities;
+    } else {
+      return Collections.emptySet();
     }
-    return Collections.emptySet();
-  }
-
-  /**
-   * Método de conveniência para obter o objeto de requisição a partir do {@link RequestContextHolder}.
-   *
-   * @return <code>{@link HttpServletRequest}</code>
-   */
-  public static HttpServletRequest getRequest() {
-    return ((ServletRequestAttributes) Objects.requireNonNull(
-      RequestContextHolder.getRequestAttributes())).getRequest();
   }
 
 }
