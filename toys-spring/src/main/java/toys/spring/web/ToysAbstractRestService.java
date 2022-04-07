@@ -1,10 +1,14 @@
 package toys.spring.web;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MarkerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
 import toys.pojos.TextMessagePojo;
 import toys.servlet.RequestDetailsBuilder;
@@ -13,6 +17,7 @@ import toys.spring.ToysSpringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Implementação básica para construção de serviços REST.
@@ -143,13 +148,33 @@ public abstract class ToysAbstractRestService {
   }
 
   /**
-   * Método de conveniência para gerar o texto de log de usuário sem o objeto da requisição, que será obtida através do
-   * método {@link ToysSpringUtils#getRequest()}.
+   * Método de conveniência para gerar o texto de log de usuário sem o objeto da requisição.
    *
    * @see #usersLogText(String, HttpServletRequest)
    */
   protected String usersLogText(String text) {
-    return usersLogText(text, ToysSpringUtils.getRequest());
+    var request = ((ServletRequestAttributes) Objects.requireNonNull(
+      RequestContextHolder.getRequestAttributes())).getRequest();
+    return usersLogText(text, request);
+  }
+
+  /**
+   * Retorna a autenticação corrente do contexto possui alguma das autoridades informadas.
+   *
+   * @param authorities Relação de autoridades para verificação.
+   * @return boolean
+   */
+  protected boolean hasAnyAuthority(String... authorities) {
+    if (authorities == null || authorities.length == 0)
+      return true;
+    var sc = SecurityContextHolder.getContext();
+    if (sc != null) {
+      var userAuthorities = ToysSpringUtils.getAuthorities(sc.getAuthentication());
+      for (String auth : userAuthorities)
+        if (ArrayUtils.contains(authorities, auth))
+          return true;
+    }
+    return false;
   }
 
 }
