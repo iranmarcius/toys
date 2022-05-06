@@ -111,6 +111,14 @@ public abstract class ToysAbstractRestService {
   }
 
   /**
+   * Método de conveniência para retornar uma resposta com o status {@link HttpStatus#FORBIDDEN FORBIDDEN (403)}.
+   */
+  @SuppressWarnings("rawtypes")
+  protected ResponseEntity forbiddenResponse() {
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+  }
+
+  /**
    * Método de conveniência para retornar uma resposta com o status {@link HttpStatus#NO_CONTENT NO_CONTENT (204)}
    */
   @SuppressWarnings("rawtypes")
