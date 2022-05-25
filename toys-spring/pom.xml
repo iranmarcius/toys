@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>toys-spring</artifactId>
-    <version>1.6.9</version>
+    <version>1.7.0</version>
 
     <parent>
         <groupId>toys</groupId>
@@ -13,7 +13,7 @@
     </parent>
 
     <properties>
-        <spring.boot.version>2.6.3</spring.boot.version>
+        <spring.boot.version>2.7.0</spring.boot.version>
     </properties>
 
     <build>
