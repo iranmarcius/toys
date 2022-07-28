@@ -36,11 +36,11 @@ class DateToysTest {
     }
 
     @Test
-    void testDurationStr2ms() {
-        assertEquals(10000L, DateToys.durationStr2ms("10s"));
-        assertEquals(2170000L, DateToys.durationStr2ms("36m10s"));
-        assertEquals(9370000L, DateToys.durationStr2ms("2h36m10s"));
-        assertEquals(268570000L, DateToys.durationStr2ms("3d2h36m10s"));
+    void testTimeStr2ms() {
+        assertEquals(10000L, DateToys.timeStr2ms("10s"));
+        assertEquals(2170000L, DateToys.timeStr2ms("36m10s"));
+        assertEquals(9370000L, DateToys.timeStr2ms("2h36m10s"));
+        assertEquals(268570000L, DateToys.timeStr2ms("3d2h36m10s"));
     }
 
     @Test
