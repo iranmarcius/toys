@@ -13,7 +13,6 @@ import java.util.*;
  * @since 11/2020
  */
 public class HttpServletRequestPojo implements HttpServletRequest {
-  private final Map<String, String> headers;
   private final Principal principal;
   private final String contextPath;
   private final String queryString;
@@ -21,20 +20,27 @@ public class HttpServletRequestPojo implements HttpServletRequest {
   private final StringBuffer requestURL;
   private final String remoteAddr;
   private final String remoteHost;
+  private final Map<String, String> headers;
+  private final Map<String, String[]> params;
 
   public HttpServletRequestPojo(HttpServletRequest request) {
     principal = request.getUserPrincipal();
     contextPath = request.getContextPath();
     queryString = request.getQueryString();
-    headers = new HashMap<>();
     requestURI = request.getRequestURI();
     requestURL = request.getRequestURL();
     remoteAddr = request.getRemoteAddr();
     remoteHost = request.getRemoteHost();
+    headers = new HashMap<>();
     request
       .getHeaderNames()
       .asIterator()
-      .forEachRemaining(name -> headers.put(name.toLowerCase(), request.getHeader(name)));
+      .forEachRemaining(name -> headers.put(name, request.getHeader(name)));
+    params = new HashMap<>();
+    request
+      .getParameterNames()
+      .asIterator()
+      .forEachRemaining(name -> params.put(name, request.getParameterValues(name)));
   }
 
   @Override
@@ -239,22 +245,22 @@ public class HttpServletRequestPojo implements HttpServletRequest {
 
   @Override
   public String getParameter(String name) {
-    return null;
+    return params.containsKey(name) ? params.get(name)[0] : null;
   }
 
   @Override
   public Enumeration<String> getParameterNames() {
-    return null;
+    return Collections.enumeration(params.keySet());
   }
 
   @Override
   public String[] getParameterValues(String name) {
-    return new String[0];
+    return params.getOrDefault(name, null);
   }
 
   @Override
   public Map<String, String[]> getParameterMap() {
-    return null;
+    return params;
   }
 
   @Override
