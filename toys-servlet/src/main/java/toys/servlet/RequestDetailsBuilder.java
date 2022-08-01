@@ -9,7 +9,7 @@ import java.util.Map;
 import static toys.ToysConsts.*;
 
 /**
- * classe utilitária para construir umaa string com os detalhes de uma requisição.
+ * Classe utilitária para construir uma string com os detalhes de uma requisição.
  *
  * @author Iran Marcius
  * @since 10/2020
@@ -84,7 +84,7 @@ public class RequestDetailsBuilder {
   }
 
   public String build() {
-    var sb = new StringBuilder("Requisicao [");
+    var sb = new StringBuilder("Requisição [");
     appendDetail(sb, "principal", principal);
     appendParams(sb);
     appendDetail(sb, "remoteAddress", request.getRemoteAddr());
