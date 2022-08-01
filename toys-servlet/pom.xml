@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>toys-servlet</artifactId>
-    <version>1.6.2</version>
+    <version>1.6.3</version>
 
     <properties>
         <jsonwebtoken.version>0.11.2</jsonwebtoken.version>
