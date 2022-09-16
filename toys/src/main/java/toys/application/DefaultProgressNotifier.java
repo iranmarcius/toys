@@ -37,12 +37,23 @@ public class DefaultProgressNotifier implements ProgressNotifier {
   @Override
   public void start(String text, Object... params) {
     current = 0;
-    text(text, params);
+    text(text, Level.INFO, params);
   }
 
   @Override
   public void start(int total) {
     start(total, null);
+  }
+
+  @Override
+  public void finish(String text, Object... params) {
+    current = total;
+    text(text, Level.INFO, params);
+  }
+
+  @Override
+  public void finish() {
+    finish(null);
   }
 
   @Override

@@ -12,35 +12,39 @@ import toys.enums.Level;
  * @author Iran
  */
 public interface ProgressNotifier {
-    void start(int total, String text, Object... params);
+  void start(int total, String text, Object... params);
 
-    void start(String text, Object... params);
+  void start(String text, Object... params);
 
-    void start(int total);
+  void start(int total);
 
-    void step(int ammount, String text, Level level, Object... params);
+  void finish();
 
-    void step(int ammount, String text, Object... params);
+  void finish(String text, Object... params);
 
-    void text(String text, Level level, Object... params);
+  void step(int ammount, String text, Level level, Object... params);
 
-    void text(String text, Object... params);
+  void step(int ammount, String text, Object... params);
 
-    void cancel();
+  void text(String text, Level level, Object... params);
 
-    boolean isCancelled();
+  void text(String text, Object... params);
 
-    int getTotal();
+  void cancel();
 
-    int getCurrent();
+  boolean isCancelled();
 
-    int getPercent();
+  int getTotal();
 
-    String getText();
+  int getCurrent();
 
-    Level getLevel();
+  int getPercent();
 
-    String getPid();
+  String getText();
 
-    void onEvent(ProgressNotifier notifier);
+  Level getLevel();
+
+  String getPid();
+
+  void onEvent(ProgressNotifier notifier);
 }
