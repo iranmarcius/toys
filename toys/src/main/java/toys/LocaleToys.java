@@ -10,7 +10,6 @@ public class LocaleToys {
     public static final Locale BRAZIL = new Locale("pt", "BR", "");
 
     private LocaleToys() {
-        super();
     }
 
 }
