@@ -143,27 +143,28 @@ public abstract class ToysAbstractRestService {
    *
    * @param text    Texto da mensagem.
    * @param request Informações da requisição.
+   * @param params  Parâmetros para formatação da mensagem.
    * @return Retorna uma string contendo o texto original, o usuário autenticado e as informações da requisição.
    */
-  protected String usersLogText(String text, HttpServletRequest request) {
-    return String.format("%s - %s", text, RequestDetailsBuilder.builder(request)
-      .withPrincipal()
-      .withURI()
-      .withXForwardedFor()
-      .withUserAgent()
-      .build()
-    );
+  protected String usersLogText(String text, HttpServletRequest request, Object... params) {
+    return String.format(text, params) + " - " +
+      RequestDetailsBuilder.builder(request)
+        .withPrincipal()
+        .withURI()
+        .withXForwardedFor()
+        .withUserAgent()
+        .build();
   }
 
   /**
    * Método de conveniência para gerar o texto de log de usuário sem o objeto da requisição.
    *
-   * @see #usersLogText(String, HttpServletRequest)
+   * @see #usersLogText(String, HttpServletRequest, Object...)
    */
-  protected String usersLogText(String text) {
+  protected String usersLogText(String text, Object... params) {
     var request = ((ServletRequestAttributes) Objects.requireNonNull(
       RequestContextHolder.getRequestAttributes())).getRequest();
-    return usersLogText(text, request);
+    return usersLogText(text, request, params);
   }
 
   /**
