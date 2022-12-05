@@ -1,8 +1,7 @@
 package toys.servlet;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static toys.ToysConsts.HTTP_HEADER_X_FORWARDED_FOR;
 

@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>toys-servlet</artifactId>
-  <version>1.6.4</version>
+  <version>1.7.0</version>
 
   <properties>
     <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
@@ -28,10 +28,9 @@
 
   <dependencies>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>4.0.1</version>
-      <scope>provided</scope>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>5.0.0</version>
     </dependency>
     <dependency>
       <groupId>toys</groupId>
@@ -45,11 +44,6 @@
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-impl</artifactId>
-      <version>${jsonwebtoken.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-jackson</artifactId>
       <version>${jsonwebtoken.version}</version>
     </dependency>
   </dependencies>

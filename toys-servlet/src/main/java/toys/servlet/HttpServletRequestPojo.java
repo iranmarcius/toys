@@ -1,7 +1,8 @@
 package toys.servlet;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+
 import java.io.BufferedReader;
 import java.security.Principal;
 import java.util.*;
