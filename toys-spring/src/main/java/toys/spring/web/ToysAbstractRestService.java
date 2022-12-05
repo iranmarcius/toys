@@ -1,5 +1,6 @@
 package toys.spring.web;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import toys.pojos.TextMessagePojo;
 import toys.servlet.RequestDetailsBuilder;
 import toys.spring.ToysSpringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
