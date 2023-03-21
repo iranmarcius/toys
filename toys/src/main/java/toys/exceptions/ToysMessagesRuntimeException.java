@@ -4,6 +4,7 @@ import toys.pojos.TextMessagePojo;
 
 import java.io.Serial;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ToysMessagesRuntimeException extends ToysRuntimeException {
 
@@ -44,6 +45,13 @@ public class ToysMessagesRuntimeException extends ToysRuntimeException {
 
   public List<TextMessagePojo> getMessages() {
     return messages;
+  }
+
+  public String getMessagesText() {
+    return messages
+      .stream()
+      .map(m -> String.format("%s: %s", m.getId(), m.getText()))
+      .collect(Collectors.joining("\n"));
   }
 
 }
