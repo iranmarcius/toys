@@ -21,11 +21,11 @@ import java.util.Map;
  *
  * @author Iran
  */
-public final class FreemarkerUtils {
-    private static final Logger logger = LoggerFactory.getLogger(FreemarkerUtils.class);
+public final class FreemarkerToys {
+    private static final Logger logger = LoggerFactory.getLogger(FreemarkerToys.class);
     private static Configuration cfg;
 
-    private FreemarkerUtils() {
+    private FreemarkerToys() {
     }
 
     /**
@@ -41,7 +41,7 @@ public final class FreemarkerUtils {
             cfg = new Configuration(Configuration.VERSION_2_3_22);
             cfg.setDefaultEncoding("utf-8");
             cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-            cfg.setTemplateLoader(new ClassTemplateLoader(FreemarkerUtils.class, "/freemarker"));
+            cfg.setTemplateLoader(new ClassTemplateLoader(FreemarkerToys.class, "/freemarker"));
             logger.debug("Configuracao do Freemarker inicializada.");
         }
         return cfg.getTemplate(name + ".ftl");
@@ -146,7 +146,7 @@ public final class FreemarkerUtils {
         FreemarkerTemplatePojo t = getEmailTemplate(templateId, subjectParams);
         StringWriter sw = new StringWriter();
         t.getTemplate().process(data, sw);
-        EmailUtils.enviarEmailHtml(
+        EmailToys.enviarEmailHtml(
             hostname,
             t.getHeaders().get("From"),
             emailDestinatario,
