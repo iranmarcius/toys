@@ -87,14 +87,14 @@ public class CollectionToys {
   }
 
   /**
-   * Converte uma lista com elementos duplicados para uma lista com elementos distintos.
+   * Retorna uma lista sem elementos duplicados a partir da lista original.
    *
    * @param l Lista com elementos dupicados.
    * @return Lista com elementos distintos.
    */
   public static <T> List<T> distinctList(List<T> l) {
-    List<T> result = new ArrayList<>(l.size());
-    Set<Identity> distinct = new HashSet<>();
+    var result = new ArrayList<T>(l.size());
+    var distinct = new HashSet<Identity>();
     for (T entity : l) {
       if (distinct.add(new Identity(entity)))
         result.add(entity);

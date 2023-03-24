@@ -1,10 +1,10 @@
 package toys.enums;
 
 public enum CrudOperation {
-    CREATE("Criacao"),
+    CREATE("Criação"),
     READ("Leitura"),
-    UPDATE("Atualizacao"),
-    DELETE("Exclusao");
+    UPDATE("Atualização"),
+    DELETE("Exclusão");
 
     private final String descricao;
 
