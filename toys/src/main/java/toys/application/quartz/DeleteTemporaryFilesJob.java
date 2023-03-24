@@ -1,4 +1,4 @@
-package toys.application;
+package toys.application.quartz;
 
 import org.apache.commons.io.FileUtils;
 import org.quartz.Job;
