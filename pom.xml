@@ -17,13 +17,6 @@
     <toys.version>${project.version}</toys.version>
   </properties>
 
-  <distributionManagement>
-    <repository>
-      <id>gitlab-maven</id>
-      <url>https://gitlab.com/api/v4/projects/34703489/packages/maven</url>
-    </repository>
-  </distributionManagement>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
