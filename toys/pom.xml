@@ -5,17 +5,16 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>toys</artifactId>
-  <version>2.0.0</version>
-
-  <properties>
-    <slf4j.version>1.7.36</slf4j.version>
-  </properties>
 
   <parent>
     <groupId>toys</groupId>
     <artifactId>parent</artifactId>
-    <version>0.1.1</version>
+    <version>2.1.2</version>
   </parent>
+
+  <properties>
+    <slf4j.version>2.0.5</slf4j.version>
+  </properties>
 
   <build>
     <plugins>
@@ -39,7 +38,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.22</version>
+      <version>1.18.26</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
