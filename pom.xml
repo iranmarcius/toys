@@ -17,6 +17,13 @@
     <toys.version>${project.version}</toys.version>
   </properties>
 
+  <distributionManagement>
+    <repository>
+      <id>github-maven</id>
+      <url>https://maven.pkg.github.com/iranmarcius/toys</url>
+    </repository>
+  </distributionManagement>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
