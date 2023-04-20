@@ -89,7 +89,7 @@ public class CollectionToys {
   /**
    * Retorna uma lista sem elementos duplicados a partir da lista original.
    *
-   * @param l Lista com elementos dupicados.
+   * @param l Lista com elementos duplicados.
    * @return Lista com elementos distintos.
    */
   public static <T> List<T> distinctList(List<T> l) {
