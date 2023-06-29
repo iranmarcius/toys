@@ -5,6 +5,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import toys.exceptions.ToysRuntimeException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 
 /**
@@ -14,16 +15,16 @@ import java.util.Objects;
  * @author Iran Marcius
  * @since 12/2021
  */
-public abstract class AbstractExcelTemplateExporter extends AbstractExcelExporter {
+public abstract class AbstractExcelTemplateExporter<T> extends AbstractExcelExporter<T> {
   protected XSSFWorkbook templateWorkbook;
   protected XSSFSheet templateSheet;
 
   /**
-   * Retorna o caminho da planilha modelo.
+   * Retorna o resource do template.
    *
-   * @return String
+   * @return {@code InputStream}
    */
-  protected abstract String getTemplateResourcePath();
+  protected abstract InputStream getTemplateResource();
 
   /**
    * Abre a planilha modelo papa ler os estilos.
@@ -31,21 +32,18 @@ public abstract class AbstractExcelTemplateExporter extends AbstractExcelExporte
    * @param wb Workbook.
    */
   @Override
-  protected void preCreateContent(XSSFWorkbook wb) {
+  protected void preCreateContent(XSSFWorkbook wb) throws IOException {
     super.preCreateContent(wb);
-    try {
-      logger.debug("Lendo planilha modelo: {}", getTemplateResourcePath());
-      templateWorkbook = new XSSFWorkbook(Objects.requireNonNull(
-        getClass().getClassLoader().getResourceAsStream(getTemplateResourcePath())));
-      templateSheet = templateWorkbook.getSheetAt(0);
-      readStyles(wb);
-    } catch (IOException e) {
-      throw new ToysRuntimeException("Erro lendo planilha modelo. modelo=%s.", getTemplateResourcePath(), e);
-    }
+    var template = getTemplateResource();
+    templateWorkbook = new XSSFWorkbook(Objects.requireNonNull(template));
+    logger.debug("Template carregado.");
+    templateSheet = templateWorkbook.getSheetAt(0);
+    readStyles(wb);
+    logger.debug("Estilos carregados do template.");
   }
 
   /**
-   * Lê os estilos da planilha modelo.
+   * Lê os estilos da planilha modelo para criar na planilha destino.
    *
    * @param wb Workbook no qual os estilos serão criados.
    */
