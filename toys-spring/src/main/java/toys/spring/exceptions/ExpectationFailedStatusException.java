@@ -1,9 +1,9 @@
-package toys.spring.security.exceptions;
+package toys.spring.exceptions;
+
+import java.io.Serial;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.io.Serial;
 
 public class ExpectationFailedStatusException extends ResponseStatusException {
 
@@ -12,6 +12,10 @@ public class ExpectationFailedStatusException extends ResponseStatusException {
 
   public ExpectationFailedStatusException() {
     super(HttpStatus.EXPECTATION_FAILED);
+  }
+
+  public ExpectationFailedStatusException(String msg, Object... params) {
+    super(HttpStatus.EXPECTATION_FAILED, String.format(msg, params));
   }
 
 }

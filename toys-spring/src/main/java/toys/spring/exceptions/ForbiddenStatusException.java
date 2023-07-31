@@ -1,9 +1,9 @@
-package toys.spring.security.exceptions;
+package toys.spring.exceptions;
+
+import java.io.Serial;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.io.Serial;
 
 public class ForbiddenStatusException extends ResponseStatusException {
 
@@ -12,6 +12,10 @@ public class ForbiddenStatusException extends ResponseStatusException {
 
   public ForbiddenStatusException() {
     super(HttpStatus.FORBIDDEN);
+  }
+
+  public ForbiddenStatusException(String msg, Object... params) {
+    super(HttpStatus.FORBIDDEN, String.format(msg, params));
   }
 
 }

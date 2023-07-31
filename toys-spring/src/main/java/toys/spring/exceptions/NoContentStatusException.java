@@ -1,9 +1,9 @@
-package toys.spring.security.exceptions;
+package toys.spring.exceptions;
+
+import java.io.Serial;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.io.Serial;
 
 public class NoContentStatusException extends ResponseStatusException {
 
@@ -12,6 +12,10 @@ public class NoContentStatusException extends ResponseStatusException {
 
   public NoContentStatusException() {
     super(HttpStatus.NO_CONTENT);
+  }
+
+  public NoContentStatusException(String msg, Object... params) {
+    super(HttpStatus.NO_CONTENT, String.format(msg, params));
   }
 
 }

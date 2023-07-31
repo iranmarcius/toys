@@ -1,4 +1,4 @@
-package toys.spring.security.exceptions;
+package toys.spring.exceptions;
 
 import org.springframework.security.core.AuthenticationException;
 
