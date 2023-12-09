@@ -1,12 +1,13 @@
 package toys.exporters;
 
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import toys.exceptions.ToysRuntimeException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
+
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import toys.exceptions.ToysRuntimeException;
 
 /**
  * Implementação do exportador de planilhas com métodos para leitura de estilos
@@ -38,16 +39,16 @@ public abstract class AbstractExcelTemplateExporter<T> extends AbstractExcelExpo
     templateWorkbook = new XSSFWorkbook(Objects.requireNonNull(template));
     logger.debug("Template carregado.");
     templateSheet = templateWorkbook.getSheetAt(0);
-    readStyles(wb);
+    processTemplate(wb);
     logger.debug("Estilos carregados do template.");
   }
 
   /**
-   * Lê os estilos da planilha modelo para criar na planilha destino.
+   * Obtém todas as informações necessárias do template.
    *
-   * @param wb Workbook no qual os estilos serão criados.
+   * @param wb Workbook destino de criação de estilos.
    */
-  protected abstract void readStyles(XSSFWorkbook wb);
+  protected abstract void processTemplate(XSSFWorkbook wb);
 
   @Override
   protected void postCreateContent(XSSFWorkbook wb) {
