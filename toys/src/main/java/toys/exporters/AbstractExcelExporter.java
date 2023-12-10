@@ -1,12 +1,16 @@
 package toys.exporters;
 
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.xssf.usermodel.*;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Implementação básica de classe utilitária para exportação de planilhas.
@@ -83,7 +87,8 @@ public abstract class AbstractExcelExporter<T> extends AbstractExporter {
   /**
    * Cria uma célula setando o conteúdo.
    */
-  protected <V> XSSFCell createCell(XSSFRow row, int col, V value, CellType type, XSSFCellStyle style) {
+  protected <V> XSSFCell
+      createCell(XSSFRow row, int col, V value, CellType type, XSSFCellStyle style) {
     if (logger.isTraceEnabled())
       logger.trace("Criando célula: linha={}, coluna={}, valor={}", row.getRowNum(), col, value);
     var cell = row.createCell(col);
@@ -97,10 +102,10 @@ public abstract class AbstractExcelExporter<T> extends AbstractExporter {
       else if (value instanceof LocalDateTime v)
         cell.setCellValue(v);
       else
-        cell.setCellValue(value.toString());
-      cell.setCellType(type);
-      cell.setCellStyle(style);
+        cell.setCellValue(String.format("%s (não tratado)", value));
     }
+    cell.setCellType(value != null ? type : CellType.BLANK);
+    cell.setCellStyle(style);
     return cell;
   }
 
