@@ -87,8 +87,13 @@ public abstract class AbstractExcelExporter<T> extends AbstractExporter {
   /**
    * Cria uma célula setando o conteúdo.
    */
-  protected <V> XSSFCell
-      createCell(XSSFRow row, int col, V value, CellType type, XSSFCellStyle style) {
+  protected <V> XSSFCell createCell(
+      XSSFRow row,
+      int col,
+      V value,
+      CellType type,
+      XSSFCellStyle style
+  ) {
     if (logger.isTraceEnabled())
       logger.trace("Criando célula: linha={}, coluna={}, valor={}", row.getRowNum(), col, value);
     var cell = row.createCell(col);
