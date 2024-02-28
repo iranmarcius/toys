@@ -118,18 +118,18 @@ public abstract class AbstractExcelExporter<T> extends AbstractExporter {
    * Método invocado imediatamente antes criação do conteúdo da planilha.
    * A implementação padrão não realiza nenhuma operação.
    *
-   * @param wb Workbook.
+   * @param targetWorkbook Workbook.
    */
-  protected void preCreateContent(XSSFWorkbook wb) throws IOException {
+  protected void preCreateContent(XSSFWorkbook targetWorkbook) throws IOException {
     // Nada ocorre aqui.
   }
 
   /**
    * Método invocado imediatamente após a criação do conteúdo da planilha.
    *
-   * @param wb Workbook.
+   * @param targetWorkbook Workbook.
    */
-  protected void postCreateContent(XSSFWorkbook wb) {
+  protected void postCreateContent(XSSFWorkbook targetWorkbook) {
     // Nada ocorre aqui
   }
 
@@ -156,9 +156,9 @@ public abstract class AbstractExcelExporter<T> extends AbstractExporter {
   /**
    * Cria o conteúdo da planilha.
    *
-   * @param wb Workbook no qual o conteúdo será criado.
+   * @param targetWorkbook Workbook no qual o conteúdo será criado.
    */
-  protected abstract void createContent(XSSFWorkbook wb);
+  protected abstract void createContent(XSSFWorkbook targetWorkbook);
 
   /**
    * Cria a planilha de excel em formato binário a partir dos dados informados.

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import toys.exceptions.ToysRuntimeException;
@@ -18,7 +17,6 @@ import toys.exceptions.ToysRuntimeException;
  */
 public abstract class AbstractExcelTemplateExporter<T> extends AbstractExcelExporter<T> {
   protected XSSFWorkbook templateWorkbook;
-  protected XSSFSheet templateSheet;
 
   /**
    * Retorna o resource do template.
@@ -30,28 +28,27 @@ public abstract class AbstractExcelTemplateExporter<T> extends AbstractExcelExpo
   /**
    * Abre a planilha modelo papa ler os estilos.
    *
-   * @param wb Workbook.
+   * @param targetWorkbook Workbook.
    */
   @Override
-  protected void preCreateContent(XSSFWorkbook wb) throws IOException {
-    super.preCreateContent(wb);
+  protected void preCreateContent(XSSFWorkbook targetWorkbook) throws IOException {
+    super.preCreateContent(targetWorkbook);
     var template = getTemplateResource();
     templateWorkbook = new XSSFWorkbook(Objects.requireNonNull(template));
     logger.debug("Template carregado.");
-    templateSheet = templateWorkbook.getSheetAt(0);
-    processTemplate(wb);
+    processTemplate(targetWorkbook);
     logger.debug("Estilos carregados do template.");
   }
 
   /**
    * Obtém todas as informações necessárias do template.
    *
-   * @param wb Workbook destino de criação de estilos.
+   * @param targetWorkbook Workbook destino.
    */
-  protected abstract void processTemplate(XSSFWorkbook wb);
+  protected abstract void processTemplate(XSSFWorkbook targetWorkbook);
 
   @Override
-  protected void postCreateContent(XSSFWorkbook wb) {
+  protected void postCreateContent(XSSFWorkbook targetWorkbook) {
     try {
       templateWorkbook.close();
       logger.debug("Planilha modelo fechada.");
