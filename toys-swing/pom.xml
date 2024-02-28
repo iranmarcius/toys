@@ -9,7 +9,7 @@
   <parent>
     <groupId>toys</groupId>
     <artifactId>parent</artifactId>
-    <version>7.0.2</version>
+    <version>8.0.0</version>
   </parent>
 
   <build>
