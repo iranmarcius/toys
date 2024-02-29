@@ -16,13 +16,6 @@ public abstract class AbstractExcelTabularExporter<T> extends AbstractExcelTempl
   private List<TemplateSheetData> templateSheetData;
 
   /**
-   * Retorna o número da linha de corpo.
-   * 
-   * @return int
-   */
-  protected abstract int getBodyRowNumber();
-
-  /**
    * Retorna o número de colunas para a folha informada.
    * 
    * @param sheetIndex Índice da folha.
@@ -44,13 +37,13 @@ public abstract class AbstractExcelTabularExporter<T> extends AbstractExcelTempl
   protected abstract int getBodyRowNumber(int sheetIndex);
 
   /**
-   * Implementação padrão para inicialização dos arrays de estilos e tipos.
+   * Lê os dados de estilos e tipos de todas as folhas da planilha.
    * 
-   * @param targetWorkbook Workbook destino para criação de estilos e linhas de cabeçalho.
+   * @param targetWorkbook Workbook destino para criação de estilos.
    */
   protected void processTemplate(XSSFWorkbook targetWorkbook) {
     templateSheetData = new ArrayList<>();
-    for (int i = 0; i < targetWorkbook.getNumberOfSheets(); i++)
+    for (int i = 0; i < templateWorkbook.getNumberOfSheets(); i++)
       templateSheetData.add(new TemplateSheetData(
           targetWorkbook,
           templateWorkbook.getSheetAt(i),
@@ -82,6 +75,10 @@ public abstract class AbstractExcelTabularExporter<T> extends AbstractExcelTempl
       cell.setCellStyle(templateSheetData.get(sheetIndex).getHeaderStyle(c));
       cell.setCellValue(originRow.getCell(c).getStringCellValue());
     }
+  }
+
+  protected TemplateSheetData getTemplateSheetData(int sheetIndex) {
+    return templateSheetData.get(sheetIndex);
   }
 
 }

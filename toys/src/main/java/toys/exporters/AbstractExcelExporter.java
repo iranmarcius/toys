@@ -120,7 +120,7 @@ public abstract class AbstractExcelExporter<T> extends AbstractExporter {
    *
    * @param targetWorkbook Workbook.
    */
-  protected void preCreateContent(XSSFWorkbook targetWorkbook) throws IOException {
+  protected void beforeCreateContent(XSSFWorkbook targetWorkbook) throws IOException {
     // Nada ocorre aqui.
   }
 
@@ -129,7 +129,7 @@ public abstract class AbstractExcelExporter<T> extends AbstractExporter {
    *
    * @param targetWorkbook Workbook.
    */
-  protected void postCreateContent(XSSFWorkbook targetWorkbook) {
+  protected void afterCreateContent(XSSFWorkbook targetWorkbook) {
     // Nada ocorre aqui
   }
 
@@ -142,11 +142,11 @@ public abstract class AbstractExcelExporter<T> extends AbstractExporter {
     try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
       try (XSSFWorkbook wb = new XSSFWorkbook()) {
         logger.debug("Invocando preCreateContent.");
-        preCreateContent(wb);
+        beforeCreateContent(wb);
         logger.debug("Criando conteúdo.");
         createContent(wb);
         logger.debug("Invocando posCreateContent.");
-        postCreateContent(wb);
+        afterCreateContent(wb);
         wb.write(out);
       }
       return out.toByteArray();
